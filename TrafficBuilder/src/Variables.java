@@ -1,4 +1,4 @@
 
 public class Variables {
-	public boolean InStart = true;
+	public static boolean InStart = true;
 }

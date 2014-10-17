@@ -7,6 +7,9 @@ public class Gui extends JFrame {
 		this.setVisible(true);
 		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setTitle("Traffic Builder");
+		if(Variables.InStart){
+			this.add(new StartClass.paintIt());
+		}
 	}
 	
 }
