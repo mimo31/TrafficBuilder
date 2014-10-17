@@ -1,7 +1,5 @@
 import javax.swing.*;
 
-import java.awt.*;
-
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
 
