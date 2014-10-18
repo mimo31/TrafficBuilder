@@ -1,5 +1,4 @@
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -27,16 +26,12 @@ public class Gui extends JFrame {
 		Container Test = Variables.myGui.getContentPane();
 		Variables.height = Test.getHeight();
 		Variables.width = Test.getWidth();
-		System.out.println(Variables.height);
-		System.out.println(Variables.width);
-		Variables.a++;
-		System.out.println(Variables.a);
 	}
 	
 	public class InterfaceMouseEvents implements MouseListener{
 
 		public void mouseClicked(MouseEvent event) {
-			System.out.println("Breakpoint1");
+			
 			
 		}
 
@@ -63,13 +58,13 @@ public class Gui extends JFrame {
 	public class InterfaceComponentEvents implements ComponentListener{
 
 		public void componentMoved(ComponentEvent e) {
-			updateGui();
-			System.out.println("Breakpoint2");
+
+			
 		}
 		
 		public void componentResized(ComponentEvent e) {
 			updateGui();
-			System.out.println("Breakpoint3");
+			
 		}
 		
 		public void componentShown(ComponentEvent e) {

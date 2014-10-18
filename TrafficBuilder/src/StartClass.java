@@ -9,6 +9,7 @@ public class StartClass {
 	public static void main(String[] args){
 		Variables.InStart = true;
 		Variables.myGui = new Gui(true);
+		Gui.updateGui();
 	}
 	
 	public static class paintIt extends JComponent{
