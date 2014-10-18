@@ -1,3 +1,5 @@
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
@@ -16,15 +18,15 @@ public class Gui extends JFrame {
 		this.setTitle("Traffic Builder");
 		this.addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
-		this.getContentPane().setSize(250, 250);;
 	}
 	
 	public static void updateGui(){
 		if(Variables.InStart){
 			Variables.myGui.add(new StartClass.paintIt());
 		}
-		Variables.height = Variables.myGui.getHeight();
-		Variables.width = Variables.myGui.getWidth();
+		Container Test = Variables.myGui.getContentPane();
+		Variables.height = Test.getHeight();
+		Variables.width = Test.getWidth();
 		System.out.println(Variables.height);
 		System.out.println(Variables.width);
 		Variables.a++;
