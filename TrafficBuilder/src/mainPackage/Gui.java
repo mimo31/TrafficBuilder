@@ -1,3 +1,4 @@
+package mainPackage;
 import java.awt.Container;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
