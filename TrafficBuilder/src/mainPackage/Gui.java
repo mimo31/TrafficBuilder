@@ -16,7 +16,7 @@ public class Gui extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Traffic Builder");
-		this.addMouseListener(new InterfaceMouseEvents());
+		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
 	}
 	

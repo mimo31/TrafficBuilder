@@ -1,6 +1,10 @@
 package mainPackage;
 
-	import java.io.ByteArrayOutputStream;
+	import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,4 +47,10 @@ public class Functions {
 		input.close();
 		return buffer.toByteArray();
 	}
+	
+	public static Rectangle getStringBounds(Graphics2D g2, String str, float x, float y) {
+        FontRenderContext frc = g2.getFontRenderContext();
+        GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
+        return gv.getPixelBounds(null, x, y);
+    }
 }

@@ -14,7 +14,7 @@ public class ResourceHandler {
 			try {
 				Variables.ResourcePackName = Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\SmallData\\LatestResources.txt");
 				final InputStream isG = new FileInputStream(new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Resources\\" + Variables.ResourcePackName + "\\Font.ttf"));
-				Variables.nowUsingFont =  (Font.createFont(0, isG)).deriveFont(0, 50f);
+				Variables.nowUsingFont =  (Font.createFont(Font.TRUETYPE_FONT, isG));
 			} catch (Exception e) {
 				
 			}
