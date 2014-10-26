@@ -1,6 +1,7 @@
 package mainPackage;
 
-	import java.awt.Graphics2D;
+	import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
@@ -15,6 +16,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Functions {
+	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds){
+		g2.setFont(Variables.nowUsingFont.deriveFont(Font.BOLD, 101f));
+		Rectangle s1Size = new Rectangle(Functions.getStringBounds(g2, str, 0, 0));
+		Double s1Per1Width = ((double) s1Size.width) / 101;
+		Double s1Per1Height = ((double) s1Size.height) / 101;
+		if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
+			g2.setFont(Variables.nowUsingFont.deriveFont(Font.BOLD, (float) (bounds.width / s1Per1Width)));
+		}
+		else{
+			g2.setFont(Variables.nowUsingFont.deriveFont(Font.BOLD, (float) (bounds.height / s1Per1Height)));
+		}
+		s1Size = Functions.getStringBounds(g2, str, 0, 0);
+		g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 - s1Size.height / 2);
+		s1Size = null;
+	}
+	
 	public static String readTextFile(String path){
 		String[] ReadedLines = null;
 		Path filePath = Paths.get(path);

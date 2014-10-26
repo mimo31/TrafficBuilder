@@ -9,10 +9,9 @@ import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
-	public Gui(boolean fullscreen) {
-		if(fullscreen){
-			this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-			}
+	public Gui() {
+		this.setSize(200, 200);
+		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Traffic Builder");
@@ -21,12 +20,13 @@ public class Gui extends JFrame {
 	}
 	
 	public static void updateGui(){
-		if(Variables.InStart){
-			Variables.myGui.add(new StartClass.paintIt());
-		}
 		Container Test = Variables.myGui.getContentPane();
 		Variables.height = Test.getHeight();
 		Variables.width = Test.getWidth();
+			System.out.println(Variables.height);
+		if(Variables.InStart){
+			Variables.myGui.add(new StartClass.paintIt());
+		}
 	}
 	
 	public class InterfaceMouseEvents implements MouseListener{
