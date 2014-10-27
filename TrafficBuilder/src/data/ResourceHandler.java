@@ -16,7 +16,7 @@ public class ResourceHandler {
 				final InputStream isG = new FileInputStream(new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Resources\\" + Variables.ResourcePackName + "\\Font.ttf"));
 				Variables.nowUsingFont =  (Font.createFont(Font.TRUETYPE_FONT, isG));
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 		}
 

@@ -1,10 +1,12 @@
 package mainPackage;
 import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
@@ -17,22 +19,36 @@ public class Gui extends JFrame {
 		this.setTitle("Traffic Builder");
 		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
+		this.add(new paintIt());
 	}
 	
 	public static void updateGui(){
 		Container Test = Variables.myGui.getContentPane();
 		Variables.height = Test.getHeight();
 		Variables.width = Test.getWidth();
-		if(Variables.InStart){
-			Variables.myGui.add(new StartClass.paintIt());
+		Variables.myGui.repaint();
+	}
+	
+	public static class paintIt extends JComponent{
+		public void paint(Graphics g){
+			System.out.println("painted0" + Variables.InNewCity + Variables.InStart);
+			
+			if(Variables.InStart){
+				screens.title.paint(g);
+			}
+			else if(Variables.InNewCity) {
+				System.out.println("painted0.1");
+				screens.newCity.paint(g);
+			}
 		}
 	}
 	
 	public class InterfaceMouseEvents implements MouseListener{
 
 		public void mouseClicked(MouseEvent event) {
-			
-			
+			if(Variables.InStart){
+				screens.title.mouseClicked(event);
+			}
 		}
 
 		public void mouseEntered(MouseEvent event) {
