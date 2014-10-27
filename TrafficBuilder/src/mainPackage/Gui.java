@@ -3,6 +3,8 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -31,16 +33,31 @@ public class Gui extends JFrame {
 	
 	public static class paintIt extends JComponent{
 		public void paint(Graphics g){
-			System.out.println("painted0" + Variables.InNewCity + Variables.InStart);
-			
 			if(Variables.InStart){
 				screens.title.paint(g);
 			}
 			else if(Variables.InNewCity) {
-				System.out.println("painted0.1");
 				screens.newCity.paint(g);
 			}
 		}
+	}
+	
+	public class InterfaceKeyEvent implements KeyListener{
+		
+		public void keyPressed(KeyEvent event) {
+			
+		}
+		
+		public void keyReleased(KeyEvent event) {
+			if(Variables.InNewCity){
+				screens.newCity.keyReleased(event);
+			}
+		}
+		
+		public void keyTyped(KeyEvent event) {
+			
+		}
+		
 	}
 	
 	public class InterfaceMouseEvents implements MouseListener{
