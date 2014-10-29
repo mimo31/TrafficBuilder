@@ -21,6 +21,7 @@ public class Gui extends JFrame {
 		this.setTitle("Traffic Builder");
 		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
+		this.addKeyListener(new InterfaceKeyEvents());
 		this.add(new paintIt());
 	}
 	
@@ -42,7 +43,7 @@ public class Gui extends JFrame {
 		}
 	}
 	
-	public class InterfaceKeyEvent implements KeyListener{
+	public class InterfaceKeyEvents implements KeyListener{
 		
 		public void keyPressed(KeyEvent event) {
 			

@@ -16,6 +16,7 @@ public class newCity {
 	public static void load(){
 		Variables.InNewCity = true;
 		nameTextbox.active = true;
+		nameTextbox.clicked = true;
 	}
 	
 	public static void close(){
@@ -27,12 +28,13 @@ public class newCity {
 		Functions.drawMaxString(graph2, "Name your city", new Rectangle(Variables.width / 4, Variables.height / 8, Variables.width / 2, Variables.height / 4));
 		nameTextbox.size = new Dimension(Variables.width / 2, Variables.height / 8);
 		nameTextbox.position = new Point(Variables.width / 4, Variables.height / 2);
-		nameTextbox.text = "OMG something very very very strange MOOOOOOOOOOOOOOOOOOOOOOOOOOOOOORE digits";
-		//nameTextbox.text = "test";
 		nameTextbox.paint(graph2);
 	}
 	
 	public static void keyReleased(KeyEvent event){
-		
+		if(nameTextbox.clicked == true){
+			nameTextbox.keyPressed(event);
+			Variables.myGui.repaint();
+		}
 	}
 }
