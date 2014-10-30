@@ -46,28 +46,48 @@ public class Textbox {
 		String textToPaint = "";
 		//code up to this is final
 		
+		int viewPosition;
 		int counter;
 		if(this.lastViewPosition <= this.cursorPosition && this.cursorPosition <= this.lastViewLenght + this.lastViewPosition){
-			counter = this.cursorPosition - 1;
-			while(counter >= this.lastViewPosition && Functions.getStringBounds(graph2, this.text.substring(counter, counter + 1) + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
-				textToPaint = this.text.substring(counter, counter + 1) + textToPaint;
-				counter--;
-			}
+			if(this.cursorPosition != 0){
+				counter = this.cursorPosition - 1;
+				while(counter >= this.lastViewPosition){
+					if(Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+					textToPaint = this.text.toCharArray()[counter] + textToPaint;
+					counter--;
+					}else{break;}
+				}
+			viewPosition = counter + 1;
+			}else{viewPosition = 0;}
 			
 			counter = cursorPosition;
-			while(counter < this.lastViewLenght + this.lastViewPosition && Functions.getStringBounds(graph2, textToPaint + this.text.substring(counter, counter + 1), 0, 0).width < this.size.width - borderSize * 2){
-				textToPaint = textToPaint + this.text.substring(counter, counter + 1);
+			System.out.println("LastViewPosition:" + this.lastViewPosition);
+			System.out.println("LastViewLength:" + this.lastViewLenght);
+			System.out.println("Counter:" + counter);
+			while(counter < this.lastViewLenght + this.lastViewPosition - 1){
+				System.out.println("Counter:" + counter);
+				if(Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+					textToPaint = textToPaint + this.text.toCharArray()[counter];
+					counter++;
+				}else{break;}
+			}
+		}else if(this.cursorPosition < this.lastViewPosition){
+			counter = this.cursorPosition;
+			while(counter < this.text.length() &&  Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+				textToPaint = textToPaint + this.text.toCharArray()[counter];
 				counter++;
 			}
-		}else if(this.cursorPosition > this.lastViewPosition){
-			
+			viewPosition = this.cursorPosition;
+		}else{
+			counter = this.cursorPosition - 1;
+			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+				textToPaint = this.text.toCharArray()[counter] + textToPaint;
+				counter--;
+			}
+			viewPosition = counter + 1;
 		}
-		
-		/*counter = this.cursorPosition - 1;
-		while(counter >= 0 && Functions.getStringBounds(graph2, this.text.substring(counter, counter + 1) + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
-			textToPaint = this.text.substring(counter, counter + 1) + textToPaint;
-			counter--;
-		}*/
+		this.lastViewPosition = viewPosition;
+		this.lastViewLenght = textToPaint.length();
 		
 		//code under this is final
 		graph2.setColor(Color.BLACK);
