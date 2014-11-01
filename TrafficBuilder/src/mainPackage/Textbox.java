@@ -44,65 +44,57 @@ public class Textbox {
 		final double s1HeightPer1 = ((double) Functions.getStringBounds(graph2, this.text, 0, 0).height) / 100;
 		graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((this.size.height - borderSize * 2) / s1HeightPer1)));
 		String textToPaint = "";
-		//code up to this is final
 		
 		int viewPosition;
 		int counter;
 		if(this.text == ""){
-			System.out.println("Option-1");
 			viewPosition = 0;
 		}else if(this.cursorPosition == this.text.length()){
-			System.out.println("Option0");
 			counter = this.cursorPosition - 1;
 			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
 				counter--;
 			}
-			System.out.println(Functions.getStringBounds(graph2, textToPaint, 0, 0).width);
-			System.out.println(this.size.width - borderSize * 2);
 			viewPosition = counter + 1;
 		}else if(this.lastViewPosition <= this.cursorPosition && this.cursorPosition <= this.lastViewLenght + this.lastViewPosition){
-			System.out.println("LastViewPosition:" + this.lastViewPosition);
-			System.out.println("LastViewLength:" + this.lastViewLenght);
-			System.out.println("Cursor:" + this.cursorPosition);
 			if(this.cursorPosition != 0){
 				counter = this.cursorPosition - 1;
 				while(counter >= this.lastViewPosition){
 					if(Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
-					textToPaint = this.text.toCharArray()[counter] + textToPaint;
-					counter--;
+						textToPaint = this.text.toCharArray()[counter] + textToPaint;
+						counter--;
 					}else{break;}
 				}
 				viewPosition = counter + 1;
 			}else{viewPosition = 0;}
-			System.out.println("FirstPart:" + textToPaint);
 			counter = this.cursorPosition;
-			while(counter < this.lastViewLenght + this.lastViewPosition && text.length() > counter){
-				System.out.println("Counter:" + counter);
+			while(counter < this.lastViewLenght + this.lastViewPosition && this.text.length() > counter){
 				if(Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
 					textToPaint = textToPaint + this.text.toCharArray()[counter];
 					counter++;
 				}else{break;}
 			}
-			System.out.println("SecondPart:" + textToPaint);
 			counter = viewPosition - 1;
 			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
 				counter--;
 			}
 			viewPosition = counter + 1;
+			counter = viewPosition + textToPaint.length();
+			while(this.text.length() > counter){
+				if(Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+					textToPaint = textToPaint + this.text.toCharArray()[counter];
+					counter++;
+				}else{break;}
+			}
 		}else if(this.cursorPosition < this.lastViewPosition){
 			counter = this.cursorPosition;
-			System.out.println("Option2" + "Lenght: " + this.text.length());
-			System.out.println("Counter:" + counter);
 			while(counter < this.text.length() &&  Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = textToPaint + this.text.toCharArray()[counter];
-				System.out.println("Op2Counter:" + counter);
 				counter++;
 			}
 			viewPosition = this.cursorPosition;
 		}else{
-			System.out.println("Option3");
 			counter = this.cursorPosition - 1;
 			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
@@ -113,10 +105,13 @@ public class Textbox {
 		this.lastViewPosition = viewPosition;
 		this.lastViewLenght = textToPaint.length();
 		
-		//code under this is final
 		graph2.setColor(Color.BLACK);
 		final Rectangle finalStringSize = Functions.getStringBounds(graph2, this.text, 0, 0);
 		graph2.drawString(textToPaint, this.position.x + borderSize, (this.position.y + this.size.height - borderSize) - finalStringSize.height - finalStringSize.y);
+		graph2.setColor(Color.darkGray);
+		if(System.currentTimeMillis() % 1000 < 500){
+			graph2.fillRect(this.size.width / 80 + this.position.x + borderSize + Functions.getStringBounds(graph2, this.text.substring(viewPosition, this.cursorPosition), 0, 0).width, this.position.y + borderSize, 2, this.size.height - borderSize * 2);
+		}
 	}
 	
 	public void keyPressed(KeyEvent event){
@@ -141,12 +136,13 @@ public class Textbox {
 			this.text = this.text.substring(0, this.cursorPosition) + " " + this.text.substring(this.cursorPosition, this.text.length());
 			this.cursorPosition++;
 			break;
+		case(127):
+			if(this.cursorPosition != this.text.length()){
+				this.text = this.text.substring(0, this.cursorPosition) + this.text.substring(this.cursorPosition + 1, this.text.length());
+			}
+			break;
 		}
-		if(event.getKeyCode() > 64 && event.getKeyCode() < 91){
-			this.text = this.text.substring(0, this.cursorPosition) + event.getKeyChar() + this.text.substring(this.cursorPosition, this.text.length());
-			this.cursorPosition++;
-		}else if(event.getKeyCode() > 47 && event.getKeyCode() < 66){
-			System.out.println("number");
+		if((event.getKeyCode() > 64 && event.getKeyCode() < 91) || (event.getKeyCode() > 95 && event.getKeyCode() < 106) || event.getKeyCode() == 517){
 			this.text = this.text.substring(0, this.cursorPosition) + event.getKeyChar() + this.text.substring(this.cursorPosition, this.text.length());
 			this.cursorPosition++;
 		}
