@@ -82,8 +82,36 @@ public class Functions {
 	}
 	
 	public static Rectangle getStringBounds(Graphics2D g2, String str, float x, float y) {
-        FontRenderContext frc = g2.getFontRenderContext();
-        GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
-        return gv.getPixelBounds(null, x, y);
+        if(str.length() != 0){
+        	FontRenderContext frc = g2.getFontRenderContext();
+        	GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
+        	Rectangle result = gv.getPixelBounds(null, x, y);
+        	result.x = 0;
+        	if(str.toCharArray()[0] == ' ' || str.toCharArray()[str.length() - 1] == ' '){
+        		int counter = 0; 
+        		while(counter < str.length()){
+        			if(str.toCharArray()[counter] != ' '){
+        				result.width = result.width + counter * getSpaceSize(g2);
+        				counter = str.length() - 1;
+        				while(counter >= 0){
+        					if(str.toCharArray()[counter] != ' '){
+        						result.width = result.width + (str.length() - 1 - counter) * getSpaceSize(g2);
+        						return result;
+        					}
+        					counter--;
+        				}
+        			}
+        			counter++;
+        		}
+	        	if(counter == str.length()){
+        			return new Rectangle(0, 0, getSpaceSize(g2) * str.length(), 0);
+        		}
+        	}
+        	return result;
+        }else{return new Rectangle(0, 0, 0, 0);}
     }
+	
+	static int getSpaceSize(Graphics2D graph2){
+		return getStringBounds(graph2, "h h", 0, 0).width - getStringBounds(graph2, "hh", 0, 0).width;
+	}
 }
