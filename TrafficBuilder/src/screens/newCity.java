@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+
 import javax.swing.*;
 
 import mainPackage.Functions;
@@ -43,6 +45,13 @@ public class newCity {
 			Variables.myGui.repaint();
 		}
 	}
+	
+	public static void mouseClicked(MouseEvent event){
+		nameTextbox.clicked = Functions.buttonClicked(event, nameTextbox.position.x, nameTextbox.position.y, nameTextbox.size.width, nameTextbox.size.height);
+		Variables.myGui.repaint();
+	}
+	
+	
 	private static ActionListener timerAction = new ActionListener()
     {
         @Override

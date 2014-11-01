@@ -3,6 +3,7 @@ package mainPackage;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.io.ByteArrayOutputStream;
@@ -113,5 +114,9 @@ public class Functions {
 	
 	static int getSpaceSize(Graphics2D graph2){
 		return getStringBounds(graph2, "h h", 0, 0).width - getStringBounds(graph2, "hh", 0, 0).width;
+	}
+	
+	public static boolean buttonClicked(MouseEvent event, int x, int y, int width, int height){
+		return (event.getX() >= x && event.getY() >= y && event.getX() <= x + width && event.getY() <= y + height);
 	}
 }

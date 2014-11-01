@@ -31,7 +31,13 @@ public class Textbox {
 	public void paint(Graphics2D graph2){
 		graph2.setColor(Color.BLACK);
 		graph2.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
-		graph2.setColor(Color.WHITE);
+		System.out.println(this.clicked);
+		if(this.clicked){
+			graph2.setColor(Color.WHITE);
+		}
+		else{
+			graph2.setColor(Color.lightGray);
+		}
 		int borderSize = (this.size.width / 20 + this.size.height / 20) / 2;
 		if(borderSize > this.size.height / 4){
 			borderSize = this.size.height / 4;
@@ -108,9 +114,15 @@ public class Textbox {
 		graph2.setColor(Color.BLACK);
 		final Rectangle finalStringSize = Functions.getStringBounds(graph2, this.text, 0, 0);
 		graph2.drawString(textToPaint, this.position.x + borderSize, (this.position.y + this.size.height - borderSize) - finalStringSize.height - finalStringSize.y);
-		graph2.setColor(Color.darkGray);
-		if(System.currentTimeMillis() % 1000 < 500){
-			graph2.fillRect(this.size.width / 80 + this.position.x + borderSize + Functions.getStringBounds(graph2, this.text.substring(viewPosition, this.cursorPosition), 0, 0).width, this.position.y + borderSize, 2, this.size.height - borderSize * 2);
+		if(this.clicked){
+			graph2.setColor(Color.darkGray);
+			if(System.currentTimeMillis() % 1000 < 500){
+				int cursorX = this.size.width / 80 + this.position.x + borderSize + Functions.getStringBounds(graph2, this.text.substring(viewPosition, this.cursorPosition), 0, 0).width;
+				if(cursorX > this.position.x + this.size.width - borderSize - 3){
+					cursorX = this.position.x + this.size.width - borderSize - 3;
+				}
+				graph2.fillRect(cursorX, this.position.y + borderSize, 2, this.size.height - borderSize * 2);
+			}
 		}
 	}
 	

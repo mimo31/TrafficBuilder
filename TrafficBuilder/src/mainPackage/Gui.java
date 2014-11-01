@@ -66,6 +66,8 @@ public class Gui extends JFrame {
 		public void mouseClicked(MouseEvent event) {
 			if(Variables.InStart){
 				screens.title.mouseClicked(event);
+			}else if(Variables.InNewCity){
+				screens.newCity.mouseClicked(event);
 			}
 		}
 
