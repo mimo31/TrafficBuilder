@@ -141,10 +141,12 @@ public class Textbox {
 				this.text = this.text.substring(0, this.cursorPosition) + this.text.substring(this.cursorPosition + 1, this.text.length());
 			}
 			break;
+		default:
+			if(event.getKeyCode() != 16 && event.getKeyCode() != 10 && event.getKeyCode() != 40 && event.getKeyCode() != 38 && event.getKeyCode() != 17){
+				this.text = this.text.substring(0, this.cursorPosition) + event.getKeyChar() + this.text.substring(this.cursorPosition, this.text.length());
+				this.cursorPosition++;
+			}
 		}
-		if((event.getKeyCode() > 64 && event.getKeyCode() < 91) || (event.getKeyCode() > 95 && event.getKeyCode() < 106) || event.getKeyCode() == 517){
-			this.text = this.text.substring(0, this.cursorPosition) + event.getKeyChar() + this.text.substring(this.cursorPosition, this.text.length());
-			this.cursorPosition++;
-		}
+		
 	}
 }
