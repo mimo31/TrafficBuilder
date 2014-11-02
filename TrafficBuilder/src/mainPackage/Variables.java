@@ -10,4 +10,5 @@ public class Variables {
 	public static Gui myGui;
 	public static Font nowUsingFont;
 	public static String ResourcePackName;
+	public static String currentCityFolder;
 }

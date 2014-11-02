@@ -31,7 +31,6 @@ public class Textbox {
 	public void paint(Graphics2D graph2){
 		graph2.setColor(Color.BLACK);
 		graph2.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
-		System.out.println(this.clicked);
 		if(this.clicked){
 			graph2.setColor(Color.WHITE);
 		}
