@@ -66,6 +66,7 @@ public class newCity {
 				close();
 				data.city.createCity(nameTextbox.text);
 				city.load();
+				Variables.myGui.repaint();
 			}
 			else{
 				nameTextbox.keyPressed(event);
@@ -85,6 +86,7 @@ public class newCity {
 			close();
 			data.city.createCity(nameTextbox.text);
 			city.load();
+			Variables.myGui.repaint();
 		}
 	}
 }

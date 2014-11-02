@@ -6,9 +6,11 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -111,6 +113,16 @@ public class Functions {
         	return result;
         }else{return new Rectangle(0, 0, 0, 0);}
     }
+
+	public static void writeTextToFile(String text, String path, boolean append){
+		try {
+			BufferedWriter bufw = new BufferedWriter(new FileWriter(path, true));
+			bufw.write(text);
+			bufw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	static int getSpaceSize(Graphics2D graph2){
 		return getStringBounds(graph2, "h h", 0, 0).width - getStringBounds(graph2, "hh", 0, 0).width;
