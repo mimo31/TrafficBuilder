@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -22,6 +23,7 @@ public class Gui extends JFrame {
 		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
 		this.addKeyListener(new InterfaceKeyEvents());
+		this.addMouseMotionListener(new InterfaceMouseMotionEvents());
 		this.add(new paintIt());
 	}
 	
@@ -93,7 +95,23 @@ public class Gui extends JFrame {
 			
 			
 		}
-}
+	}
+	
+	public class InterfaceMouseMotionEvents implements MouseMotionListener{
+
+		public void mouseDragged(MouseEvent event) {
+			
+			
+		}
+
+		public void mouseMoved(MouseEvent event) {
+			if(Variables.InStart){
+				screens.title.mouseMove(event);
+			}
+		}
+		
+	}
+	
 	public class InterfaceComponentEvents implements ComponentListener{
 
 		public void componentMoved(ComponentEvent e) {

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
@@ -12,6 +13,7 @@ import mainPackage.Variables;
 import mainPackage.Gui;
 
 public class title {
+	static Point mousePosition;
 	
 	public static void mouseClicked(MouseEvent event){
 		if(new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){
@@ -40,5 +42,9 @@ public class title {
 		Functions.drawMaxString(graph2, "New City", new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16));
 		Functions.drawMaxString(graph2, "Load City", new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16));
 		Functions.drawMaxString(graph2, "Settings", new Rectangle(Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16));
+	}
+	
+	public static void mouseMove(MouseEvent event){
+		mousePosition = event.getPoint();
 	}
 }

@@ -12,6 +12,7 @@ import javax.swing.Timer;
 import mainPackage.Variables;
 
 public class city {
+	
 	private static ActionListener timerAction = new ActionListener(){
     @Override
     public void actionPerformed(ActionEvent arg0)
@@ -38,34 +39,41 @@ public class city {
 	}
 	
 	public static void drawPowerLine(Graphics2D graph2){
+		int linePosition;
+		if(Variables.height > 800){
+			linePosition = 160;
+		}
+		else{
+			linePosition = Variables.height / 5;
+		}
 		graph2.setColor(Color.white);
-		graph2.fillRect(0, Variables.height / 5 - 15, Variables.width, 30);
+		graph2.fillRect(0, linePosition - 15, Variables.width, 30);
 		final long time = System.currentTimeMillis();
 		int counter = 0;
 		graph2.setColor(Color.red);
 		double sin;
 		while(counter < Variables.width){
 			sin = (int) (Math.sin(time / 50 + counter / 10) * 5);
-			graph2.drawRect(counter, (int) (Variables.height / 5 - sin), 1, (int) (sin + 15));
+			graph2.drawRect(counter, (int) (linePosition - sin), 1, (int) (sin + 15));
 			counter++;
 		}
 		graph2.setColor(Color.black);
-		graph2.fillRect(0, Variables.height / 5 - 20, Variables.width, 5);
-		graph2.fillRect(0, Variables.height / 5 + 14, Variables.width, 5);
+		graph2.fillRect(0, linePosition - 20, Variables.width, 5);
+		graph2.fillRect(0, linePosition + 14, Variables.width, 5);
 		int blockHeight = 0;
 		if(time % 3000 > 1000){
 			blockHeight = (int) (((Math.abs((time % 3000) - 2000) - 500) * -1 + 500) * 0.03);
 		}
-		graph2.fillRect(0, Variables.height / 5 - 15, Variables.width % 20 / 2, blockHeight);
+		graph2.fillRect(0, linePosition - 15, Variables.width % 20 / 2, blockHeight);
 		int blockSpaceFilled = Variables.width % 20 / 2;
 		boolean nextUp = false;
 		while(blockSpaceFilled < Variables.width){
 			if(nextUp){
-				graph2.fillRect(blockSpaceFilled, Variables.height / 5 - 15, 10, blockHeight);
+				graph2.fillRect(blockSpaceFilled, linePosition - 15, 10, blockHeight);
 				nextUp = false;
 			}
 			else{
-				graph2.fillRect(blockSpaceFilled, Variables.height / 5 + 15 - blockHeight, 10, blockHeight);
+				graph2.fillRect(blockSpaceFilled, linePosition + 15 - blockHeight, 10, blockHeight);
 				nextUp = true;
 			}
 			blockSpaceFilled = blockSpaceFilled + 10;
