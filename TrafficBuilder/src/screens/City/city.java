@@ -13,6 +13,7 @@ import mainPackage.Variables;
 
 public class city {
 	
+	
 	private static ActionListener timerAction = new ActionListener(){
     @Override
     public void actionPerformed(ActionEvent arg0)
@@ -36,6 +37,23 @@ public class city {
 	public static void paint(Graphics g){
 		Graphics2D graph2 = (Graphics2D)g;
 		drawPowerLine(graph2);
+		drawControlPanel(graph2);
+	}
+	
+	public static void drawControlPanel(Graphics2D graph2){
+		int controlPanelHeight;
+		int borderSize;
+		if(Variables.height > 800){
+			controlPanelHeight = 140;
+		}
+		else{
+			controlPanelHeight = Variables.height / 5 - 20;
+		}
+		borderSize = controlPanelHeight / 10;
+		graph2.setColor(Color.black);
+		graph2.fillRect(0, 0, Variables.width, controlPanelHeight);
+		graph2.setColor(Color.blue);
+		graph2.fillRect(borderSize, borderSize, Variables.width - borderSize * 2, controlPanelHeight - borderSize * 2);
 	}
 	
 	public static void drawPowerLine(Graphics2D graph2){

@@ -22,7 +22,7 @@ public class city {
 		int counter = 0;
 		char[] nameChars = name.toCharArray();
 		while(counter < nameChars.length){
-			if(nameChars[counter] == '?' | nameChars[counter] == '/' | nameChars[counter] == '<' | nameChars[counter] == '>' | nameChars[counter] == '\\' | nameChars[counter] == ':' | nameChars[counter] == '*'){
+			if(nameChars[counter] == '?' | nameChars[counter] == '/' | nameChars[counter] == '<' | nameChars[counter] == '>' | nameChars[counter] == '\\' | nameChars[counter] == ':' | nameChars[counter] == '*' | nameChars[counter] == '.'){
 				nameChars[counter] = '_';
 			}
 			counter++;
@@ -33,11 +33,6 @@ public class city {
 		}
 		if(name.length() == 0){
 			name = "IllegalName";
-		}
-		else{
-			if(name.toCharArray()[0] == '.'){
-				name = "dot" + name;
-			}
 		}
 		if(name.length() > 31){
 			name = name.substring(0, 31);
