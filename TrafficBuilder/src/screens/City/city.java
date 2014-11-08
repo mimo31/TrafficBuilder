@@ -19,7 +19,7 @@ public class city {
     		Variables.myGui.repaint();
     	}
 	};
-	public static Timer repaint = new Timer(33, timerAction);
+	public static Timer repaint = new Timer(25, timerAction);
 	
 	public static void load(){
 		Variables.InCity = true;
@@ -40,22 +40,32 @@ public class city {
 	public static void drawPowerLine(Graphics2D graph2){
 		graph2.setColor(Color.white);
 		graph2.fillRect(0, Variables.height / 5 - 15, Variables.width, 30);
+		final long time = System.currentTimeMillis();
+		int counter = 0;
+		graph2.setColor(Color.red);
+		double sin;
+		while(counter < Variables.width){
+			sin = (int) (Math.sin(time / 50 + counter / 10) * 5);
+			graph2.drawRect(counter, (int) (Variables.height / 5 - sin), 1, (int) (sin + 15));
+			counter++;
+		}
 		graph2.setColor(Color.black);
 		graph2.fillRect(0, Variables.height / 5 - 20, Variables.width, 5);
-		graph2.fillRect(0, Variables.height / 5 + 15, Variables.width, 5);
+		graph2.fillRect(0, Variables.height / 5 + 14, Variables.width, 5);
 		int blockHeight = 0;
-		if(System.currentTimeMillis() % 3000 > 1000){
-			blockHeight = (int) (((Math.abs((System.currentTimeMillis() % 3000) - 2000) - 500) * -1 + 500) * 0.03);
+		if(time % 3000 > 1000){
+			blockHeight = (int) (((Math.abs((time % 3000) - 2000) - 500) * -1 + 500) * 0.03);
 		}
 		graph2.fillRect(0, Variables.height / 5 - 15, Variables.width % 20 / 2, blockHeight);
 		int blockSpaceFilled = Variables.width % 20 / 2;
 		boolean nextUp = false;
-		while(blockSpaceFilled + 20 < Variables.width){
+		while(blockSpaceFilled < Variables.width){
 			if(nextUp){
 				graph2.fillRect(blockSpaceFilled, Variables.height / 5 - 15, 10, blockHeight);
 				nextUp = false;
 			}
 			else{
+				graph2.fillRect(blockSpaceFilled, Variables.height / 5 + 15 - blockHeight, 10, blockHeight);
 				nextUp = true;
 			}
 			blockSpaceFilled = blockSpaceFilled + 10;
