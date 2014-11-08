@@ -53,9 +53,10 @@ public class city {
 		while(blockSpaceFilled + 20 < Variables.width){
 			if(nextUp){
 				graph2.fillRect(blockSpaceFilled, Variables.height / 5 - 15, 10, blockHeight);
+				nextUp = false;
 			}
 			else{
-				
+				nextUp = true;
 			}
 			blockSpaceFilled = blockSpaceFilled + 10;
 		}
