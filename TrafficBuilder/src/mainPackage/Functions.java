@@ -1,5 +1,6 @@
 package mainPackage;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -130,5 +131,18 @@ public class Functions {
 	
 	public static boolean buttonClicked(MouseEvent event, int x, int y, int width, int height){
 		return (event.getX() >= x && event.getY() >= y && event.getX() <= x + width && event.getY() <= y + height);
+	}
+	
+	public static boolean isOnButton(int x, int y, int width, int height){
+		return (Variables.lastMousePosition.getX() >= x && Variables.lastMousePosition.getY() >= y && Variables.lastMousePosition.getX() <= x + width && Variables.lastMousePosition.getY() <= y + height);
+	}
+	
+	public static void drawChangRect(Graphics2D graph2, Color normalColor, Color onMouseColor, int x, int y, int width, int height){
+		if(Functions.isOnButton(x, y, width, height)){
+			graph2.setColor(onMouseColor);
+		}else{
+			graph2.setColor(normalColor);
+		}
+		graph2.fill(new Rectangle(x, y, width, height));
 	}
 }

@@ -6,14 +6,13 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.event.MouseInputAdapter;
 
 @SuppressWarnings("serial")
-public class Gui extends JFrame {
+public class Gui extends JFrame{
 	public Gui() {
 		this.setSize(200, 200);
 		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -23,7 +22,7 @@ public class Gui extends JFrame {
 		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
 		this.addKeyListener(new InterfaceKeyEvents());
-		this.addMouseMotionListener(new InterfaceMouseMotionEvents());
+		this.getContentPane().addMouseMotionListener(new InterfaceMouseEvents());
 		this.add(new paintIt());
 	}
 	
@@ -66,52 +65,6 @@ public class Gui extends JFrame {
 		
 	}
 	
-	public class InterfaceMouseEvents implements MouseListener{
-
-		public void mouseClicked(MouseEvent event) {
-			if(Variables.InStart){
-				screens.title.mouseClicked(event);
-			}else if(Variables.InNewCity){
-				screens.newCity.mouseClicked(event);
-			}
-		}
-
-		public void mouseEntered(MouseEvent event) {
-			
-			
-		}
-
-		public void mouseExited(MouseEvent event) {
-			
-			
-		}
-
-		public void mousePressed(MouseEvent event) {
-			
-			
-		}
-
-		public void mouseReleased(MouseEvent event) {
-			
-			
-		}
-	}
-	
-	public class InterfaceMouseMotionEvents implements MouseMotionListener{
-
-		public void mouseDragged(MouseEvent event) {
-			
-			
-		}
-
-		public void mouseMoved(MouseEvent event) {
-			if(Variables.InStart){
-				screens.title.mouseMove(event);
-			}
-		}
-		
-	}
-	
 	public class InterfaceComponentEvents implements ComponentListener{
 
 		public void componentMoved(ComponentEvent e) {
@@ -134,5 +87,27 @@ public class Gui extends JFrame {
 			
 		}
 		
+	}
+	
+	private class InterfaceMouseEvents extends MouseInputAdapter {
+		public void mouseClicked(MouseEvent event) {
+			if(Variables.InStart){
+				screens.title.mouseClicked(event);
+			}else if(Variables.InNewCity){
+				screens.newCity.mouseClicked(event);
+			}
+		}
+
+		public void mouseDragged(MouseEvent event) {
+			Variables.lastMousePosition = event.getPoint();
+			updateGui();
+			event.consume();
+		}
+
+		public void mouseMoved(MouseEvent event) {
+			Variables.lastMousePosition = event.getPoint();
+			updateGui();
+			event.consume();
+		}
 	}
 }

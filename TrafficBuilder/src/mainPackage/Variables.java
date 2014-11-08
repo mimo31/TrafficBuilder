@@ -1,5 +1,6 @@
 package mainPackage;
 import java.awt.Font;
+import java.awt.Point;
 
 
 public class Variables {
@@ -12,4 +13,5 @@ public class Variables {
 	public static Font nowUsingFont;
 	public static String ResourcePackName;
 	public static String currentCityFolder;
+	public static Point lastMousePosition;
 }

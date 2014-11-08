@@ -34,17 +34,14 @@ public class title {
 	
 	public static void paint(Graphics g){
 		Graphics2D graph2 = (Graphics2D)g;
-		graph2.fill(new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16));
-		graph2.fill(new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16));
-		graph2.fill(new Rectangle(Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16));
+		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16);
+		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16);
+		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16);
+		graph2.setColor(Color.black);
 		Functions.drawMaxString(graph2, "Traffic Builder", new Rectangle(Variables.width / 4,  Variables.height / 32, Variables.width / 2, Variables.height / 16 * 3));
 		graph2.setColor(Color.white);
 		Functions.drawMaxString(graph2, "New City", new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16));
 		Functions.drawMaxString(graph2, "Load City", new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16));
 		Functions.drawMaxString(graph2, "Settings", new Rectangle(Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16));
-	}
-	
-	public static void mouseMove(MouseEvent event){
-		mousePosition = event.getPoint();
 	}
 }
