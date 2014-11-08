@@ -40,6 +40,9 @@ public class Gui extends JFrame {
 			else if(Variables.InNewCity) {
 				screens.newCity.paint(g);
 			}
+			else if(Variables.InCity){
+				screens.City.city.paint(g);
+			}
 		}
 	}
 	
