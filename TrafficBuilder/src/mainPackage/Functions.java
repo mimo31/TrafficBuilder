@@ -145,4 +145,27 @@ public class Functions {
 		}
 		graph2.fill(new Rectangle(x, y, width, height));
 	}
+	
+	public static long byteToLong(byte[] data){
+		long result = 0;
+		int counter = 0;
+		while(data.length > counter){
+			result = (long) (result + data[counter] * Math.pow(256, counter));
+			counter++;
+		}
+		return result;
+	}
+	
+	public static byte[] longToByte(long number){
+		byte[] result = new byte[(int) Math.floor(logarithm(number, 256)) + 1];
+		int counter = 0;
+		while(counter >= 0){
+			
+		}
+		return result;
+	}
+	
+	public static double logarithm(double number, double base){
+		return Math.log(number) / Math.log(base);
+	}
 }
