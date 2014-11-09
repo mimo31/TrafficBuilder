@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 import screens.City.city;
+import mainPackage.CityType;
 import mainPackage.Functions;
 import mainPackage.Textbox;
 import mainPackage.Variables;
@@ -65,8 +66,7 @@ public class newCity {
 		if(nameTextbox.clicked == true){
 			if(event.getKeyCode() == 10){
 				close();
-				data.city.createCity(nameTextbox.text);
-				city.load();
+				city.load(new CityType(nameTextbox.text));
 				Variables.myGui.repaint();
 			}
 			else{
@@ -91,8 +91,7 @@ public class newCity {
 		}
 		else if(Functions.buttonClicked(event, Variables.width / 4 * 3 - Variables.width / 12, Variables.height / 8 * 5 + Variables.height / 16, Variables.width / 12, Variables.height / 16)){
 			close();
-			data.city.createCity(nameTextbox.text);
-			city.load();
+			city.load(new CityType(nameTextbox.text));
 			Variables.myGui.repaint();
 		}
 	}

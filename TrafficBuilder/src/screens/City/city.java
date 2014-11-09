@@ -9,10 +9,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import mainPackage.CityType;
 import mainPackage.Variables;
 
 public class city {
-	
+	public static CityType theCity;
+	static long lastCityTime;
 	
 	private static ActionListener timerAction = new ActionListener(){
     @Override
@@ -23,9 +25,11 @@ public class city {
 	};
 	public static Timer repaint = new Timer(25, timerAction);
 	
-	public static void load(){
+	public static void load(CityType city){
 		Variables.InCity = true;
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
+		theCity = city;
+		lastCityTime = theCity.time;
 		repaint.start();
 	}
 	
@@ -97,4 +101,15 @@ public class city {
 			blockSpaceFilled = blockSpaceFilled + 10;
 		}
 	}
+	
+	/*static String longTimeToDate(long longTime){
+		longTime = longTime / 250 * 3;
+		int year;
+		String month;
+		String day;
+		int hour;
+		int minute;
+		year = (int) (2000 + Math.floor(longTime / 525600));
+		longTime = longTime % 525600;
+	}*/
 }

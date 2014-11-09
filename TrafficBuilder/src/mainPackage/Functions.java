@@ -71,7 +71,8 @@ public class Functions {
 	}
 	
 	public static byte[] readBytes(String path) throws Exception{
-		InputStream input = new FileInputStream(new File(path));
+		InputStream input;
+		input = new FileInputStream(new File(path));
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		byte[] data = new byte[1024];
 		int nRead;
@@ -157,10 +158,12 @@ public class Functions {
 	}
 	
 	public static byte[] longToByte(long number){
-		byte[] result = new byte[(int) Math.floor(logarithm(number, 256)) + 1];
-		int counter = 0;
+		byte[] result = new byte[(int) Math.floor(logarithm(number, 256))];
+		int counter = result.length - 1;
 		while(counter >= 0){
-			
+			result[counter] = (byte) Math.floor(number / Math.pow(256, counter));
+			number = (long) (number % Math.pow(256, counter));
+			counter--;
 		}
 		return result;
 	}
