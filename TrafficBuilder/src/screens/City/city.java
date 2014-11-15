@@ -102,7 +102,7 @@ public class city {
 		}
 	}
 	
-	/*static String longTimeToDate(long longTime){
+	static String longTimeToDate(long longTime){
 		longTime = longTime / 250 * 3;
 		int year;
 		String month;
@@ -111,5 +111,55 @@ public class city {
 		int minute;
 		year = (int) (2000 + Math.floor(longTime / 525600));
 		longTime = longTime % 525600;
-	}*/
+		if(longTime < 44640){
+			month = "January";
+		}else if(longTime < 84960){
+			longTime = longTime - 44640;
+			month = "February";
+		}else if(longTime < 129600){
+			longTime = longTime - 84960;
+			month = "March";
+		}else if(longTime < 172800){
+			longTime = longTime - 129600;
+			month = "April";
+		}else if(longTime < 217440){
+			longTime = longTime - 172800;
+			month = "May";
+		}else if(longTime < 260640){
+			longTime = longTime - 217440;
+			month = "June";
+		}else if(longTime < 305280){
+			longTime = longTime - 260640;
+			month = "July";
+		}else if(longTime < 349920){
+			longTime = longTime - 305280;
+			month = "August";
+		}else if(longTime < 393120){
+			longTime = longTime - 349920;
+			month = "September";
+		}else if(longTime < 437760){
+			longTime = longTime - 393120;
+			month = "October";
+		}else if(longTime < 480960){
+			longTime = longTime - 437760;
+			month = "November";
+		}else{
+			longTime = longTime - 480960;
+			month = "December";
+		}
+		final byte monthDay = (byte) (Math.floor(longTime / 1440) + 1);
+		if(monthDay == 1 || monthDay == 21 || monthDay == 31){
+			day = monthDay + "st";
+		}else if(monthDay == 2 || monthDay == 22){
+			day = monthDay + "nd";
+		}else if(monthDay == 3 || monthDay == 23){
+			day = monthDay + "rd";
+		}else{
+			day = monthDay + "th";
+		}
+		longTime = longTime % 1440;
+		hour = (int) Math.floor(longTime / 60);
+		minute = (int) (longTime % 60);
+		return day + " " + month + ", " + year + " " + hour + ":" + minute;
+	}
 }
