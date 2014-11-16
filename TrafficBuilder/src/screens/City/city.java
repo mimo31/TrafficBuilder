@@ -4,18 +4,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
 import mainPackage.CityType;
+import mainPackage.Functions;
 import mainPackage.Variables;
 
 public class city {
 	public static CityType theCity;
-	static long lastCityTime;
-	
+	static long lastTime;
 	private static ActionListener timerAction = new ActionListener(){
     @Override
     public void actionPerformed(ActionEvent arg0)
@@ -24,17 +25,17 @@ public class city {
     	}
 	};
 	public static Timer repaint = new Timer(25, timerAction);
-	
 	public static void load(CityType city){
 		Variables.InCity = true;
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
 		theCity = city;
-		lastCityTime = theCity.time;
+		lastTime = System.currentTimeMillis();
 		repaint.start();
 	}
 	
 	public static void close(){
 		Variables.InCity = false;
+		theCity.save();
 		repaint.stop();
 	}
 	
@@ -58,6 +59,10 @@ public class city {
 		graph2.fillRect(0, 0, Variables.width, controlPanelHeight);
 		graph2.setColor(Color.blue);
 		graph2.fillRect(borderSize, borderSize, Variables.width - borderSize * 2, controlPanelHeight - borderSize * 2);
+		theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
+		lastTime = System.currentTimeMillis();
+		graph2.setColor(Color.white);
+		Functions.drawMaxString(graph2, longTimeToDate(theCity.time), new Rectangle(0, 0, 200, 100));
 	}
 	
 	public static void drawPowerLine(Graphics2D graph2){

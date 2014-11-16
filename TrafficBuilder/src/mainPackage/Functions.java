@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,6 +69,17 @@ public class Functions {
 			counter++;
 		}
 		return output;
+	}
+	
+	public static void writeBytesToFile(byte[] Bytes, String path, boolean append){
+		FileOutputStream out;
+		try {
+			out = new FileOutputStream(path);
+			out.write(Bytes);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static byte[] readBytes(String path) throws Exception{

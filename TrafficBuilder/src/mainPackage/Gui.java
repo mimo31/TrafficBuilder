@@ -22,6 +22,14 @@ public class Gui extends JFrame{
 		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
 		this.addComponentListener(new InterfaceComponentEvents());
 		this.addKeyListener(new InterfaceKeyEvents());
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        if (Variables.InCity == true){
+		        	screens.City.city.close();
+		        }
+		    }
+		});
 		this.getContentPane().addMouseMotionListener(new InterfaceMouseEvents());
 		this.add(new paintIt());
 	}
