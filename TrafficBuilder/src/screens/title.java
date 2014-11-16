@@ -21,6 +21,11 @@ public class title {
 			newCity.load();
 			Gui.updateGui();
 		}
+		else if(new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){
+			title.close();
+			loadCity.load();
+			Gui.updateGui();
+		}
 	}
 	
 	public static void load(){

@@ -52,6 +52,9 @@ public class Gui extends JFrame{
 			else if(Variables.InCity){
 				screens.City.city.paint(g);
 			}
+			else if(Variables.InLoadCity){
+				screens.loadCity.paint(g);
+			}
 		}
 	}
 	
@@ -82,7 +85,6 @@ public class Gui extends JFrame{
 		
 		public void componentResized(ComponentEvent e) {
 			updateGui();
-			
 		}
 		
 		public void componentShown(ComponentEvent e) {
@@ -101,8 +103,12 @@ public class Gui extends JFrame{
 		public void mouseClicked(MouseEvent event) {
 			if(Variables.InStart){
 				screens.title.mouseClicked(event);
-			}else if(Variables.InNewCity){
+			}
+			else if(Variables.InNewCity){
 				screens.newCity.mouseClicked(event);
+			}
+			else if(Variables.InLoadCity){
+				screens.loadCity.mouseClicked(event);
 			}
 		}
 

@@ -3,6 +3,7 @@ package mainPackage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Calendar;
 
 public class CityType {
 	public long time;
@@ -23,6 +24,9 @@ public class CityType {
 	
 	public void save(){
 		Functions.writeBytesToFile(Functions.longToByte(this.time), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\time.byt", false);
+		Calendar now = Calendar.getInstance();
+		final byte[] dateData = {(byte) (now.get(Calendar.YEAR) - 2000), (byte) now.get(Calendar.MONTH), (byte) now.get(Calendar.DAY_OF_MONTH), (byte) now.get(Calendar.HOUR_OF_DAY), (byte) now.get(Calendar.MINUTE), (byte) now.get(Calendar.SECOND)};
+		Functions.writeBytesToFile(dateData, System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\lastPlay.byt", false);
 	}
 	
 	

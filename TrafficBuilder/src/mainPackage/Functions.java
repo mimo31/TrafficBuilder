@@ -84,7 +84,7 @@ public class Functions {
 	
 	public static byte[] readBytes(String path) throws Exception{
 		InputStream input;
-		input = new FileInputStream(new File(path));
+			input = new FileInputStream(new File(path));
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		byte[] data = new byte[1024];
 		int nRead;
