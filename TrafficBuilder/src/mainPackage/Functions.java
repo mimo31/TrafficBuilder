@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 public class Functions {
 	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds, int fontType){
 		g2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
-		Rectangle s1Size = new Rectangle(Functions.getStringBounds(g2, str, 0, 0));
+		Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
 		Double s1Per1Width = ((double) s1Size.width) / 101;
 		Double s1Per1Height = ((double) s1Size.height) / 101;
 		if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
@@ -39,7 +39,7 @@ public class Functions {
 	
 	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds){
 		g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
-		Rectangle s1Size = new Rectangle(Functions.getStringBounds(g2, str, 0, 0));
+		Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
 		Double s1Per1Width = ((double) s1Size.width) / 101;
 		Double s1Per1Height = ((double) s1Size.height) / 101;
 		if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){

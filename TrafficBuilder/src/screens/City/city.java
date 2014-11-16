@@ -62,7 +62,12 @@ public class city {
 		theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
 		lastTime = System.currentTimeMillis();
 		graph2.setColor(Color.white);
-		Functions.drawMaxString(graph2, longTimeToDate(theCity.time), new Rectangle(0, 0, 200, 100));
+		graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
+		Rectangle s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
+		Double s1Per1Height = ((double) s1Size.height) / 101;
+		graph2.setFont(Variables.nowUsingFont.deriveFont((float) ((controlPanelHeight - 2 * borderSize) / 4 / s1Per1Height)));
+		s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
+		graph2.drawString(longTimeToDate(theCity.time),Variables.width - borderSize - 3 - s1Size.width, borderSize + 3 - s1Size.y);
 	}
 	
 	public static void drawPowerLine(Graphics2D graph2){
@@ -112,8 +117,8 @@ public class city {
 		int year;
 		String month;
 		String day;
-		int hour;
-		int minute;
+		String hour;
+		String minute;
 		year = (int) (2000 + Math.floor(longTime / 525600));
 		longTime = longTime % 525600;
 		if(longTime < 44640){
@@ -163,8 +168,18 @@ public class city {
 			day = monthDay + "th";
 		}
 		longTime = longTime % 1440;
-		hour = (int) Math.floor(longTime / 60);
-		minute = (int) (longTime % 60);
+		if(Math.floor(longTime / 60) < 10){
+			hour = "0" + String.valueOf((int) Math.floor(longTime / 60));
+		}
+		else{
+			hour = String.valueOf((int) Math.floor(longTime / 60));
+		}
+		if(longTime % 60 < 10){
+			minute = "0" + String.valueOf(longTime % 60);
+		}
+		else{
+			minute = String.valueOf(longTime % 60);
+		}
 		return day + " " + month + ", " + year + " " + hour + ":" + minute;
 	}
 }
