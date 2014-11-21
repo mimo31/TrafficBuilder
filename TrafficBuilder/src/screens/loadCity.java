@@ -3,6 +3,7 @@ package screens;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -16,6 +17,7 @@ public class loadCity {
 	static String[] names;
 	static Calendar[] lastPlays;
 	static String[] folders;
+	static double listPosition;
 	
 	public static void paint(Graphics g){
 		Graphics2D graph2 = (Graphics2D) g;
@@ -23,6 +25,51 @@ public class loadCity {
 		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
 		graph2.setColor(Color.WHITE);
 		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
+		Functions.drawChangRect(graph2, Color.white, Color.lightGray, Variables.width - Variables.width / 40, Variables.height / 6, Variables.width / 40, Variables.height - Variables.height / 6);
+		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+		if(theUpPolygon.contains(Variables.lastMousePosition)){
+			graph2.setColor(Color.white);
+		}
+		else{
+			graph2.setColor(Color.DARK_GRAY);
+		}
+		graph2.fillPolygon(theUpPolygon);
+		final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+				new int[]{(int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.height - Variables.width / 240, (int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+		if(theDownPolygon.contains(Variables.lastMousePosition)){
+			graph2.setColor(Color.white);
+		}
+		else{
+			graph2.setColor(Color.DARK_GRAY);
+		}
+		graph2.fillPolygon(theDownPolygon);
+		if(names.length == 0){
+			
+		}
+		else{
+			final int gapSize;
+			final int cityBlockWidth;
+			final boolean fullBlocks;
+			if(Variables.width - Variables.width / 40 > 900){
+				cityBlockWidth = (Variables.width - Variables.width / 40) / 2;
+				gapSize = cityBlockWidth / 3 / 10;
+				fullBlocks = false;
+			}
+			else{
+				gapSize = (Variables.width - Variables.width / 40) / 32;
+				cityBlockWidth = (Variables.width - Variables.width / 40) - 2 * gapSize;
+				fullBlocks = true;
+			}
+			int lastPainted = (int) Math.floor(listPosition);
+			int spaceUsed = (int) ((cityBlockWidth / 3 + gapSize) * (1 - (listPosition % 1)));
+			if(fullBlocks == true){
+				graph2.fillRect(gapSize, -1 * (cityBlockWidth / 3 - spaceUsed) + Variables.height / 6, cityBlockWidth, cityBlockWidth / 3);
+			}
+			else{
+				graph2.fillRect(cityBlockWidth / 2, -1 * (cityBlockWidth / 3 - spaceUsed) + Variables.height / 6, cityBlockWidth, cityBlockWidth / 3);
+			}
+		}
 	}
 	
 	public static void mouseClicked(MouseEvent event){
@@ -33,6 +80,7 @@ public class loadCity {
 		Variables.InLoadCity = true;
 		File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves");
 		File[] listed = directory.listFiles();
+		listPosition = 0;
 		if(listed.length == 0){
 			names = new String[0];
 			lastPlays = new Calendar[0];
