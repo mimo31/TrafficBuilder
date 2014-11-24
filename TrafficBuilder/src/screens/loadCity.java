@@ -7,7 +7,6 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Calendar;
 
 import mainPackage.Functions;
@@ -44,6 +43,7 @@ public class loadCity {
 			graph2.setColor(Color.DARK_GRAY);
 		}
 		graph2.fillPolygon(theDownPolygon);
+		graph2.setColor(Color.black);
 		if(names.length == 0){
 			
 		}
@@ -63,11 +63,68 @@ public class loadCity {
 			}
 			int lastPainted = (int) Math.floor(listPosition);
 			int spaceUsed = (int) ((cityBlockWidth / 3 + gapSize) * (1 - (listPosition % 1)));
-			if(fullBlocks == true){
-				graph2.fillRect(gapSize, -1 * (cityBlockWidth / 3 - spaceUsed) + Variables.height / 6, cityBlockWidth, cityBlockWidth / 3);
+			graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
+			Rectangle s1Size = Functions.getStringBounds(graph2, names[0], 0, 0);
+			Double s1Per1Height = ((double) s1Size.height) / 101;
+			graph2.setFont(Variables.nowUsingFont.deriveFont((float) (cityBlockWidth / 6 / s1Per1Height)));
+			String textToPaint;
+			if(Functions.getStringBounds(graph2, names[0], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+				textToPaint = names[0];
 			}
 			else{
-				graph2.fillRect(cityBlockWidth / 2, -1 * (cityBlockWidth / 3 - spaceUsed) + Variables.height / 6, cityBlockWidth, cityBlockWidth / 3);
+				int counter = 1;
+				while(Functions.getStringBounds(graph2, names[0].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+					counter++;
+					if(counter + 1 > names[0].length()){
+						break;
+					}
+				}
+				textToPaint = names[0].substring(0, counter) + "...";
+			}
+			s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
+			if(fullBlocks == true){
+				graph2.fillRect(gapSize, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				graph2.setColor(Color.white);
+				graph2.drawString(textToPaint, gapSize + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
+			}
+			else{
+				graph2.fillRect(cityBlockWidth / 2, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				graph2.setColor(Color.white);
+				graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
+			}
+			while(lastPainted != names.length - 1 && spaceUsed < Variables.height - Variables.height / 6){
+				graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
+				s1Size = Functions.getStringBounds(graph2, names[lastPainted + 1], 0, 0);
+				s1Per1Height = ((double) s1Size.height) / 101;
+				graph2.setFont(Variables.nowUsingFont.deriveFont((float) ((cityBlockWidth / 9 * 2 - cityBlockWidth / 18) / s1Per1Height)));
+				if(Functions.getStringBounds(graph2, names[lastPainted + 1], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+					textToPaint = names[lastPainted + 1];
+				}
+				else{
+					int counter = 1;
+					while(Functions.getStringBounds(graph2, names[lastPainted + 1].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+						counter++;
+						if(counter + 1 > names[lastPainted + 1].length()){
+							break;
+						}
+					}
+					textToPaint = names[lastPainted + 1].substring(0, counter) + "...";
+				}
+				s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
+				if(fullBlocks == true){
+					graph2.setColor(Color.black);
+					graph2.fillRect(gapSize, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
+					graph2.setColor(Color.white);
+					graph2.drawString(textToPaint, gapSize + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
+				}
+				else{
+					graph2.setColor(Color.black);
+					graph2.fillRect(cityBlockWidth / 2, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
+					graph2.setColor(Color.white);
+					graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
+				}
+				spaceUsed = spaceUsed + cityBlockWidth / 3 + gapSize;
+				lastPainted++;
 			}
 		}
 	}
@@ -116,11 +173,11 @@ public class loadCity {
 				counter++;
 			}
 			while(amountOfUsed < used.length){
-				counter = 1;
+				counter = 0;
 				int biggestFound = 0;
-				long biggestFoundValue = readedDates[0].getTimeInMillis();
+				long biggestFoundValue = Long.MIN_VALUE;
 				while(readedDates.length > counter){
-					if(Arrays.asList(used).contains(counter) == false){
+					if(Functions.contains(used, counter) == false){
 						if(readedDates[counter].getTimeInMillis() > biggestFoundValue){
 							biggestFoundValue = readedDates[counter].getTimeInMillis();
 							biggestFound = counter;
@@ -134,6 +191,10 @@ public class loadCity {
 				used[amountOfUsed] = biggestFound;
 				amountOfUsed++;
 			}
+			System.out.println("0" + names[0]);
+			System.out.println("1" + names[1]);
+			System.out.println("2" + names[2]);
+			System.out.println("3" + names[3]);
 		}
 	}
 	

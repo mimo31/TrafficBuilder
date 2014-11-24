@@ -183,4 +183,15 @@ public class Functions {
 	public static double logarithm(double number, double base){
 		return Math.log(number) / Math.log(base);
 	}
+	
+	public static boolean contains(int[] array, int value){
+		int counter = 0;
+		while(counter < array.length){
+			if(array[counter] == value){
+				return true;
+			}
+			counter++;
+		}
+		return false;
+	}
 }
