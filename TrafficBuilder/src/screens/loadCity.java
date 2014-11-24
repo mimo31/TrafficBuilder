@@ -191,10 +191,6 @@ public class loadCity {
 				used[amountOfUsed] = biggestFound;
 				amountOfUsed++;
 			}
-			System.out.println("0" + names[0]);
-			System.out.println("1" + names[1]);
-			System.out.println("2" + names[2]);
-			System.out.println("3" + names[3]);
 		}
 	}
 	
