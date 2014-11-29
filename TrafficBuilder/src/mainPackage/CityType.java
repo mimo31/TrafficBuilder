@@ -1,5 +1,6 @@
 package mainPackage;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,11 +10,13 @@ public class CityType {
 	public long time;
 	public String name;
 	public String folderName;
+	public Point mapPosition;
 	
 	public CityType(String cityName){
 		this.name = cityName;
 		this.folderName = getNewCityFolderName(cityName);
 		this.time = 0;
+		this.mapPosition = new Point(0, 0);
 		try {
 			Files.createDirectory(Paths.get(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName));
 		} catch (IOException e) {
@@ -27,15 +30,19 @@ public class CityType {
 		Calendar now = Calendar.getInstance();
 		final byte[] dateData = {(byte) (now.get(Calendar.YEAR) - 2000), (byte) now.get(Calendar.MONTH), (byte) now.get(Calendar.DAY_OF_MONTH), (byte) now.get(Calendar.HOUR_OF_DAY), (byte) now.get(Calendar.MINUTE), (byte) now.get(Calendar.SECOND)};
 		Functions.writeBytesToFile(dateData, System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\lastPlay.byt", false);
+		Functions.writeBytesToFile(concatenateTwo4bytesArrays(Functions.intToBytes(this.mapPosition.x), Functions.intToBytes(this.mapPosition.y)), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\mapPosition.byt", false);
 	}
 	
 	
 	public static CityType load(String folderName) throws Exception{
-		return new CityType(Functions.bytesToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
-				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"), folderName);
+		return new CityType(
+				Functions.bytesToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
+				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"),
+				folderName,
+				new Point(Functions.bytesToInt(getFirst4ofByte(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\mapPosition.byt"))), Functions.bytesToInt(getLast4ofByte(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\mapPosition.byt")))));
 	}
 	
-	protected CityType(long cityTime, String cityName, String cityFolderName){
+	protected CityType(long cityTime, String cityName, String cityFolderName, Point cityMapPosition){
 		this.time = cityTime;
 		this.name = cityName;
 		this.folderName = cityFolderName;
@@ -68,5 +75,17 @@ public class CityType {
 			name = name + Integer.toString(counter);
 		}
 		return name;
+	}
+	
+	static byte[] concatenateTwo4bytesArrays(byte[] bytes1, byte[] bytes2){
+		return new byte[]{bytes1[0], bytes1[1], bytes1[2], bytes1[3], bytes2[0], bytes2[1], bytes2[2], bytes2[3]};
+	}
+	
+	static byte[] getFirst4ofByte(byte[] bytes){
+		return new byte[]{bytes[0], bytes[1], bytes[2], bytes[3]};
+	}
+	
+	static byte[] getLast4ofByte(byte[] bytes){
+		return new byte[]{bytes[4], bytes[5], bytes[6], bytes[7]};
 	}
 }

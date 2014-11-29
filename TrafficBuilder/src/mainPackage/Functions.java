@@ -160,9 +160,9 @@ public class Functions {
 		graph2.fill(new Rectangle(x, y, width, height));
 	}
 	
-	public static byte[] longToBytes(long x) {
+	public static byte[] longToBytes(long number) {
 	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-	    buffer.putLong(x);
+	    buffer.putLong(number);
 	    return buffer.array();
 	}
 
@@ -173,8 +173,17 @@ public class Functions {
 	    return buffer.getLong();
 	}
 	
-	public static double logarithm(double number, double base){
-		return Math.log(number) / Math.log(base);
+	public static byte[] intToBytes(int number) {
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.putInt(number);
+		return buffer.array();
+	}
+	
+	public static int bytesToInt(byte[] bytes) {
+	    ByteBuffer buffer = ByteBuffer.allocate(4);
+	    buffer.put(bytes);
+	    buffer.flip();
+	    return buffer.getInt();
 	}
 	
 	public static boolean contains(int[] array, int value){
