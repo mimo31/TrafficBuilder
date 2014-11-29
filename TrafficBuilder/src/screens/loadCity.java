@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 import javax.swing.Timer;
 
+import mainPackage.CityType;
 import mainPackage.Functions;
 import mainPackage.Variables;
 
@@ -209,7 +210,32 @@ public class loadCity {
 	}
 	
 	public static void mouseClicked(MouseEvent event){
-		
+		if(event.getY() > Variables.height / 6){
+			final int gapSize;
+			final int cityBlockWidth;
+			final boolean fullBlocks;
+			if(Variables.width - Variables.width / 40 > 900){
+				cityBlockWidth = (Variables.width - Variables.width / 40) / 2;
+				gapSize = cityBlockWidth / 3 / 10;
+				fullBlocks = false;
+			}
+			else{
+				gapSize = (Variables.width - Variables.width / 40) / 32;
+				cityBlockWidth = (Variables.width - Variables.width / 40) - 2 * gapSize;
+				fullBlocks = true;
+			}
+			if((fullBlocks && (event.getX() < Variables.width - Variables.width / 40 - gapSize) && (event.getX() > gapSize)) || ((fullBlocks == false) && (event.getX() > cityBlockWidth / 2) && (event.getX() < cityBlockWidth * 1.5))){
+				final double relToListClickPos =  listPosition + (double) (event.getY() - Variables.height / 6) / (double) (cityBlockWidth / 3 + gapSize);
+				if(relToListClickPos % 1 > (double) (1) / 11){
+					try {
+						screens.City.city.load(CityType.load(folders[(int) Math.floor(relToListClickPos)]));
+						screens.loadCity.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 	
 	public static void mousePressed(MouseEvent event){
@@ -263,7 +289,7 @@ public class loadCity {
 					e.printStackTrace();
 				}
 				int counter2 = listed[counter].toString().length() - 1;
-				while(listed[counter].toString().toCharArray()[counter2] == '\\'){
+				while(listed[counter].toString().toCharArray()[counter2] != '\\'){
 					counter2--;
 				}
 				readedFolders[counter] = listed[counter].toString().substring(counter2 + 1);
@@ -303,7 +329,9 @@ public class loadCity {
 	}
 	
 	public static void close(){
-		
+		Variables.InLoadCity = false;
+		scrollUp.stop();
+		scrollDown.stop();
 	}
 	
 	public static String calendarToString(Calendar data){

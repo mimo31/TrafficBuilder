@@ -23,21 +23,22 @@ public class CityType {
 	}
 	
 	public void save(){
-		Functions.writeBytesToFile(Functions.longToByte(this.time), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\time.byt", false);
+		Functions.writeBytesToFile(Functions.longToBytes(this.time), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\time.byt", false);
 		Calendar now = Calendar.getInstance();
 		final byte[] dateData = {(byte) (now.get(Calendar.YEAR) - 2000), (byte) now.get(Calendar.MONTH), (byte) now.get(Calendar.DAY_OF_MONTH), (byte) now.get(Calendar.HOUR_OF_DAY), (byte) now.get(Calendar.MINUTE), (byte) now.get(Calendar.SECOND)};
 		Functions.writeBytesToFile(dateData, System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\lastPlay.byt", false);
 	}
 	
 	
-	public CityType load(String folderName) throws Exception{
-		return new CityType(Functions.byteToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
-					Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "name.txt"));
+	public static CityType load(String folderName) throws Exception{
+		return new CityType(Functions.bytesToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
+				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"), folderName);
 	}
 	
-	protected CityType(long cityTime, String cityName){
+	protected CityType(long cityTime, String cityName, String cityFolderName){
 		this.time = cityTime;
 		this.name = cityName;
+		this.folderName = cityFolderName;
 	}
 	
 	static String getNewCityFolderName(String name){

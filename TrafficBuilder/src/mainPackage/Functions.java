@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -159,25 +160,17 @@ public class Functions {
 		graph2.fill(new Rectangle(x, y, width, height));
 	}
 	
-	public static long byteToLong(byte[] data){
-		long result = 0;
-		int counter = 0;
-		while(data.length > counter){
-			result = (long) (result + data[counter] * Math.pow(256, counter));
-			counter++;
-		}
-		return result;
+	public static byte[] longToBytes(long x) {
+	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+	    buffer.putLong(x);
+	    return buffer.array();
 	}
-	
-	public static byte[] longToByte(long number){
-		byte[] result = new byte[(int) Math.floor(logarithm(number, 256))];
-		int counter = result.length - 1;
-		while(counter >= 0){
-			result[counter] = (byte) Math.floor(number / Math.pow(256, counter));
-			number = (long) (number % Math.pow(256, counter));
-			counter--;
-		}
-		return result;
+
+	public static long bytesToLong(byte[] bytes) {
+	    ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+	    buffer.put(bytes);
+	    buffer.flip();
+	    return buffer.getLong();
 	}
 	
 	public static double logarithm(double number, double base){
