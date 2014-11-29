@@ -123,5 +123,17 @@ public class Gui extends JFrame{
 			updateGui();
 			event.consume();
 		}
+		
+		public void mousePressed(MouseEvent event) {
+			if(Variables.InLoadCity){
+				screens.loadCity.mousePressed(event);
+			}
+		}
+		
+		public void mouseReleased(MouseEvent event) {
+			if(Variables.InLoadCity){
+				screens.loadCity.mouseReleased(event);
+			}
+		}
 	}
 }

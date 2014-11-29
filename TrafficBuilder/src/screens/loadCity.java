@@ -6,9 +6,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Calendar;
+
+import javax.swing.Timer;
 
 import mainPackage.Functions;
 import mainPackage.Variables;
@@ -18,6 +22,42 @@ public class loadCity {
 	static Calendar[] lastPlays;
 	static String[] folders;
 	static double listPosition;
+	private static ActionListener scrollUp1 = new ActionListener(){
+    @Override
+    public void actionPerformed(ActionEvent arg0)
+    	{
+    		listPosition = listPosition - 0.05;
+    		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+    				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+    		if(theUpPolygon.contains(Variables.lastMousePosition) == false){
+    			scrollUp.stop();
+    		}
+    		if(listPosition < 0){
+    			listPosition = 0;
+    			scrollUp.stop();
+    		}
+    		Variables.myGui.repaint();
+    	}
+	};
+	static Timer scrollUp = new Timer(25, scrollUp1);
+	private static ActionListener scrollDown1 = new ActionListener(){
+	    @Override
+	    public void actionPerformed(ActionEvent arg0)
+	    	{
+	    		listPosition = listPosition + 0.05;
+	    		final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+	    				new int[]{(int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.height - Variables.width / 240, (int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+	    		if(theDownPolygon.contains(Variables.lastMousePosition) == false){
+	    			scrollDown.stop();
+	    		}
+	    		if(listPosition > names.length - 0.5){
+	    			listPosition = names.length - 0.5;
+	    			scrollUp.stop();
+	    		}
+	    		Variables.myGui.repaint();
+	    	}
+		};
+	static Timer scrollDown = new Timer(25, scrollDown1);
 	
 	public static void paint(Graphics g){
 		Graphics2D graph2 = (Graphics2D) g;
@@ -65,22 +105,22 @@ public class loadCity {
 			int lastPainted = (int) Math.floor(listPosition);
 			int spaceUsed = (int) ((cityBlockWidth / 3 + gapSize) * (1 - (listPosition % 1)));
 			graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
-			Rectangle s1Size = Functions.getStringBounds(graph2, names[0], 0, 0);
+			Rectangle s1Size = Functions.getStringBounds(graph2, names[lastPainted], 0, 0);
 			Double s1Per1Height = ((double) s1Size.height) / 101;
 			graph2.setFont(Variables.nowUsingFont.deriveFont((float) (cityBlockWidth / 6 / s1Per1Height)));
 			String textToPaint;
-			if(Functions.getStringBounds(graph2, names[0], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
-				textToPaint = names[0];
+			if(Functions.getStringBounds(graph2, names[lastPainted], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+				textToPaint = names[lastPainted];
 			}
 			else{
 				int counter = 1;
-				while(Functions.getStringBounds(graph2, names[0].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+				while(Functions.getStringBounds(graph2, names[lastPainted].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
 					counter++;
-					if(counter + 1 > names[0].length()){
+					if(counter + 1 > names[lastPainted].length()){
 						break;
 					}
 				}
-				textToPaint = names[0].substring(0, counter) + "...";
+				textToPaint = names[lastPainted].substring(0, counter) + "...";
 			}
 			s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
 			if(fullBlocks == true){
@@ -162,10 +202,32 @@ public class loadCity {
 				lastPainted++;
 			}
 		}
+		graph2.setColor(new Color(40, 40, 40));
+		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
+		graph2.setColor(Color.WHITE);
+		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
 	}
 	
 	public static void mouseClicked(MouseEvent event){
 		
+	}
+	
+	public static void mousePressed(MouseEvent event){
+		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+		final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+				new int[]{(int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.height - Variables.width / 240, (int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+		if(theUpPolygon.contains(event.getPoint())){
+			scrollUp.start();
+		}
+		else if(theDownPolygon.contains(event.getPoint())){
+			scrollDown.start();
+		}
+	}
+	
+	public static void mouseReleased(MouseEvent event){
+		scrollUp.stop();
+		scrollDown.stop();
 	}
 	
 	public static void load(){
