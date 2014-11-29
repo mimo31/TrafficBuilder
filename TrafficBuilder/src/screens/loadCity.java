@@ -1,6 +1,7 @@
 package screens;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
@@ -92,6 +93,23 @@ public class loadCity {
 				graph2.setColor(Color.white);
 				graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
 			}
+			graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
+			s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
+			Double s1Per1Width = ((double) s1Size.width) / 101;
+			s1Per1Height = ((double) s1Size.height) / 101;
+			if(s1Per1Width / s1Per1Height > (cityBlockWidth - cityBlockWidth / 36) / (cityBlockWidth / 9 - cityBlockWidth / 36)){
+				graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth - cityBlockWidth / 36) / s1Per1Width)));
+			}
+			else{
+				graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth / 9 - cityBlockWidth / 36) / s1Per1Height)));
+			}
+			s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
+			if(fullBlocks == true){
+				graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted]), gapSize + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed - cityBlockWidth / 72 - s1Size.height - s1Size.y);
+			}
+			else{
+				graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted]), cityBlockWidth / 2 + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed - cityBlockWidth / 72 - s1Size.height - s1Size.y);
+			}
 			while(lastPainted != names.length - 1 && spaceUsed < Variables.height - Variables.height / 6){
 				graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
 				s1Size = Functions.getStringBounds(graph2, names[lastPainted + 1], 0, 0);
@@ -122,6 +140,23 @@ public class loadCity {
 					graph2.fillRect(cityBlockWidth / 2, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
 					graph2.setColor(Color.white);
 					graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
+				}
+				graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
+				s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
+				s1Per1Width = ((double) s1Size.width) / 101;
+				s1Per1Height = ((double) s1Size.height) / 101;
+				if(s1Per1Width / s1Per1Height > (cityBlockWidth - cityBlockWidth / 36) / (cityBlockWidth / 9 - cityBlockWidth / 36)){
+					graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth - cityBlockWidth / 36) / s1Per1Width)));
+				}
+				else{
+					graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth / 9 - cityBlockWidth / 36) / s1Per1Height)));
+				}
+				s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
+				if(fullBlocks == true){
+					graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted + 1]), gapSize + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed + gapSize + cityBlockWidth / 3 - cityBlockWidth / 72 - s1Size.height - s1Size.y);
+				}
+				else{
+					graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted + 1]), cityBlockWidth / 2 + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed + gapSize + cityBlockWidth / 3 - cityBlockWidth / 72 - s1Size.height - s1Size.y);
 				}
 				spaceUsed = spaceUsed + cityBlockWidth / 3 + gapSize;
 				lastPainted++;
@@ -196,7 +231,7 @@ public class loadCity {
 	
 	static Calendar bytToCalendar(byte[] bytes){
 		Calendar result = Calendar.getInstance();
-		result.set(Calendar.YEAR, bytes[0]);
+		result.set(Calendar.YEAR, bytes[0] + 2000);
 		result.set(Calendar.MONTH, bytes[1]);
 		result.set(Calendar.DAY_OF_MONTH, bytes[2]);
 		result.set(Calendar.HOUR_OF_DAY, bytes[3]);
@@ -207,5 +242,30 @@ public class loadCity {
 	
 	public static void close(){
 		
+	}
+	
+	public static String calendarToString(Calendar data){
+		final String hour;
+		final String minute;
+		final String second;
+		if(data.get(Calendar.HOUR_OF_DAY) < 10){
+			hour = "0" + String.valueOf(data.get(Calendar.HOUR_OF_DAY));
+		}
+		else{
+			hour = String.valueOf(data.get(Calendar.HOUR_OF_DAY));
+		}
+		if(data.get(Calendar.MINUTE) < 10){
+			minute = "0" + String.valueOf(data.get(Calendar.MINUTE));
+		}
+		else{
+			minute = String.valueOf(data.get(Calendar.MINUTE));
+		}
+		if(data.get(Calendar.SECOND) < 10){
+			second = "0" + String.valueOf(data.get(Calendar.SECOND));
+		}
+		else{
+			second = String.valueOf(data.get(Calendar.SECOND));
+		}
+		return String.valueOf(data.get(Calendar.MONTH)) + "/" + String.valueOf(data.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(data.get(Calendar.YEAR)) + " " + hour + ":" + minute + ":" + second;
 	}
 }
