@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import mainPackage.CityType;
 import mainPackage.Functions;
 import mainPackage.Variables;
 

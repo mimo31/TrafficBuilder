@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 import javax.swing.Timer;
 
-import mainPackage.CityType;
+import screens.City.CityType;
 import mainPackage.Functions;
 import mainPackage.Variables;
 
