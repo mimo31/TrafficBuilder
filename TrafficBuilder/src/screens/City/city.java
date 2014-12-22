@@ -17,13 +17,12 @@ public class city {
 	public static CityType theCity;
 	static long lastTime;
 	private static ActionListener timerAction = new ActionListener(){
-    @Override
-    public void actionPerformed(ActionEvent arg0)
+    public final void actionPerformed(ActionEvent arg0)
     	{
     		Variables.myGui.repaint();
     	}
 	};
-	public static Timer repaint = new Timer(25, timerAction);
+	public final static Timer repaint = new Timer(25, timerAction);
 	public static void load(CityType city){
 		Variables.InCity = true;
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
@@ -42,6 +41,32 @@ public class city {
 		Graphics2D graph2 = (Graphics2D)g;
 		drawPowerLine(graph2);
 		drawControlPanel(graph2);
+		drawMap(graph2);
+	}
+	
+	public static void drawMap(Graphics2D graph2){
+		graph2.setColor(new Color(255, 255, 255));
+		final int spaceYStart;
+		if(Variables.height > 800){
+			spaceYStart = 179;
+		}
+		else{
+			spaceYStart = Variables.height / 5 + 19;
+		}
+		graph2.fillRect(0, spaceYStart, Variables.width, Variables.height - spaceYStart);
+		graph2.setColor(Color.lightGray);
+		int spaceUsed = (int) (theCity.mapPosition.getX() % 128);
+		graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
+		while(spaceUsed < Variables.width){
+			graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
+			spaceUsed = spaceUsed + 128;
+		}
+		spaceUsed = (int) (theCity.mapPosition.getY() % 128) + spaceYStart;
+		graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
+		while(spaceUsed < Variables.height){
+			graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
+			spaceUsed = spaceUsed + 128;
+		}
 	}
 	
 	public static void drawControlPanel(Graphics2D graph2){

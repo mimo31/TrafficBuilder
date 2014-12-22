@@ -7,6 +7,13 @@ public class chunk {
 	int positionX;
 	int positionY;
 	
+	public int getPopulation(int x, int y){
+		return this.Lands[x][y].population;
+	}
+	
+	public void setPopulation(int population, int x, int y){
+		this.Lands[x][y].population = population;
+	}
 	
 	public chunk(int x, int y) {
 		positionX = x;
@@ -14,7 +21,7 @@ public class chunk {
 	}
 	
 	protected chunk(squareLand[][] chunkLands, int x, int y) {
-		this.Lands = chunkLands;
+		Lands = chunkLands;
 		positionX = x;
 		positionY = y;
 	}
