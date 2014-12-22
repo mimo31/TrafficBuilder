@@ -3,31 +3,32 @@ package screens.City;
 import mainPackage.Functions;
 
 public class chunk {
-	squareLand[][] Lands = new squareLand[4][4];
+	int[][] Lands;
 	int positionX;
 	int positionY;
 	
 	public int getPopulation(int x, int y){
-		return this.Lands[x][y].population;
+		return this.Lands[x][y];
 	}
 	
 	public void setPopulation(int population, int x, int y){
-		this.Lands[x][y].population = population;
+		this.Lands[x][y] = population;
 	}
 	
 	public chunk(int x, int y) {
+		Lands = new int[4][4];
 		positionX = x;
 		positionY = y;
 	}
 	
-	protected chunk(squareLand[][] chunkLands, int x, int y) {
+	protected chunk(int[][] chunkLands, int x, int y) {
 		Lands = chunkLands;
 		positionX = x;
 		positionY = y;
 	}
 	
 	public chunk load(int x, int y) {
-		squareLand chunkLands[][] = new squareLand[4][4];
+		int chunkLands[][] = new int[4][4];
 		byte[] readedBytes = null;
 		try {
 			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" + 
@@ -45,7 +46,7 @@ public class chunk {
 				bytes[1] = readedBytes[counter * 16 + counter2 * 4 + 1];
 				bytes[2] = readedBytes[counter * 16 + counter2 * 4 + 2];
 				bytes[3] = readedBytes[counter * 16 + counter2 * 4 + 3];
-				chunkLands[counter2][counter] = new squareLand(Functions.bytesToInt(bytes));
+				chunkLands[counter2][counter] = Functions.bytesToInt(bytes);
 				counter2++;
 			}
 			counter++;
@@ -60,7 +61,7 @@ public class chunk {
 		while(counter < 4){
 			counter2 = 0;
 			while(counter2 < 4){
-				final byte[] intBytes = Functions.intToBytes(this.Lands[counter2][counter].population);
+				final byte[] intBytes = Functions.intToBytes(this.Lands[counter2][counter]);
 				bytesToWrite[counter * 16 + counter2 * 4] = intBytes[0];
 				bytesToWrite[counter * 16 + counter2 * 4 + 1] = intBytes[1];
 				bytesToWrite[counter * 16 + counter2 * 4 + 2] = intBytes[2];

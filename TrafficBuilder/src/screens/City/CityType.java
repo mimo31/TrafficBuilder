@@ -13,7 +13,18 @@ public class CityType {
 	public String name;
 	public String folderName;
 	public Point mapPosition;
-	chunk[] Chunks; 
+	chunk[] Chunks = new chunk[0]; 
+	
+	protected void addChunk(chunk theChunk){
+		chunk[] temp = new chunk[Chunks.length + 1];
+		int counter = 0;
+		while(counter < Chunks.length){
+			temp[counter] = Chunks[counter];
+			counter++;
+		}
+		temp[counter] = theChunk;
+		Chunks = temp;
+	}
 	
 	public CityType(String cityName){
 		this.name = cityName;
@@ -29,6 +40,37 @@ public class CityType {
 			e.printStackTrace();
 		}
 		Functions.writeTextToFile(name, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\name.txt", true);
+		chunk firstChunk = new chunk(0, 0);
+		firstChunk.setPopulation(1, 0, 0);
+		addChunk(firstChunk);
+	}
+	
+	public int getPopulation(int x, int y){
+		final int chunkX;
+		final int chunkY;
+		final int XInChunk;
+		final int YInChunk;
+		if(x >= 0){
+			chunkX = (int) Math.floor(x / 4);
+		}
+		else{
+			chunkX = (int) Math.ceil(x / 4);
+		}
+		if(y >= 0){
+			chunkY = (int) Math.floor(y / 4);
+		}
+		else{
+			chunkY = (int) Math.ceil(y / 4);
+		}
+		XInChunk = x % 4;
+		YInChunk = y % 4;
+		int counter = 0;
+		while(counter < Chunks.length){
+			if(Chunks[counter].positionX == chunkX && Chunks[counter].positionY == chunkY){
+				return Chunks[counter].getPopulation(XInChunk, YInChunk);
+			}
+		}
+		return 0;
 	}
 	
 	public void save(){
@@ -38,6 +80,11 @@ public class CityType {
 		Functions.writeBytesToFile(dateData, System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\lastPlay.byt", false);
 		Functions.writeBytesToFile(concatenateTwo4bytesArrays(Functions.intToBytes(this.mapPosition.x), Functions.intToBytes(this.mapPosition.y)),
 		System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\mapPosition.byt", false);
+		int counter = 0;
+		while(counter < Chunks.length){
+			Chunks[counter].save();
+			counter++;
+		}
 	}
 	
 	

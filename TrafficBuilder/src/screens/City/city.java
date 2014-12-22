@@ -55,17 +55,17 @@ public class city {
 		}
 		graph2.fillRect(0, spaceYStart, Variables.width, Variables.height - spaceYStart);
 		graph2.setColor(Color.lightGray);
-		int spaceUsed = (int) (theCity.mapPosition.getX() % 128);
+		int spaceUsed = (int) (theCity.mapPosition.getX() % 256);
 		graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
 		while(spaceUsed < Variables.width){
 			graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
-			spaceUsed = spaceUsed + 128;
+			spaceUsed = spaceUsed + 256;
 		}
-		spaceUsed = (int) (theCity.mapPosition.getY() % 128) + spaceYStart;
+		spaceUsed = (int) (theCity.mapPosition.getY() % 256) + spaceYStart;
 		graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
 		while(spaceUsed < Variables.height){
 			graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
-			spaceUsed = spaceUsed + 128;
+			spaceUsed = spaceUsed + 256;
 		}
 	}
 	
