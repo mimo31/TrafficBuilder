@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 import javax.swing.Timer;
 
+import data.ResourceHandler;
 import mainPackage.Functions;
 import mainPackage.Variables;
 
@@ -39,9 +42,9 @@ public class city {
 	
 	public static void paint(Graphics g){
 		Graphics2D graph2 = (Graphics2D)g;
+		drawMap(graph2);
 		drawPowerLine(graph2);
 		drawControlPanel(graph2);
-		drawMap(graph2);
 	}
 	
 	public static void drawMap(Graphics2D graph2){
@@ -54,18 +57,69 @@ public class city {
 			spaceYStart = Variables.height / 5 + 19;
 		}
 		graph2.fillRect(0, spaceYStart, Variables.width, Variables.height - spaceYStart);
+		
+		
+		int spaceXUsed = 64 - Functions.modulo((int) theCity.mapPosition.getX(), 64);
+		int spaceYUsed = 64 - Functions.modulo((int) theCity.mapPosition.getY(), 64) + spaceYStart;
+		int axisX = (int) Math.floor(theCity.mapPosition.getX() / 64);
+		int axisY = (int) Math.floor(theCity.mapPosition.getY() / 64);
+		drawSquarePopulation(graph2, spaceXUsed - 64, spaceYUsed - 64, axisX, axisY);
+		axisX++;
+		while(spaceXUsed < Variables.width){
+			drawSquarePopulation(graph2, spaceXUsed, spaceYUsed - 64, axisX, axisY);
+			axisX++;
+			spaceXUsed = spaceXUsed + 64;
+		}
+		axisX = (int) Math.floor(theCity.mapPosition.getX() / 64);
+		axisY++;
+		while(spaceYUsed  - 256 < Variables.height){
+			spaceXUsed = 64 - Functions.modulo((int) theCity.mapPosition.getX(), 64);
+			drawSquarePopulation(graph2, spaceXUsed - 64, spaceYUsed, axisX, axisY);
+			axisX++;
+			while(spaceXUsed < Variables.width){
+				drawSquarePopulation(graph2, spaceXUsed, spaceYUsed, axisX, axisY);
+				axisX++;
+				spaceXUsed = spaceXUsed + 64;
+			}
+			axisX = (int) Math.floor(theCity.mapPosition.getX() / 64);
+			axisY++;
+			spaceYUsed = spaceYUsed + 64;
+		}
+		
 		graph2.setColor(Color.lightGray);
-		int spaceUsed = (int) (theCity.mapPosition.getX() % 256);
+		int spaceUsed = 256 - Functions.modulo((int) theCity.mapPosition.getX(), 256);
 		graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
 		while(spaceUsed < Variables.width){
 			graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
 			spaceUsed = spaceUsed + 256;
 		}
-		spaceUsed = (int) (theCity.mapPosition.getY() % 256) + spaceYStart;
+		spaceUsed = 256 - Functions.modulo((int) theCity.mapPosition.getY(), 256) + spaceYStart;
 		graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
 		while(spaceUsed < Variables.height){
 			graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
 			spaceUsed = spaceUsed + 256;
+		}
+	}
+	
+	public static void mouseDragged(MouseEvent event){
+		final int spaceYStart;
+		if(Variables.height > 800){
+			spaceYStart = 179;
+		}
+		else{
+			spaceYStart = Variables.height / 5 + 19;
+		}
+		if(event.getX() > 0 && event.getX() < Variables.width && event.getY() > spaceYStart && event.getY() < Variables.height){
+			theCity.mapPosition.x = (int) (theCity.mapPosition.x - event.getX() + Variables.lastMousePosition.getX());
+			theCity.mapPosition.y = (int) (theCity.mapPosition.y - event.getY() + Variables.lastMousePosition.getY());
+		}
+		
+	}
+	
+	public static void drawSquarePopulation(Graphics2D graph2, int pixelX, int pixelY, int squareX, int squareY){
+		if(theCity.getPopulation(squareX, squareY) != 0){
+			final Image texture = ResourceHandler.getPopulationImage(theCity.getPopulation(squareX, squareY));
+			graph2.drawImage(texture, pixelX, pixelY, null);
 		}
 	}
 	

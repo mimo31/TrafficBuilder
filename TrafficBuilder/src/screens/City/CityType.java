@@ -1,6 +1,7 @@
 package screens.City;
 
 import java.awt.Point;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,13 +63,14 @@ public class CityType {
 		else{
 			chunkY = (int) Math.ceil(y / 4);
 		}
-		XInChunk = x % 4;
-		YInChunk = y % 4;
+		XInChunk = Functions.modulo(x, 4);
+		YInChunk = Functions.modulo(y, 4);
 		int counter = 0;
 		while(counter < Chunks.length){
 			if(Chunks[counter].positionX == chunkX && Chunks[counter].positionY == chunkY){
 				return Chunks[counter].getPopulation(XInChunk, YInChunk);
 			}
+			counter++;
 		}
 		return 0;
 	}
@@ -92,18 +94,42 @@ public class CityType {
 		final byte[] mapBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\mapPosition.byt");
 		final int mapX = Functions.bytesToInt(getFirst4ofByte(mapBytes));
 		final int mapY = Functions.bytesToInt(getLast4ofByte(mapBytes));
+		chunk[] chunks;
+		final File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks");
+		final File[] listed = directory.listFiles();
+		chunks = new chunk[listed.length];
+		int counter = 0;
+		while(counter < chunks.length){
+			int counter2 = listed[counter].toString().length() - 1;
+			while(listed[counter].toString().toCharArray()[counter2] != '\\'){
+				counter2--;
+			}
+			final String fileName = listed[counter].toString().substring(counter2 + 1);
+			final int chunkX;
+			final int chunkY;
+			counter2 = 0;
+			while(fileName.toCharArray()[counter2] != ','){
+				counter2++;
+			}
+			chunkX = Integer.parseInt(fileName.substring(0, counter2));
+			chunkY = Integer.parseInt(fileName.substring(counter2 + 1));
+			chunks[counter] = chunk.load(chunkX, chunkY, folderName);
+			counter++;
+		}
 		return new CityType(
 				Functions.bytesToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
 				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"),
 				folderName,
-				new Point(mapX, mapY));
+				new Point(mapX, mapY),
+				chunks);
 	}
 	
-	protected CityType(long cityTime, String cityName, String cityFolderName, Point cityMapPosition){
+	protected CityType(long cityTime, String cityName, String cityFolderName, Point cityMapPosition, chunk[] chunks){
 		this.time = cityTime;
 		this.name = cityName;
 		this.folderName = cityFolderName;
 		this.mapPosition = cityMapPosition;
+		this.Chunks = chunks;
 	}
 	
 	static String getNewCityFolderName(String name){

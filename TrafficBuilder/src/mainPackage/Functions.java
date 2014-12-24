@@ -22,6 +22,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Functions {
+	public static int modulo(int d, int mod){
+		if(d >= 0){
+			return d % mod;
+		}
+		else{
+			while(d < 0){
+				d = d + mod;
+			}
+			return d;
+		}
+	}
+	
 	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds, int fontType){
 		g2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
 		Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);

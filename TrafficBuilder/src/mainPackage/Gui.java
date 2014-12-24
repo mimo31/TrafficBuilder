@@ -113,6 +113,9 @@ public class Gui extends JFrame{
 		}
 
 		public void mouseDragged(MouseEvent event) {
+			if(Variables.InCity){
+				screens.City.city.mouseDragged(event);
+			}
 			Variables.lastMousePosition = event.getPoint();
 			updateGui();
 			event.consume();

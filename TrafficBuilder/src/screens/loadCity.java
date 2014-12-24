@@ -125,12 +125,24 @@ public class loadCity {
 			}
 			s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
 			if(fullBlocks == true){
-				graph2.fillRect(gapSize, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				if(Variables.lastMousePosition.y > Variables.height / 6){
+					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), gapSize, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				}
+				else{
+					graph2.setColor(Color.black);
+					graph2.fillRect(gapSize, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				}
 				graph2.setColor(Color.white);
 				graph2.drawString(textToPaint, gapSize + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
 			}
 			else{
-				graph2.fillRect(cityBlockWidth / 2, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				if(Variables.lastMousePosition.y > Variables.height / 6){
+					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), cityBlockWidth / 2, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				}
+				else{
+					graph2.setColor(Color.black);
+					graph2.fillRect(cityBlockWidth / 2, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
+				}
 				graph2.setColor(Color.white);
 				graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
 			}
@@ -171,14 +183,12 @@ public class loadCity {
 				}
 				s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
 				if(fullBlocks == true){
-					graph2.setColor(Color.black);
-					graph2.fillRect(gapSize, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
+					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), gapSize, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
 					graph2.setColor(Color.white);
 					graph2.drawString(textToPaint, gapSize + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
 				}
 				else{
-					graph2.setColor(Color.black);
-					graph2.fillRect(cityBlockWidth / 2, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
+					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), cityBlockWidth / 2, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
 					graph2.setColor(Color.white);
 					graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
 				}
@@ -258,8 +268,8 @@ public class loadCity {
 	
 	public static void load(){
 		Variables.InLoadCity = true;
-		File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves");
-		File[] listed = directory.listFiles();
+		final File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves");
+		final File[] listed = directory.listFiles();
 		listPosition = 0;
 		if(listed.length == 0){
 			names = new String[0];
@@ -356,6 +366,6 @@ public class loadCity {
 		else{
 			second = String.valueOf(data.get(Calendar.SECOND));
 		}
-		return String.valueOf(data.get(Calendar.MONTH)) + "/" + String.valueOf(data.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(data.get(Calendar.YEAR)) + " " + hour + ":" + minute + ":" + second;
+		return String.valueOf(data.get(Calendar.MONTH) + 1) + "/" + String.valueOf(data.get(Calendar.DAY_OF_MONTH)) + "/" + String.valueOf(data.get(Calendar.YEAR)) + " " + hour + ":" + minute + ":" + second;
 	}
 }

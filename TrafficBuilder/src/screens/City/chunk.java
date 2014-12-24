@@ -27,11 +27,11 @@ public class chunk {
 		positionY = y;
 	}
 	
-	public chunk load(int x, int y) {
+	public static chunk load(int x, int y, String folderName) {
 		int chunkLands[][] = new int[4][4];
 		byte[] readedBytes = null;
 		try {
-			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" + 
+			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks\\" + 
 			x + "," + y);
 		} catch (Exception e) {
 			e.printStackTrace();
