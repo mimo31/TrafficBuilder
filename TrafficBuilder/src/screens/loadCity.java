@@ -217,10 +217,15 @@ public class loadCity {
 		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
 		graph2.setColor(Color.WHITE);
 		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
+		Functions.drawPauseButton(graph2, new Color(100, 100, 100));
 	}
 	
 	public static void mouseClicked(MouseEvent event){
-		if(event.getY() > Variables.height / 6){
+		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
+			close();
+			title.load();
+		}
+		else if(event.getY() > Variables.height / 6){
 			final int gapSize;
 			final int cityBlockWidth;
 			final boolean fullBlocks;

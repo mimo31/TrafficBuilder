@@ -19,6 +19,8 @@ import mainPackage.Variables;
 public class city {
 	public static CityType theCity;
 	static long lastTime;
+	public static boolean paused;
+	static long powerLineState;
 	private static ActionListener timerAction = new ActionListener(){
     public final void actionPerformed(ActionEvent arg0)
     	{
@@ -26,6 +28,7 @@ public class city {
     	}
 	};
 	public final static Timer repaint = new Timer(25, timerAction);
+	
 	public static void load(CityType city){
 		Variables.InCity = true;
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
@@ -38,6 +41,8 @@ public class city {
 		Variables.InCity = false;
 		theCity.save();
 		repaint.stop();
+		paused = false;
+		powerLineState = 0;
 	}
 	
 	public static void paint(Graphics g){
@@ -45,6 +50,47 @@ public class city {
 		drawMap(graph2);
 		drawPowerLine(graph2);
 		drawControlPanel(graph2);
+		if(paused){
+			pause.paint(graph2);
+		}
+		lastTime = System.currentTimeMillis();
+	}
+	
+	public static void mouseClicked(MouseEvent event){
+		if(paused == false){
+			final int controlPanelHeight;
+			final int borderSize;
+			if(Variables.height > 800){
+				controlPanelHeight = 140;
+			}
+			else{
+				controlPanelHeight = Variables.height / 5 - 20;
+			}
+			borderSize = controlPanelHeight / 10;
+			final int pauseSize = (controlPanelHeight - 2 * borderSize) / 2;
+			final Rectangle pauseButton = new Rectangle(Variables.width - borderSize - pauseSize,
+					controlPanelHeight - borderSize - pauseSize,
+					pauseSize,
+					pauseSize);
+			if(pauseButton.contains(event.getPoint())){
+				pause();
+			}
+		}
+		else{
+			pause.mouseClicked(event);
+		}
+	}
+	
+	public static void pause(){
+		paused = true;
+		repaint.stop();
+		Variables.myGui.repaint();
+	}
+	
+	public static void unpause(){
+		paused = false;
+		repaint.start();
+		Variables.myGui.repaint();
 	}
 	
 	public static void drawMap(Graphics2D graph2){
@@ -102,18 +148,19 @@ public class city {
 	}
 	
 	public static void mouseDragged(MouseEvent event){
-		final int spaceYStart;
-		if(Variables.height > 800){
-			spaceYStart = 179;
+		if(paused == false){
+			final int spaceYStart;
+			if(Variables.height > 800){
+				spaceYStart = 179;
+			}
+			else{
+				spaceYStart = Variables.height / 5 + 19;
+			}
+			if(event.getX() > 0 && event.getX() < Variables.width && event.getY() > spaceYStart && event.getY() < Variables.height){
+				theCity.mapPosition.x = (int) (theCity.mapPosition.x - event.getX() + Variables.lastMousePosition.getX());
+				theCity.mapPosition.y = (int) (theCity.mapPosition.y - event.getY() + Variables.lastMousePosition.getY());
+			}
 		}
-		else{
-			spaceYStart = Variables.height / 5 + 19;
-		}
-		if(event.getX() > 0 && event.getX() < Variables.width && event.getY() > spaceYStart && event.getY() < Variables.height){
-			theCity.mapPosition.x = (int) (theCity.mapPosition.x - event.getX() + Variables.lastMousePosition.getX());
-			theCity.mapPosition.y = (int) (theCity.mapPosition.y - event.getY() + Variables.lastMousePosition.getY());
-		}
-		
 	}
 	
 	public static void drawSquarePopulation(Graphics2D graph2, int pixelX, int pixelY, int squareX, int squareY){
@@ -124,8 +171,8 @@ public class city {
 	}
 	
 	public static void drawControlPanel(Graphics2D graph2){
-		int controlPanelHeight;
-		int borderSize;
+		final int controlPanelHeight;
+		final int borderSize;
 		if(Variables.height > 800){
 			controlPanelHeight = 140;
 		}
@@ -137,15 +184,31 @@ public class city {
 		graph2.fillRect(0, 0, Variables.width, controlPanelHeight);
 		graph2.setColor(Color.blue);
 		graph2.fillRect(borderSize, borderSize, Variables.width - borderSize * 2, controlPanelHeight - borderSize * 2);
-		theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
-		lastTime = System.currentTimeMillis();
+		if(paused == false){
+			theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
+		}
 		graph2.setColor(Color.white);
 		graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
 		Rectangle s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
-		Double s1Per1Height = ((double) s1Size.height) / 101;
+		final Double s1Per1Height = ((double) s1Size.height) / 101;
 		graph2.setFont(Variables.nowUsingFont.deriveFont((float) ((controlPanelHeight - 2 * borderSize) / 4 / s1Per1Height)));
 		s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
 		graph2.drawString(longTimeToDate(theCity.time),Variables.width - borderSize - 3 - s1Size.width, borderSize + 3 - s1Size.y);
+		final int pauseSize = (controlPanelHeight - 2 * borderSize) / 2;
+		final Rectangle pauseButton = new Rectangle(Variables.width - borderSize - pauseSize,
+				controlPanelHeight - borderSize - pauseSize,
+				pauseSize,
+				pauseSize);
+		if(pauseButton.contains(Variables.lastMousePosition) && paused == false){
+			graph2.setColor(new Color(255, 246, 143));
+		}
+		else{
+			graph2.setColor(Color.white);
+		}
+		graph2.fill(pauseButton);
+		graph2.setColor(Color.blue);
+		graph2.fillRect(pauseButton.x + pauseSize / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
+		graph2.fillRect(pauseButton.x + pauseSize - pauseSize * 2 / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
 	}
 	
 	public static void drawPowerLine(Graphics2D graph2){
@@ -158,12 +221,14 @@ public class city {
 		}
 		graph2.setColor(Color.white);
 		graph2.fillRect(0, linePosition - 15, Variables.width, 30);
-		final long time = System.currentTimeMillis();
+		if(paused == false){
+			powerLineState = powerLineState + System.currentTimeMillis() - lastTime;
+		}
 		int counter = 0;
 		graph2.setColor(Color.red);
 		double sin;
 		while(counter < Variables.width){
-			sin = (int) (Math.sin(time / 50 + counter / 10) * 5);
+			sin = (int) (Math.sin(powerLineState / 50 + counter / 10) * 5);
 			graph2.drawRect(counter, (int) (linePosition - sin), 1, (int) (sin + 15));
 			counter++;
 		}
@@ -171,8 +236,8 @@ public class city {
 		graph2.fillRect(0, linePosition - 20, Variables.width, 5);
 		graph2.fillRect(0, linePosition + 14, Variables.width, 5);
 		int blockHeight = 0;
-		if(time % 3000 > 1000){
-			blockHeight = (int) (((Math.abs((time % 3000) - 2000) - 500) * -1 + 500) * 0.03);
+		if(powerLineState % 3000 > 1000){
+			blockHeight = (int) (((Math.abs((powerLineState % 3000) - 2000) - 500) * -1 + 500) * 0.03);
 		}
 		graph2.fillRect(0, linePosition - 15, Variables.width % 20 / 2, blockHeight);
 		int blockSpaceFilled = Variables.width % 20 / 2;

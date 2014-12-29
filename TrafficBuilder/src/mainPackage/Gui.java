@@ -110,6 +110,9 @@ public class Gui extends JFrame{
 			else if(Variables.InLoadCity){
 				screens.loadCity.mouseClicked(event);
 			}
+			else if(Variables.InCity){
+				screens.City.city.mouseClicked(event);
+			}
 		}
 
 		public void mouseDragged(MouseEvent event) {

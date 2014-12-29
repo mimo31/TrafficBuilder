@@ -34,36 +34,50 @@ public class Functions {
 		}
 	}
 	
+	public static void drawPauseButton(Graphics2D graph2){
+		drawPauseButton(graph2, new Color(40, 40, 40));
+	}
+	
+	public static void drawPauseButton(Graphics2D graph2, Color onMouseColor){
+		Functions.drawChangRect(graph2, Color.black, onMouseColor, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24);
+		graph2.setColor(Color.WHITE);
+		Functions.drawMaxString(graph2, "<<", new Rectangle(Variables.width / 200 + Variables.width / 100, Variables.height / 200 + Variables.height / 100, Variables.width / 16 * 1 / 2, Variables.height / 24 / 2));
+	}
+	
 	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds, int fontType){
-		g2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
-		Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
-		Double s1Per1Width = ((double) s1Size.width) / 101;
-		Double s1Per1Height = ((double) s1Size.height) / 101;
-		if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
-			g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.width / s1Per1Width)));
+		if(bounds.width > 0 && bounds.height > 0){
+			g2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
+			Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
+			Double s1Per1Width = ((double) s1Size.width) / 101;
+			Double s1Per1Height = ((double) s1Size.height) / 101;
+			if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
+				g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.width / s1Per1Width)));
+			}
+			else{
+				g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.height / s1Per1Height)));
+			}
+			s1Size = Functions.getStringBounds(g2, str, 0, 0);
+			g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
+			s1Size = null;
 		}
-		else{
-			g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.height / s1Per1Height)));
-		}
-		s1Size = Functions.getStringBounds(g2, str, 0, 0);
-		g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
-		s1Size = null;
 	}
 	
 	public static void drawMaxString(Graphics2D g2, String str, Rectangle bounds){
-		g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
-		Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
-		Double s1Per1Width = ((double) s1Size.width) / 101;
-		Double s1Per1Height = ((double) s1Size.height) / 101;
-		if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
-			g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.width / s1Per1Width)));
+		if(bounds.width > 0 && bounds.height > 0){
+			g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
+			Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
+			Double s1Per1Width = ((double) s1Size.width) / 101;
+			Double s1Per1Height = ((double) s1Size.height) / 101;
+			if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
+				g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.width / s1Per1Width)));
+			}	
+			else{
+				g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.height / s1Per1Height)));
+			}
+			s1Size = Functions.getStringBounds(g2, str, 0, 0);
+			g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
+			s1Size = null;
 		}
-		else{
-			g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.height / s1Per1Height)));
-		}
-		s1Size = Functions.getStringBounds(g2, str, 0, 0);
-		g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
-		s1Size = null;
 	}
 	
 	public static String readTextFile(String path){
@@ -169,7 +183,11 @@ public class Functions {
 		}else{
 			graph2.setColor(normalColor);
 		}
-		graph2.fill(new Rectangle(x, y, width, height));
+		graph2.fillRect(x, y, width, height);
+	}
+	
+	public static void drawChangRect(Graphics2D graph2, Color normalColor, Color onMouseColor, Rectangle rectangle){
+		drawChangRect(graph2, normalColor, onMouseColor, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 	}
 	
 	public static byte[] longToBytes(long number) {
