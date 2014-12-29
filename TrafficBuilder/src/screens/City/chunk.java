@@ -6,34 +6,34 @@ public class chunk {
 	int[][] Lands;
 	int positionX;
 	int positionY;
-	
-	public int getPopulation(int x, int y){
+
+	public int getPopulation(final int x, final int y){
 		return this.Lands[x][y];
 	}
-	
-	public void setPopulation(int population, int x, int y){
+
+	public void setPopulation(final int population, final int x, final int y){
 		this.Lands[x][y] = population;
 	}
-	
-	public chunk(int x, int y) {
+
+	public chunk(final int x, final int y) {
 		Lands = new int[4][4];
 		positionX = x;
 		positionY = y;
 	}
-	
-	protected chunk(int[][] chunkLands, int x, int y) {
+
+	protected chunk(final int[][] chunkLands, final int x, final int y) {
 		Lands = chunkLands;
 		positionX = x;
 		positionY = y;
 	}
-	
-	public static chunk load(int x, int y, String folderName) {
-		int chunkLands[][] = new int[4][4];
+
+	public static chunk load(final int x, final int y, final String folderName) {
+		final int chunkLands[][] = new int[4][4];
 		byte[] readedBytes = null;
 		try {
-			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks\\" + 
-			x + "," + y);
-		} catch (Exception e) {
+			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks\\" +
+					x + "," + y);
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 		int counter = 0;
@@ -53,9 +53,9 @@ public class chunk {
 		}
 		return new chunk(chunkLands, x, y);
 	}
-	
+
 	public void save() {
-		byte[] bytesToWrite = new byte[64];
+		final byte[] bytesToWrite = new byte[64];
 		int counter = 0;
 		int counter2;
 		while(counter < 4){
@@ -70,7 +70,7 @@ public class chunk {
 			}
 			counter++;
 		}
-	Functions.writeBytesToFile(bytesToWrite, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" + 
-	this.positionX + "," + this.positionY, false);
+		Functions.writeBytesToFile(bytesToWrite, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" +
+				this.positionX + "," + this.positionY, false);
 	}
 }

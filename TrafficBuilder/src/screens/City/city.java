@@ -12,9 +12,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Timer;
 
-import data.ResourceHandler;
 import mainPackage.Functions;
 import mainPackage.Variables;
+import data.ResourceHandler;
 
 public class city {
 	public static CityType theCity;
@@ -22,21 +22,22 @@ public class city {
 	public static boolean paused;
 	static long powerLineState;
 	private static ActionListener timerAction = new ActionListener(){
-    public final void actionPerformed(ActionEvent arg0)
-    	{
-    		Variables.myGui.repaint();
-    	}
+		@Override
+		public final void actionPerformed(final ActionEvent arg0)
+		{
+			Variables.myGui.repaint();
+		}
 	};
 	public final static Timer repaint = new Timer(25, timerAction);
-	
-	public static void load(CityType city){
+
+	public static void load(final CityType city){
 		Variables.InCity = true;
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
 		theCity = city;
 		lastTime = System.currentTimeMillis();
 		repaint.start();
 	}
-	
+
 	public static void close(){
 		Variables.InCity = false;
 		theCity.save();
@@ -44,9 +45,9 @@ public class city {
 		paused = false;
 		powerLineState = 0;
 	}
-	
-	public static void paint(Graphics g){
-		Graphics2D graph2 = (Graphics2D)g;
+
+	public static void paint(final Graphics g){
+		final Graphics2D graph2 = (Graphics2D)g;
 		drawMap(graph2);
 		drawPowerLine(graph2);
 		drawControlPanel(graph2);
@@ -55,8 +56,8 @@ public class city {
 		}
 		lastTime = System.currentTimeMillis();
 	}
-	
-	public static void mouseClicked(MouseEvent event){
+
+	public static void mouseClicked(final MouseEvent event){
 		if(paused == false){
 			final int controlPanelHeight;
 			final int borderSize;
@@ -80,20 +81,20 @@ public class city {
 			pause.mouseClicked(event);
 		}
 	}
-	
+
 	public static void pause(){
 		paused = true;
 		repaint.stop();
 		Variables.myGui.repaint();
 	}
-	
+
 	public static void unpause(){
 		paused = false;
 		repaint.start();
 		Variables.myGui.repaint();
 	}
-	
-	public static void drawMap(Graphics2D graph2){
+
+	public static void drawMap(final Graphics2D graph2){
 		graph2.setColor(new Color(255, 255, 255));
 		final int spaceYStart;
 		if(Variables.height > 800){
@@ -103,8 +104,8 @@ public class city {
 			spaceYStart = Variables.height / 5 + 19;
 		}
 		graph2.fillRect(0, spaceYStart, Variables.width, Variables.height - spaceYStart);
-		
-		
+
+
 		int spaceXUsed = 64 - Functions.modulo((int) theCity.mapPosition.getX(), 64);
 		int spaceYUsed = 64 - Functions.modulo((int) theCity.mapPosition.getY(), 64) + spaceYStart;
 		int axisX = (int) Math.floor(theCity.mapPosition.getX() / 64);
@@ -131,7 +132,7 @@ public class city {
 			axisY++;
 			spaceYUsed = spaceYUsed + 64;
 		}
-		
+
 		graph2.setColor(Color.lightGray);
 		int spaceUsed = 256 - Functions.modulo((int) theCity.mapPosition.getX(), 256);
 		graph2.drawLine(spaceUsed, spaceYStart, spaceUsed, Variables.height);
@@ -146,8 +147,8 @@ public class city {
 			spaceUsed = spaceUsed + 256;
 		}
 	}
-	
-	public static void mouseDragged(MouseEvent event){
+
+	public static void mouseDragged(final MouseEvent event){
 		if(paused == false){
 			final int spaceYStart;
 			if(Variables.height > 800){
@@ -162,15 +163,15 @@ public class city {
 			}
 		}
 	}
-	
-	public static void drawSquarePopulation(Graphics2D graph2, int pixelX, int pixelY, int squareX, int squareY){
+
+	public static void drawSquarePopulation(final Graphics2D graph2, final int pixelX, final int pixelY, final int squareX, final int squareY){
 		if(theCity.getPopulation(squareX, squareY) != 0){
 			final Image texture = ResourceHandler.getPopulationImage(theCity.getPopulation(squareX, squareY));
 			graph2.drawImage(texture, pixelX, pixelY, null);
 		}
 	}
-	
-	public static void drawControlPanel(Graphics2D graph2){
+
+	public static void drawControlPanel(final Graphics2D graph2){
 		final int controlPanelHeight;
 		final int borderSize;
 		if(Variables.height > 800){
@@ -210,8 +211,8 @@ public class city {
 		graph2.fillRect(pauseButton.x + pauseSize / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
 		graph2.fillRect(pauseButton.x + pauseSize - pauseSize * 2 / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
 	}
-	
-	public static void drawPowerLine(Graphics2D graph2){
+
+	public static void drawPowerLine(final Graphics2D graph2){
 		int linePosition;
 		if(Variables.height > 800){
 			linePosition = 160;
@@ -254,7 +255,7 @@ public class city {
 			blockSpaceFilled = blockSpaceFilled + 10;
 		}
 	}
-	
+
 	static String longTimeToDate(long longTime){
 		longTime = longTime / 250 * 3;
 		int year;

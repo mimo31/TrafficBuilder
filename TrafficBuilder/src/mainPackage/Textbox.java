@@ -17,18 +17,18 @@ public class Textbox {
 	public int cursorPosition;
 	int lastViewPosition;
 	int lastViewLenght;
-	
+
 	public Textbox(){
 		this.text = "";
 	}
-	
-	public Textbox(Point position, Dimension size){
+
+	public Textbox(final Point position, final Dimension size){
 		this.position = position;
 		this.size = size;
 		this.text = "";
 	}
 
-	public void paint(Graphics2D graph2){
+	public void paint(final Graphics2D graph2){
 		graph2.setColor(Color.BLACK);
 		graph2.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
 		if(this.clicked){
@@ -49,7 +49,7 @@ public class Textbox {
 		final double s1HeightPer1 = ((double) Functions.getStringBounds(graph2, this.text, 0, 0).height) / 100;
 		graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((this.size.height - borderSize * 2) / s1HeightPer1)));
 		String textToPaint = "";
-		
+
 		int viewPosition;
 		int counter;
 		if(this.text == ""){
@@ -109,7 +109,7 @@ public class Textbox {
 		}
 		this.lastViewPosition = viewPosition;
 		this.lastViewLenght = textToPaint.length();
-		
+
 		graph2.setColor(Color.BLACK);
 		final Rectangle finalStringSize = Functions.getStringBounds(graph2, this.text, 0, 0);
 		graph2.drawString(textToPaint, this.position.x + borderSize, (this.position.y + this.size.height - borderSize) - finalStringSize.height - finalStringSize.y);
@@ -124,40 +124,40 @@ public class Textbox {
 			}
 		}
 	}
-	
-	public void keyPressed(KeyEvent event){
+
+	public void keyPressed(final KeyEvent event){
 		switch(event.getKeyCode()){
 		case(37):
 			if(this.cursorPosition != 0){
 				this.cursorPosition--;
 			}
-			break;
+		break;
 		case(39):
 			if(this.text.length() != this.cursorPosition){
 				this.cursorPosition++;
 			}
-			break;
+		break;
 		case(8):
 			if(this.cursorPosition > 0){
 				this.cursorPosition--;
 				this.text = this.text.substring(0, this.cursorPosition) + this.text.substring(this.cursorPosition + 1, this.text.length());
 			}
-			break;
+		break;
 		case(32):
 			this.text = this.text.substring(0, this.cursorPosition) + " " + this.text.substring(this.cursorPosition, this.text.length());
-			this.cursorPosition++;
-			break;
+		this.cursorPosition++;
+		break;
 		case(127):
 			if(this.cursorPosition != this.text.length()){
 				this.text = this.text.substring(0, this.cursorPosition) + this.text.substring(this.cursorPosition + 1, this.text.length());
 			}
-			break;
+		break;
 		default:
 			if(event.getKeyCode() != 16 && event.getKeyCode() != 10 && event.getKeyCode() != 40 && event.getKeyCode() != 38 && event.getKeyCode() != 17){
 				this.text = this.text.substring(0, this.cursorPosition) + event.getKeyChar() + this.text.substring(this.cursorPosition, this.text.length());
 				this.cursorPosition++;
 			}
 		}
-		
+
 	}
 }

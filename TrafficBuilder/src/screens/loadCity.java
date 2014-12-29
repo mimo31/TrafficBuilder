@@ -14,9 +14,9 @@ import java.util.Calendar;
 
 import javax.swing.Timer;
 
-import screens.City.CityType;
 import mainPackage.Functions;
 import mainPackage.Variables;
+import screens.City.CityType;
 
 public class loadCity {
 	static String[] names;
@@ -24,44 +24,44 @@ public class loadCity {
 	static String[] folders;
 	static double listPosition;
 	private static ActionListener scrollUp1 = new ActionListener(){
-    @Override
-    public void actionPerformed(ActionEvent arg0)
-    	{
-    		listPosition = listPosition - 0.05;
-    		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
-    				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
-    		if(theUpPolygon.contains(Variables.lastMousePosition) == false){
-    			scrollUp.stop();
-    		}
-    		if(listPosition < 0){
-    			listPosition = 0;
-    			scrollUp.stop();
-    		}
-    		Variables.myGui.repaint();
-    	}
+		@Override
+		public void actionPerformed(final ActionEvent arg0)
+		{
+			listPosition = listPosition - 0.05;
+			final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+					new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+			if(theUpPolygon.contains(Variables.lastMousePosition) == false){
+				scrollUp.stop();
+			}
+			if(listPosition < 0){
+				listPosition = 0;
+				scrollUp.stop();
+			}
+			Variables.myGui.repaint();
+		}
 	};
 	static Timer scrollUp = new Timer(25, scrollUp1);
 	private static ActionListener scrollDown1 = new ActionListener(){
-	    @Override
-	    public void actionPerformed(ActionEvent arg0)
-	    	{
-	    		listPosition = listPosition + 0.05;
-	    		final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
-	    				new int[]{(int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.height - Variables.width / 240, (int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
-	    		if(theDownPolygon.contains(Variables.lastMousePosition) == false){
-	    			scrollDown.stop();
-	    		}
-	    		if(listPosition > names.length - 0.5){
-	    			listPosition = names.length - 0.5;
-	    			scrollUp.stop();
-	    		}
-	    		Variables.myGui.repaint();
-	    	}
-		};
+		@Override
+		public void actionPerformed(final ActionEvent arg0)
+		{
+			listPosition = listPosition + 0.05;
+			final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
+					new int[]{(int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.height - Variables.width / 240, (int) (Variables.height - Variables.width / 240 - Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
+			if(theDownPolygon.contains(Variables.lastMousePosition) == false){
+				scrollDown.stop();
+			}
+			if(listPosition > names.length - 0.5){
+				listPosition = names.length - 0.5;
+				scrollUp.stop();
+			}
+			Variables.myGui.repaint();
+		}
+	};
 	static Timer scrollDown = new Timer(25, scrollDown1);
-	
-	public static void paint(Graphics g){
-		Graphics2D graph2 = (Graphics2D) g;
+
+	public static void paint(final Graphics g){
+		final Graphics2D graph2 = (Graphics2D) g;
 		graph2.setColor(new Color(40, 40, 40));
 		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
 		graph2.setColor(Color.WHITE);
@@ -87,7 +87,7 @@ public class loadCity {
 		graph2.fillPolygon(theDownPolygon);
 		graph2.setColor(Color.black);
 		if(names.length == 0){
-			
+
 		}
 		else{
 			final int gapSize;
@@ -219,8 +219,8 @@ public class loadCity {
 		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
 		Functions.drawPauseButton(graph2, new Color(100, 100, 100));
 	}
-	
-	public static void mouseClicked(MouseEvent event){
+
+	public static void mouseClicked(final MouseEvent event){
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
 			title.load();
@@ -245,15 +245,15 @@ public class loadCity {
 					try {
 						screens.City.city.load(CityType.load(folders[(int) Math.floor(relToListClickPos)]));
 						screens.loadCity.close();
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		}
 	}
-	
-	public static void mousePressed(MouseEvent event){
+
+	public static void mousePressed(final MouseEvent event){
 		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
 				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
 		final Polygon theDownPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
@@ -265,12 +265,12 @@ public class loadCity {
 			scrollDown.start();
 		}
 	}
-	
-	public static void mouseReleased(MouseEvent event){
+
+	public static void mouseReleased(final MouseEvent event){
 		scrollUp.stop();
 		scrollDown.stop();
 	}
-	
+
 	public static void load(){
 		Variables.InLoadCity = true;
 		final File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves");
@@ -285,10 +285,10 @@ public class loadCity {
 			names = new String[listed.length];
 			lastPlays = new Calendar[listed.length];
 			folders = new String[listed.length];
-			String[] readedNames = new String[listed.length];
-			Calendar[] readedDates = new Calendar[listed.length];
-			String[] readedFolders = new String[listed.length];
-			int[] used = new int[listed.length];
+			final String[] readedNames = new String[listed.length];
+			final Calendar[] readedDates = new Calendar[listed.length];
+			final String[] readedFolders = new String[listed.length];
+			final int[] used = new int[listed.length];
 			int amountOfUsed = 0;
 			int counter = 0;
 			while(used.length > counter){
@@ -300,7 +300,7 @@ public class loadCity {
 				readedNames[counter] = Functions.readTextFile(listed[counter].toString() + "\\name.txt");
 				try {
 					readedDates[counter] = bytToCalendar(Functions.readBytes(listed[counter].toString() + "\\lastPlay.byt"));
-				} catch (Throwable e) {
+				} catch (final Throwable e) {
 					e.printStackTrace();
 				}
 				int counter2 = listed[counter].toString().length() - 1;
@@ -331,9 +331,9 @@ public class loadCity {
 			}
 		}
 	}
-	
-	static Calendar bytToCalendar(byte[] bytes){
-		Calendar result = Calendar.getInstance();
+
+	static Calendar bytToCalendar(final byte[] bytes){
+		final Calendar result = Calendar.getInstance();
 		result.set(Calendar.YEAR, bytes[0] + 2000);
 		result.set(Calendar.MONTH, bytes[1]);
 		result.set(Calendar.DAY_OF_MONTH, bytes[2]);
@@ -342,14 +342,14 @@ public class loadCity {
 		result.set(Calendar.SECOND, bytes[5]);
 		return result;
 	}
-	
+
 	public static void close(){
 		Variables.InLoadCity = false;
 		scrollUp.stop();
 		scrollDown.stop();
 	}
-	
-	public static String calendarToString(Calendar data){
+
+	public static String calendarToString(final Calendar data){
 		final String hour;
 		final String minute;
 		final String second;

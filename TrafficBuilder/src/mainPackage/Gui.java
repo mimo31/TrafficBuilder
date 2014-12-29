@@ -23,26 +23,27 @@ public class Gui extends JFrame{
 		this.addComponentListener(new InterfaceComponentEvents());
 		this.addKeyListener(new InterfaceKeyEvents());
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        if (Variables.InCity == true){
-		        	screens.City.city.close();
-		        }
-		    }
+			@Override
+			public void windowClosing(final java.awt.event.WindowEvent windowEvent) {
+				if (Variables.InCity == true){
+					screens.City.city.close();
+				}
+			}
 		});
 		this.getContentPane().addMouseMotionListener(new InterfaceMouseEvents());
 		this.add(new paintIt());
 	}
-	
+
 	public static void updateGui(){
-		Container Test = Variables.myGui.getContentPane();
+		final Container Test = Variables.myGui.getContentPane();
 		Variables.height = Test.getHeight();
 		Variables.width = Test.getWidth();
 		Variables.myGui.repaint();
 	}
-	
+
 	public static class paintIt extends JComponent{
-		public void paint(Graphics g){
+		@Override
+		public void paint(final Graphics g){
 			if(Variables.InStart){
 				screens.title.paint(g);
 			}
@@ -57,50 +58,58 @@ public class Gui extends JFrame{
 			}
 		}
 	}
-	
+
 	public class InterfaceKeyEvents implements KeyListener{
-		
-		public void keyPressed(KeyEvent event) {
-			
+
+		@Override
+		public void keyPressed(final KeyEvent event) {
+
 		}
-		
-		public void keyReleased(KeyEvent event) {
+
+		@Override
+		public void keyReleased(final KeyEvent event) {
 			if(Variables.InNewCity){
 				screens.newCity.keyReleased(event);
 			}
 		}
-		
-		public void keyTyped(KeyEvent event) {
-			
+
+		@Override
+		public void keyTyped(final KeyEvent event) {
+
 		}
-		
+
 	}
-	
+
 	public class InterfaceComponentEvents implements ComponentListener{
 
-		public void componentMoved(ComponentEvent e) {
+		@Override
+		public void componentMoved(final ComponentEvent e) {
 
-			
+
 		}
-		
-		public void componentResized(ComponentEvent e) {
+
+		@Override
+		public void componentResized(final ComponentEvent e) {
 			updateGui();
 		}
-		
-		public void componentShown(ComponentEvent e) {
-			
-			
+
+		@Override
+		public void componentShown(final ComponentEvent e) {
+
+
 		}
 
-		public void componentHidden(ComponentEvent e) {
-			
-			
+		@Override
+		public void componentHidden(final ComponentEvent e) {
+
+
 		}
-		
+
 	}
-	
+
 	private class InterfaceMouseEvents extends MouseInputAdapter {
-		public void mouseClicked(MouseEvent event) {
+		@Override
+		public void mouseClicked(final MouseEvent event) {
 			if(Variables.InStart){
 				screens.title.mouseClicked(event);
 			}
@@ -115,7 +124,8 @@ public class Gui extends JFrame{
 			}
 		}
 
-		public void mouseDragged(MouseEvent event) {
+		@Override
+		public void mouseDragged(final MouseEvent event) {
 			if(Variables.InCity){
 				screens.City.city.mouseDragged(event);
 			}
@@ -124,19 +134,22 @@ public class Gui extends JFrame{
 			event.consume();
 		}
 
-		public void mouseMoved(MouseEvent event) {
+		@Override
+		public void mouseMoved(final MouseEvent event) {
 			Variables.lastMousePosition = event.getPoint();
 			updateGui();
 			event.consume();
 		}
-		
-		public void mousePressed(MouseEvent event) {
+
+		@Override
+		public void mousePressed(final MouseEvent event) {
 			if(Variables.InLoadCity){
 				screens.loadCity.mousePressed(event);
 			}
 		}
-		
-		public void mouseReleased(MouseEvent event) {
+
+		@Override
+		public void mouseReleased(final MouseEvent event) {
 			if(Variables.InLoadCity){
 				screens.loadCity.mouseReleased(event);
 			}

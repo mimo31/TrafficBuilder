@@ -11,27 +11,27 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import javax.swing.*;
+import javax.swing.Timer;
 
-import screens.City.CityType;
-import screens.City.city;
 import mainPackage.Functions;
 import mainPackage.Textbox;
 import mainPackage.Variables;
+import screens.City.CityType;
+import screens.City.city;
 
 public class newCity {
 	static Textbox nameTextbox;
 	static boolean showBlankWarning;
 	private static ActionListener timerAction = new ActionListener()
-    {
-        @Override
-        public void actionPerformed(ActionEvent arg0)
-        {
-        	Variables.myGui.repaint();
-        }
-    };
+	{
+		@Override
+		public void actionPerformed(final ActionEvent arg0)
+		{
+			Variables.myGui.repaint();
+		}
+	};
 	static Timer repaint = new Timer(500, timerAction);
-    
+
 	public static void load(){
 		Variables.InNewCity = true;
 		showBlankWarning = false;
@@ -40,14 +40,14 @@ public class newCity {
 		nameTextbox.clicked = true;
 		repaint.start();
 	}
-	
+
 	public static void close(){
 		Variables.InNewCity = false;
 		repaint.stop();
 	}
 
-	public static void paint(Graphics g){
-		Graphics2D graph2 = (Graphics2D)g;
+	public static void paint(final Graphics g){
+		final Graphics2D graph2 = (Graphics2D)g;
 		Functions.drawPauseButton(graph2);
 		graph2.setColor(Color.black);
 		Functions.drawMaxString(graph2, "Name your city", new Rectangle(Variables.width / 4, Variables.height / 8, Variables.width / 2, Variables.height / 4));
@@ -74,8 +74,8 @@ public class newCity {
 			Functions.drawMaxString(graph2, "Type the name for your city please.", warnFinalBounds);
 		}
 	}
-	
-	public static void keyReleased(KeyEvent event){
+
+	public static void keyReleased(final KeyEvent event){
 		if(nameTextbox.clicked == true){
 			if(event.getKeyCode() == 10){
 				goToNewWorld();
@@ -87,7 +87,7 @@ public class newCity {
 			}
 		}
 	}
-	
+
 	public static void goToNewWorld(){
 		if(nameTextbox.text.equals("")){
 			showBlankWarning = true;
@@ -98,8 +98,8 @@ public class newCity {
 			Variables.myGui.repaint();
 		}
 	}
-	
-	public static void mouseClicked(MouseEvent event){
+
+	public static void mouseClicked(final MouseEvent event){
 		Variables.myGui.repaint();
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
