@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.Timer;
 
 import mainPackage.Functions;
+import mainPackage.StringDraw;
 import mainPackage.Textbox;
 import mainPackage.Variables;
 import screens.City.CityType;
@@ -50,7 +51,7 @@ public class newCity {
 		final Graphics2D graph2 = (Graphics2D)g;
 		Functions.drawPauseButton(graph2);
 		graph2.setColor(Color.black);
-		Functions.drawMaxString(graph2, "Name your city", new Rectangle(Variables.width / 4, Variables.height / 8, Variables.width / 2, Variables.height / 4));
+		StringDraw.drawMaxString(graph2, "Name your city", new Rectangle(Variables.width / 4, Variables.height / 8, Variables.width / 2, Variables.height / 4));
 		nameTextbox.size = new Dimension(Variables.width / 2, Variables.height / 8);
 		nameTextbox.position = new Point(Variables.width / 4, Variables.height / 2);
 		nameTextbox.paint(graph2);
@@ -65,13 +66,13 @@ public class newCity {
 		}
 		graph2.fillRect((int) (Variables.width / 4 * 3 - Variables.width / 12 + borderSize),  (int) (Variables.height / 8 * 5 + Variables.height / 16 + borderSize), (int) (Variables.width / 12 - borderSize * 2), (int) (Variables.height / 16 - borderSize * 2));
 		graph2.setColor(Color.white);
-		Functions.drawMaxString(graph2, "OK", new Rectangle((int) (Variables.width / 4 * 3 - Variables.width / 12 + borderSize * 2),  (int) (Variables.height / 8 * 5 + Variables.height / 16 + borderSize * 2), (int) (Variables.width / 12 - borderSize * 4), (int) (Variables.height / 16 - borderSize * 4)), Font.BOLD);
+		StringDraw.drawMaxString(graph2, "OK", new Rectangle((int) (Variables.width / 4 * 3 - Variables.width / 12 + borderSize * 2),  (int) (Variables.height / 8 * 5 + Variables.height / 16 + borderSize * 2), (int) (Variables.width / 12 - borderSize * 4), (int) (Variables.height / 16 - borderSize * 4)), Font.BOLD);
 		if(showBlankWarning){
 			final Rectangle boundsWithoutBorders = new Rectangle(0, Variables.height / 8 * 7, Variables.width, Variables.height / 8);
 			final int warnBorderSize = boundsWithoutBorders.height / 8;
 			final Rectangle warnFinalBounds = new Rectangle(boundsWithoutBorders.x + warnBorderSize, boundsWithoutBorders.y + warnBorderSize, boundsWithoutBorders.width - 2 * warnBorderSize, boundsWithoutBorders.height - 2 * warnBorderSize);
 			graph2.setColor(Color.red);
-			Functions.drawMaxString(graph2, "Type the name for your city please.", warnFinalBounds);
+			StringDraw.drawMaxString(graph2, "Type the name for your city please.", warnFinalBounds);
 		}
 	}
 

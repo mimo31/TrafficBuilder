@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.Timer;
 
 import mainPackage.Functions;
+import mainPackage.StringDraw;
 import mainPackage.Variables;
 import data.ResourceHandler;
 
@@ -189,12 +190,12 @@ public class city {
 			theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
 		}
 		graph2.setColor(Color.white);
-		graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
-		Rectangle s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
-		final Double s1Per1Height = ((double) s1Size.height) / 101;
-		graph2.setFont(Variables.nowUsingFont.deriveFont((float) ((controlPanelHeight - 2 * borderSize) / 4 / s1Per1Height)));
-		s1Size = Functions.getStringBounds(graph2, longTimeToDate(theCity.time), 0, 0);
-		graph2.drawString(longTimeToDate(theCity.time),Variables.width - borderSize - 3 - s1Size.width, borderSize + 3 - s1Size.y);
+		final Rectangle timeBounds = new Rectangle();
+		timeBounds.x = borderSize + (Variables.width - borderSize * 2) / 3 * 2;
+		timeBounds.y = borderSize;
+		timeBounds.width = (Variables.width - borderSize * 2) / 3;
+		timeBounds.height = (controlPanelHeight - borderSize * 2) / 3;
+		StringDraw.drawMaxString(graph2, 3, longTimeToDate(theCity.time), StringDraw.UpRight, timeBounds);
 		final int pauseSize = (controlPanelHeight - 2 * borderSize) / 2;
 		final Rectangle pauseButton = new Rectangle(Variables.width - borderSize - pauseSize,
 				controlPanelHeight - borderSize - pauseSize,
@@ -210,6 +211,14 @@ public class city {
 		graph2.setColor(Color.blue);
 		graph2.fillRect(pauseButton.x + pauseSize / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
 		graph2.fillRect(pauseButton.x + pauseSize - pauseSize * 2 / 5, pauseButton.y + pauseSize / 5, pauseSize / 5, pauseSize * 3 / 5);
+		graph2.setColor(new Color(255, 215, 0));
+		final Rectangle moneyBounds = new Rectangle();;
+		final int moneyRectBorder = (controlPanelHeight - 2 * borderSize) / 16;
+		moneyBounds.x = borderSize;
+		moneyBounds.y = borderSize;
+		moneyBounds.width = Variables.width / 2 - borderSize;
+		moneyBounds.height = controlPanelHeight / 2 - borderSize;
+		StringDraw.drawMaxString(graph2, moneyRectBorder, String.format("%.2f", theCity.money) + " TBC", StringDraw.Left, moneyBounds);
 	}
 
 	public static void drawPowerLine(final Graphics2D graph2){

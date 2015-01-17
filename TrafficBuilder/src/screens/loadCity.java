@@ -15,6 +15,7 @@ import java.util.Calendar;
 import javax.swing.Timer;
 
 import mainPackage.Functions;
+import mainPackage.StringDraw;
 import mainPackage.Variables;
 import screens.City.CityType;
 
@@ -65,7 +66,7 @@ public class loadCity {
 		graph2.setColor(new Color(40, 40, 40));
 		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
 		graph2.setColor(Color.WHITE);
-		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
+		StringDraw.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
 		Functions.drawChangRect(graph2, Color.white, Color.lightGray, Variables.width - Variables.width / 40, Variables.height / 6, Variables.width / 40, Variables.height - Variables.height / 6);
 		final Polygon theUpPolygon = new Polygon(new int[]{Variables.width - Variables.width / 48, Variables.width - Variables.width / 80, Variables.width - Variables.width / 240},
 				new int[]{(int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2))), Variables.width / 240 + Variables.height / 6, (int) (Variables.width / 240 + Variables.height / 6 + Math.sqrt(3 * Math.pow(Variables.width / 120, 2)))}, 3);
@@ -106,16 +107,16 @@ public class loadCity {
 			int lastPainted = (int) Math.floor(listPosition);
 			int spaceUsed = (int) ((cityBlockWidth / 3 + gapSize) * (1 - (listPosition % 1)));
 			graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
-			Rectangle s1Size = Functions.getStringBounds(graph2, names[lastPainted], 0, 0);
+			Rectangle s1Size = StringDraw.getStringBounds(graph2, names[lastPainted], 0, 0);
 			Double s1Per1Height = ((double) s1Size.height) / 101;
 			graph2.setFont(Variables.nowUsingFont.deriveFont((float) (cityBlockWidth / 6 / s1Per1Height)));
 			String textToPaint;
-			if(Functions.getStringBounds(graph2, names[lastPainted], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+			if(StringDraw.getStringBounds(graph2, names[lastPainted], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
 				textToPaint = names[lastPainted];
 			}
 			else{
 				int counter = 1;
-				while(Functions.getStringBounds(graph2, names[lastPainted].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+				while(StringDraw.getStringBounds(graph2, names[lastPainted].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
 					counter++;
 					if(counter + 1 > names[lastPainted].length()){
 						break;
@@ -123,7 +124,7 @@ public class loadCity {
 				}
 				textToPaint = names[lastPainted].substring(0, counter) + "...";
 			}
-			s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
+			s1Size = StringDraw.getStringBounds(graph2, textToPaint, 0, 0);
 			if(fullBlocks == true){
 				if(Variables.lastMousePosition.y > Variables.height / 6){
 					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), gapSize, Variables.height / 6 + spaceUsed - cityBlockWidth / 3, cityBlockWidth, cityBlockWidth / 3);
@@ -147,7 +148,7 @@ public class loadCity {
 				graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed - cityBlockWidth / 3 + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height);
 			}
 			graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
-			s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
+			s1Size = StringDraw.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
 			Double s1Per1Width = ((double) s1Size.width) / 101;
 			s1Per1Height = ((double) s1Size.height) / 101;
 			if(s1Per1Width / s1Per1Height > (cityBlockWidth - cityBlockWidth / 36) / (cityBlockWidth / 9 - cityBlockWidth / 36)){
@@ -156,7 +157,7 @@ public class loadCity {
 			else{
 				graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth / 9 - cityBlockWidth / 36) / s1Per1Height)));
 			}
-			s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
+			s1Size = StringDraw.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted]), 0, 0);
 			if(fullBlocks == true){
 				graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted]), gapSize + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed - cityBlockWidth / 72 - s1Size.height - s1Size.y);
 			}
@@ -165,15 +166,15 @@ public class loadCity {
 			}
 			while(lastPainted != names.length - 1 && spaceUsed < Variables.height - Variables.height / 6){
 				graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
-				s1Size = Functions.getStringBounds(graph2, names[lastPainted + 1], 0, 0);
+				s1Size = StringDraw.getStringBounds(graph2, names[lastPainted + 1], 0, 0);
 				s1Per1Height = ((double) s1Size.height) / 101;
 				graph2.setFont(Variables.nowUsingFont.deriveFont((float) ((cityBlockWidth / 9 * 2 - cityBlockWidth / 18) / s1Per1Height)));
-				if(Functions.getStringBounds(graph2, names[lastPainted + 1], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+				if(StringDraw.getStringBounds(graph2, names[lastPainted + 1], 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
 					textToPaint = names[lastPainted + 1];
 				}
 				else{
 					int counter = 1;
-					while(Functions.getStringBounds(graph2, names[lastPainted + 1].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
+					while(StringDraw.getStringBounds(graph2, names[lastPainted + 1].substring(0, counter + 1) + "...", 0, 0).width <= cityBlockWidth - cityBlockWidth / 18){
 						counter++;
 						if(counter + 1 > names[lastPainted + 1].length()){
 							break;
@@ -181,7 +182,7 @@ public class loadCity {
 					}
 					textToPaint = names[lastPainted + 1].substring(0, counter) + "...";
 				}
-				s1Size = Functions.getStringBounds(graph2, textToPaint, 0, 0);
+				s1Size = StringDraw.getStringBounds(graph2, textToPaint, 0, 0);
 				if(fullBlocks == true){
 					Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), gapSize, spaceUsed + Variables.height / 6 + gapSize, cityBlockWidth, cityBlockWidth / 3);
 					graph2.setColor(Color.white);
@@ -193,7 +194,7 @@ public class loadCity {
 					graph2.drawString(textToPaint, cityBlockWidth / 2 + cityBlockWidth / 36, Variables.height / 6 + spaceUsed + cityBlockWidth * 2 / 9 - cityBlockWidth / 36 - s1Size.y - s1Size.height + gapSize);
 				}
 				graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
-				s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
+				s1Size = StringDraw.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
 				s1Per1Width = ((double) s1Size.width) / 101;
 				s1Per1Height = ((double) s1Size.height) / 101;
 				if(s1Per1Width / s1Per1Height > (cityBlockWidth - cityBlockWidth / 36) / (cityBlockWidth / 9 - cityBlockWidth / 36)){
@@ -202,7 +203,7 @@ public class loadCity {
 				else{
 					graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((cityBlockWidth / 9 - cityBlockWidth / 36) / s1Per1Height)));
 				}
-				s1Size = Functions.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
+				s1Size = StringDraw.getStringBounds(graph2, "Last Played: " + calendarToString(lastPlays[lastPainted + 1]), 0, 0);
 				if(fullBlocks == true){
 					graph2.drawString("Last Played: " + calendarToString(lastPlays[lastPainted + 1]), gapSize + cityBlockWidth / 72 , Variables.height / 6 + spaceUsed + gapSize + cityBlockWidth / 3 - cityBlockWidth / 72 - s1Size.height - s1Size.y);
 				}
@@ -216,7 +217,7 @@ public class loadCity {
 		graph2.setColor(new Color(40, 40, 40));
 		graph2.fillRect(0, 0, Variables.width, Variables.height / 6);
 		graph2.setColor(Color.WHITE);
-		Functions.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
+		StringDraw.drawMaxString(graph2, "Load your city", new Rectangle(Variables.width / 8, Variables.height / 48, Variables.width / 4 * 3, Variables.height / 8));
 		Functions.drawPauseButton(graph2, new Color(100, 100, 100));
 	}
 

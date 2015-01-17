@@ -46,7 +46,7 @@ public class Textbox {
 		}
 		graph2.fillRect(this.position.x + borderSize, this.position.y + borderSize, this.size.width - borderSize * 2, this.size.height - borderSize * 2);
 		graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 100f));
-		final double s1HeightPer1 = ((double) Functions.getStringBounds(graph2, this.text, 0, 0).height) / 100;
+		final double s1HeightPer1 = ((double) StringDraw.getStringBounds(graph2, this.text, 0, 0).height) / 100;
 		graph2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) ((this.size.height - borderSize * 2) / s1HeightPer1)));
 		String textToPaint = "";
 
@@ -56,7 +56,7 @@ public class Textbox {
 			viewPosition = 0;
 		}else if(this.cursorPosition == this.text.length()){
 			counter = this.cursorPosition - 1;
-			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+			while(counter >= 0 && StringDraw.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
 				counter--;
 			}
@@ -65,7 +65,7 @@ public class Textbox {
 			if(this.cursorPosition != 0){
 				counter = this.cursorPosition - 1;
 				while(counter >= this.lastViewPosition){
-					if(Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+					if(StringDraw.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 						textToPaint = this.text.toCharArray()[counter] + textToPaint;
 						counter--;
 					}else{break;}
@@ -74,34 +74,34 @@ public class Textbox {
 			}else{viewPosition = 0;}
 			counter = this.cursorPosition;
 			while(counter < this.lastViewLenght + this.lastViewPosition && this.text.length() > counter){
-				if(Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+				if(StringDraw.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
 					textToPaint = textToPaint + this.text.toCharArray()[counter];
 					counter++;
 				}else{break;}
 			}
 			counter = viewPosition - 1;
-			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+			while(counter >= 0 && StringDraw.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
 				counter--;
 			}
 			viewPosition = counter + 1;
 			counter = viewPosition + textToPaint.length();
 			while(this.text.length() > counter){
-				if(Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+				if(StringDraw.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
 					textToPaint = textToPaint + this.text.toCharArray()[counter];
 					counter++;
 				}else{break;}
 			}
 		}else if(this.cursorPosition < this.lastViewPosition){
 			counter = this.cursorPosition;
-			while(counter < this.text.length() &&  Functions.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
+			while(counter < this.text.length() &&  StringDraw.getStringBounds(graph2, textToPaint + this.text.toCharArray()[counter], 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = textToPaint + this.text.toCharArray()[counter];
 				counter++;
 			}
 			viewPosition = this.cursorPosition;
 		}else{
 			counter = this.cursorPosition - 1;
-			while(counter >= 0 && Functions.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
+			while(counter >= 0 && StringDraw.getStringBounds(graph2, this.text.toCharArray()[counter] + textToPaint, 0, 0).width < this.size.width - borderSize * 2){
 				textToPaint = this.text.toCharArray()[counter] + textToPaint;
 				counter--;
 			}
@@ -111,12 +111,12 @@ public class Textbox {
 		this.lastViewLenght = textToPaint.length();
 
 		graph2.setColor(Color.BLACK);
-		final Rectangle finalStringSize = Functions.getStringBounds(graph2, this.text, 0, 0);
+		final Rectangle finalStringSize = StringDraw.getStringBounds(graph2, this.text, 0, 0);
 		graph2.drawString(textToPaint, this.position.x + borderSize, (this.position.y + this.size.height - borderSize) - finalStringSize.height - finalStringSize.y);
 		if(this.clicked){
 			graph2.setColor(Color.darkGray);
 			if(System.currentTimeMillis() % 1000 < 500){
-				int cursorX = this.size.width / 80 + this.position.x + borderSize + Functions.getStringBounds(graph2, this.text.substring(viewPosition, this.cursorPosition), 0, 0).width;
+				int cursorX = this.size.width / 80 + this.position.x + borderSize + StringDraw.getStringBounds(graph2, this.text.substring(viewPosition, this.cursorPosition), 0, 0).width;
 				if(cursorX > this.position.x + this.size.width - borderSize - 3){
 					cursorX = this.position.x + this.size.width - borderSize - 3;
 				}

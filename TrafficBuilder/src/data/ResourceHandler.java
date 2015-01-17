@@ -15,6 +15,7 @@ public class ResourceHandler {
 	static Image[] pops = new Image[128];
 	static int[] popLevels = new int[128];
 	static int nextIndex = 0;
+	
 	public static void start(){
 		int counter = 0;
 		while(counter < 128){

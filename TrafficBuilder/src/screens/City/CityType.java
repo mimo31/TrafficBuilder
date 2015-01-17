@@ -14,6 +14,7 @@ public class CityType {
 	public String name;
 	public String folderName;
 	public Point mapPosition;
+	public float money;
 	chunk[] Chunks = new chunk[0];
 
 	protected void addChunk(final chunk theChunk){
@@ -32,6 +33,7 @@ public class CityType {
 		this.folderName = getNewCityFolderName(cityName);
 		this.time = 0;
 		this.mapPosition = new Point(0, 0);
+		this.money = 65000;
 		try {
 			Files.createDirectory(Paths.get(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName));
 			Files.createDirectory(Paths.get(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map"));
@@ -82,6 +84,7 @@ public class CityType {
 		Functions.writeBytesToFile(dateData, System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\lastPlay.byt", false);
 		Functions.writeBytesToFile(concatenateTwo4bytesArrays(Functions.intToBytes(this.mapPosition.x), Functions.intToBytes(this.mapPosition.y)),
 				System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\mapPosition.byt", false);
+		Functions.writeBytesToFile(Functions.floatToBytes(this.money), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\money.byt", false);
 		int counter = 0;
 		while(counter < Chunks.length){
 			Chunks[counter].save();
@@ -94,6 +97,7 @@ public class CityType {
 		final byte[] mapBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\mapPosition.byt");
 		final int mapX = Functions.bytesToInt(getFirst4ofByte(mapBytes));
 		final int mapY = Functions.bytesToInt(getLast4ofByte(mapBytes));
+		final float money = Functions.bytesToFloat(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\money.byt"));
 		chunk[] chunks;
 		final File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks");
 		final File[] listed = directory.listFiles();
@@ -121,15 +125,17 @@ public class CityType {
 				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"),
 				folderName,
 				new Point(mapX, mapY),
-				chunks);
+				chunks,
+				money);
 	}
 
-	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final chunk[] chunks){
+	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final chunk[] chunks, final float cityMoney){
 		this.time = cityTime;
 		this.name = cityName;
 		this.folderName = cityFolderName;
 		this.mapPosition = cityMapPosition;
 		this.Chunks = chunks;
+		this.money = cityMoney;
 	}
 
 	static String getNewCityFolderName(String name){

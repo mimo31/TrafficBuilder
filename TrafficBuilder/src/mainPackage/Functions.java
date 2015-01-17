@@ -1,12 +1,9 @@
 package mainPackage;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class Functions {
+	
 	public static int modulo(int d, final int mod){
 		if(d >= 0){
 			return d % mod;
@@ -41,45 +39,9 @@ public class Functions {
 	public static void drawPauseButton(final Graphics2D graph2, final Color onMouseColor){
 		Functions.drawChangRect(graph2, Color.black, onMouseColor, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24);
 		graph2.setColor(Color.WHITE);
-		Functions.drawMaxString(graph2, "<<", new Rectangle(Variables.width / 200 + Variables.width / 100, Variables.height / 200 + Variables.height / 100, Variables.width / 16 * 1 / 2, Variables.height / 24 / 2));
+		StringDraw.drawMaxString(graph2, "<<", new Rectangle(Variables.width / 200 + Variables.width / 100, Variables.height / 200 + Variables.height / 100, Variables.width / 16 * 1 / 2, Variables.height / 24 / 2));
 	}
-
-	public static void drawMaxString(final Graphics2D g2, final String str, final Rectangle bounds, final int fontType){
-		if(bounds.width > 0 && bounds.height > 0){
-			g2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
-			Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
-			final Double s1Per1Width = ((double) s1Size.width) / 101;
-			final Double s1Per1Height = ((double) s1Size.height) / 101;
-			if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
-				g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.width / s1Per1Width)));
-			}
-			else{
-				g2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.height / s1Per1Height)));
-			}
-			s1Size = Functions.getStringBounds(g2, str, 0, 0);
-			g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
-			s1Size = null;
-		}
-	}
-
-	public static void drawMaxString(final Graphics2D g2, final String str, final Rectangle bounds){
-		if(bounds.width > 0 && bounds.height > 0){
-			g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, 101f));
-			Rectangle s1Size = Functions.getStringBounds(g2, str, 0, 0);
-			final Double s1Per1Width = ((double) s1Size.width) / 101;
-			final Double s1Per1Height = ((double) s1Size.height) / 101;
-			if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
-				g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.width / s1Per1Width)));
-			}
-			else{
-				g2.setFont(Variables.nowUsingFont.deriveFont(Font.PLAIN, (float) (bounds.height / s1Per1Height)));
-			}
-			s1Size = Functions.getStringBounds(g2, str, 0, 0);
-			g2.drawString(str, bounds.x + bounds.width / 2 - s1Size.width / 2 , bounds.y + bounds.height / 2 + s1Size.height / 2 - (s1Size.height + s1Size.y));
-			s1Size = null;
-		}
-	}
-
+	
 	public static String readTextFile(final String path){
 		String[] ReadedLines = null;
 		final Path filePath = Paths.get(path);
@@ -125,36 +87,6 @@ public class Functions {
 		return buffer.toByteArray();
 	}
 
-	public static Rectangle getStringBounds(final Graphics2D g2, final String str, final float x, final float y) {
-		if(str.length() != 0){
-			final FontRenderContext frc = g2.getFontRenderContext();
-			final GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
-			final Rectangle result = gv.getPixelBounds(null, x, y);
-			result.x = 0;
-			if(str.toCharArray()[0] == ' ' || str.toCharArray()[str.length() - 1] == ' '){
-				int counter = 0;
-				while(counter < str.length()){
-					if(str.toCharArray()[counter] != ' '){
-						result.width = result.width + counter * getSpaceSize(g2);
-						counter = str.length() - 1;
-						while(counter >= 0){
-							if(str.toCharArray()[counter] != ' '){
-								result.width = result.width + (str.length() - 1 - counter) * getSpaceSize(g2);
-								return result;
-							}
-							counter--;
-						}
-					}
-					counter++;
-				}
-				if(counter == str.length()){
-					return new Rectangle(0, 0, getSpaceSize(g2) * str.length(), 0);
-				}
-			}
-			return result;
-		}else{return new Rectangle(0, 0, 0, 0);}
-	}
-
 	public static void writeTextToFile(final String text, final String path, final boolean append){
 		try {
 			final BufferedWriter bufw = new BufferedWriter(new FileWriter(path, true));
@@ -164,11 +96,6 @@ public class Functions {
 			e.printStackTrace();
 		}
 	}
-
-	static int getSpaceSize(final Graphics2D graph2){
-		return getStringBounds(graph2, "h h", 0, 0).width - getStringBounds(graph2, "hh", 0, 0).width;
-	}
-
 	public static boolean buttonClicked(final MouseEvent event, final int x, final int y, final int width, final int height){
 		return (event.getX() >= x && event.getY() >= y && event.getX() <= x + width && event.getY() <= y + height);
 	}
@@ -202,7 +129,20 @@ public class Functions {
 		buffer.flip();
 		return buffer.getLong();
 	}
-
+	
+	public static byte[] floatToBytes(final float number) {
+		final ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.putFloat(number);
+		return buffer.array();
+	}
+	
+	public static float bytesToFloat(final byte[] bytes) {
+		final ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.put(bytes);
+		buffer.flip();
+		return buffer.getFloat();
+	}
+	
 	public static byte[] intToBytes(final int number) {
 		final ByteBuffer buffer = ByteBuffer.allocate(4);
 		buffer.putInt(number);
