@@ -10,7 +10,7 @@ import mainPackage.StringDraw;
 import mainPackage.Variables;
 import screens.title;
 
-public class pause {
+public class pause extends city{
 	public static void paint(final Graphics2D graph2){
 		graph2.setColor(new Color(255, 255, 255, 127));
 		graph2.fillRect(0, 0, Variables.width, Variables.height);
