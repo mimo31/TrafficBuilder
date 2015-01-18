@@ -19,7 +19,7 @@ public class title {
 	public static void mouseClicked(final MouseEvent event){
 		if(new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){
 			title.close();
-			newCity.load();
+			newCity.load(true);
 			Gui.updateGui();
 		}
 		else if(new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){

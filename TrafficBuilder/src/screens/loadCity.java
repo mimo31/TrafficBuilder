@@ -88,7 +88,11 @@ public class loadCity {
 		graph2.fillPolygon(theDownPolygon);
 		graph2.setColor(Color.black);
 		if(names.length == 0){
-
+			StringDraw.drawMaxString(graph2, "You did not create any city yet", StringDraw.Up, new Rectangle(Variables.width / 8, Variables.height * 3 / 12, Variables.width * 3 / 4, Variables.height / 6));
+			Rectangle button = new Rectangle(Variables.width / 2 - Variables.width / 12, Variables.height * 5 / 12, Variables.width / 6, Variables.height / 16);
+			Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), button);
+			graph2.setColor(Color.white);
+			StringDraw.drawMaxString(graph2, Variables.width / 128, "Create one", button);
 		}
 		else{
 			final int gapSize;
@@ -226,6 +230,13 @@ public class loadCity {
 			close();
 			title.load();
 		}
+		else if(names.length == 0){
+			Rectangle button = new Rectangle(Variables.width / 2 - Variables.width / 12, Variables.height * 5 / 12, Variables.width / 6, Variables.height / 16);
+			if(button.contains(event.getPoint())){
+				close();
+				newCity.load(false);
+			}
+		}
 		else if(event.getY() > Variables.height / 6){
 			final int gapSize;
 			final int cityBlockWidth;
@@ -240,6 +251,7 @@ public class loadCity {
 				cityBlockWidth = (Variables.width - Variables.width / 40) - 2 * gapSize;
 				fullBlocks = true;
 			}
+			System.out.println();
 			if((fullBlocks && (event.getX() < Variables.width - Variables.width / 40 - gapSize) && (event.getX() > gapSize)) || ((fullBlocks == false) && (event.getX() > cityBlockWidth / 2) && (event.getX() < cityBlockWidth * 1.5))){
 				final double relToListClickPos =  listPosition + (double) (event.getY() - Variables.height / 6) / (double) (cityBlockWidth / 3 + gapSize);
 				if(relToListClickPos % 1 > (double) (1) / 11){

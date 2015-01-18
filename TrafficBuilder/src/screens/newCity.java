@@ -23,6 +23,7 @@ import screens.City.city;
 public class newCity {
 	static Textbox nameTextbox;
 	static boolean showBlankWarning;
+	static boolean backToTitle;
 	private static ActionListener timerAction = new ActionListener()
 	{
 		@Override
@@ -33,13 +34,14 @@ public class newCity {
 	};
 	static Timer repaint = new Timer(500, timerAction);
 
-	public static void load(){
+	public static void load(final boolean fromTitle){
 		Variables.InNewCity = true;
 		showBlankWarning = false;
 		nameTextbox = new Textbox();
 		nameTextbox.active = true;
 		nameTextbox.clicked = true;
 		repaint.start();
+		backToTitle = fromTitle;
 	}
 
 	public static void close(){
@@ -104,7 +106,12 @@ public class newCity {
 		Variables.myGui.repaint();
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
-			title.load();
+			if(backToTitle){
+				title.load();
+			}
+			else{
+				loadCity.load();
+			}
 		}
 		else if(Functions.buttonClicked(event, Variables.width / 4 * 3 - Variables.width / 12, Variables.height / 8 * 5 + Variables.height / 16, Variables.width / 12, Variables.height / 16)){
 			goToNewWorld();
