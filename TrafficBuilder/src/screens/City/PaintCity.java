@@ -18,7 +18,7 @@ public class PaintCity extends city {
 		}
 		drawPowerLine(graph2);
 		drawControlPanel(graph2);
-		if(paused){
+		if(inPauseMenu){
 			pause.paint(graph2);
 		}
 		lastTime = System.currentTimeMillis();
@@ -79,13 +79,7 @@ public class PaintCity extends city {
 	}
 
 	public static void drawTCW(Graphics2D graph2){
-		final int controlPanelHeight;
-		if(Variables.height > 800){
-			controlPanelHeight = 140;
-		}
-		else{
-			controlPanelHeight = Variables.height / 5 - 20;
-		}
+		final int controlPanelHeight = getControlPHeight();
 		if(TCWframeBlack){
 			graph2.setColor(Color.black);
 		}
@@ -98,6 +92,13 @@ public class PaintCity extends city {
 		graph2.fillRect(TCWposition.x + borderSize, TCWposition.y + controlPanelHeight + borderSize, TCWwidth - 2 * borderSize, TCWwidth * 2 - 2 * borderSize);
 		graph2.setColor(Color.red);
 		graph2.fillRect(TCWposition.x + TCWwidth - 3 * borderSize, TCWposition.y + controlPanelHeight + borderSize, 2 * borderSize, 2 * borderSize);
+		graph2.setColor(new Color(205, 133, 0));
+		StringDraw.drawMaxString(graph2, 2, "Population lvl. " + theCity.getPopulation(TCWmapX, TCWmapY), StringDraw.Left, new Rectangle(TCWposition.x + borderSize, TCWposition.y + 4 * borderSize + controlPanelHeight, TCWwidth - 2 * borderSize, TCWwidth / 8));
+		graph2.setColor(Color.green);
+		final Rectangle CLButton = new Rectangle(TCWposition.x + borderSize, TCWposition.y + controlPanelHeight + TCWwidth * 2 - borderSize - TCWwidth / 8, TCWwidth - 2 * borderSize, TCWwidth / 8);
+		Functions.drawChangRect(graph2, Color.green, new Color(0, 200, 0), CLButton);
+		graph2.setColor(Color.white);
+		StringDraw.drawMaxString(graph2, TCWwidth / 64, "Create Line", CLButton);
 	}
 
 	public static void drawSquarePopulation(final Graphics2D graph2, final int pixelX, final int pixelY, final int squareX, final int squareY){
@@ -107,16 +108,9 @@ public class PaintCity extends city {
 		}
 	}
 
-	public static void drawControlPanel(final Graphics2D graph2){
-		final int controlPanelHeight;
-		final int borderSize;
-		if(Variables.height > 800){
-			controlPanelHeight = 140;
-		}
-		else{
-			controlPanelHeight = Variables.height / 5 - 20;
-		}
-		borderSize = controlPanelHeight / 10;
+	public static void drawControlPanel(Graphics2D graph2){
+		final int controlPanelHeight = getControlPHeight();
+		final int borderSize = controlPanelHeight / 10;
 		graph2.setColor(Color.black);
 		graph2.fillRect(0, 0, Variables.width, controlPanelHeight);
 		graph2.setColor(Color.blue);
@@ -154,8 +148,40 @@ public class PaintCity extends city {
 		moneyBounds.width = Variables.width / 2 - borderSize;
 		moneyBounds.height = controlPanelHeight / 2 - borderSize;
 		StringDraw.drawMaxString(graph2, moneyRectBorder, String.format("%.2f", theCity.money) + " TBC", StringDraw.Left, moneyBounds);
+		if(makingLine){
+			drawPrice(graph2);
+		}
 	}
 
+	public static void drawPrice(Graphics2D graph2){
+		final int controlPanelHeight = getControlPHeight();
+		final int borderSize = controlPanelHeight / 10;
+		final int linePrice = getLinePrice();
+		final Rectangle priceBounds = Functions.addBorders(new Rectangle(borderSize, controlPanelHeight / 2, Variables.width / 2 - borderSize, controlPanelHeight / 2 - borderSize), (controlPanelHeight / 2 - borderSize) / 16);
+		graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
+		final Rectangle stringBounds = StringDraw.getStringBounds(graph2, "Total price: " + String.valueOf(linePrice) + "TBC", 0, 0);
+		final float size1Height = stringBounds.height / 101f;
+		final float size1Width = stringBounds.width / 101f;
+		final float priceBoundsCoeficient = priceBounds.height / (float) priceBounds.width;
+		final float textBoundsCoeficient = size1Height / size1Width;
+		if(priceBoundsCoeficient > textBoundsCoeficient){
+			graph2.setFont(Variables.nowUsingFont.deriveFont(priceBounds.width / size1Width));
+		}
+		else {
+			graph2.setFont(Variables.nowUsingFont.deriveFont(priceBounds.height / size1Height));
+		}
+		final Rectangle totalPriceTextRect = StringDraw.getStringBounds(graph2, "Total price: ", 0, 0);
+		graph2.setColor(Color.black);
+		graph2.drawString("Total price: ", priceBounds.x, priceBounds.y + priceBounds.height - totalPriceTextRect.height - totalPriceTextRect.y);
+		if(theCity.money < linePrice){
+			graph2.setColor(Color.red);
+		}
+		else{
+			graph2.setColor(Color.green);
+		}
+		graph2.drawString(String.valueOf(linePrice) + "TBC", priceBounds.x + totalPriceTextRect.width, priceBounds.y + priceBounds.height - totalPriceTextRect.height - totalPriceTextRect.y);
+	}
+	
 	public static void drawPowerLine(final Graphics2D graph2){
 		int linePosition;
 		if(Variables.height > 800){

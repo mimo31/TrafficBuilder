@@ -18,6 +18,7 @@ public class city {
 	public static CityType theCity;
 	static long lastTime;
 	public static boolean paused;
+	public static boolean inPauseMenu;
 	static long powerLineState;
 	static boolean showTCW;
 	static Point TCWposition;
@@ -26,6 +27,9 @@ public class city {
 	static int TCWwidth;
 	static boolean TCWframeBlack;
 	static long endTCWBlinking;
+	static boolean draggingTCW;
+	static boolean makingLine;
+	static Point[] line;
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
@@ -53,29 +57,45 @@ public class city {
 		paused = false;
 		powerLineState = 0;
 	}
-
+	
 	public static void paint(final Graphics g){
 		final Graphics2D graph2 = (Graphics2D)g;
 		PaintCity.paint(graph2);
 	}
-
+	
+	public static void mousePressed(MouseEvent event){
+		if(showTCW){
+			final Rectangle TCW = new Rectangle(TCWposition.x, TCWposition.y, TCWwidth, TCWwidth * 2);
+			if(TCW.contains(event.getPoint())){
+				draggingTCW = true;
+			}
+		}
+	}
+	
+	public static void mouseRelesed(MouseEvent event){
+		draggingTCW = false;
+	}
+	
+	public static int getControlPHeight(){
+		if(Variables.height > 800){
+			return 140;
+		}
+		else{
+			return Variables.height / 5 - 20;
+		}
+	}
+	
 	public static void mouseClicked(final MouseEvent event){
-		if(paused == false){
-			final int controlPanelHeight;
-			final int borderSize;
-			if(Variables.height > 800){
-				controlPanelHeight = 140;
-			}
-			else{
-				controlPanelHeight = Variables.height / 5 - 20;
-			}
-			borderSize = controlPanelHeight / 10;
+		if(inPauseMenu == false){
+			final int controlPanelHeight = getControlPHeight();
+			final int borderSize = controlPanelHeight / 10;
 			final int pauseSize = (controlPanelHeight - 2 * borderSize) / 2;
 			final Rectangle pauseButton = new Rectangle(Variables.width - borderSize - pauseSize,
 					controlPanelHeight - borderSize - pauseSize,
 					pauseSize,
 					pauseSize);
 			if(pauseButton.contains(event.getPoint())){
+				inPauseMenu = true;
 				pause();
 			}
 			else{
@@ -83,8 +103,14 @@ public class city {
 					if(showTCW){
 						if(Functions.buttonClicked(event, TCWposition.x, TCWposition.y + controlPanelHeight, TCWwidth, TCWwidth * 2)){
 							final int TCWborderSize = TCWwidth / 16;
+							final Rectangle CLButton = new Rectangle(TCWposition.x + borderSize, TCWposition.y + controlPanelHeight + TCWwidth * 2 - borderSize - TCWwidth / 8, TCWwidth - 2 * borderSize, TCWwidth / 8);
 							if(Functions.buttonClicked(event, TCWposition.x + TCWwidth - 3 * TCWborderSize, TCWposition.y + controlPanelHeight + TCWborderSize, 2 * TCWborderSize, 2 * TCWborderSize)){
 								showTCW = false;
+							}
+							else if(CLButton.contains(event.getPoint())){
+								makingLine = true;
+								line = new Point[1];
+								line[0] = new Point(TCWmapX, TCWmapY);
 							}
 						}
 						else{
@@ -94,13 +120,19 @@ public class city {
 					else{
 						showTCW = true;
 						if(Variables.width > Variables.height){
-							TCWwidth = Variables.height / 8;
+							TCWwidth = Variables.height / 4;
 						}
 						else{
-							TCWwidth = Variables.width / 8;
+							TCWwidth = Variables.width / 4;
 						}
 						TCWposition = event.getPoint();
 						TCWposition.y = TCWposition.y - controlPanelHeight;
+						final int mapMoveFromLastPointX = Functions.modulo((int) theCity.mapPosition.getX(), 64);
+						final int mapMoveFromLastPointY = Functions.modulo((int) theCity.mapPosition.getY(), 64);
+						final int lastPointX = (int) Math.floor(theCity.mapPosition.getX() / 64);
+						final int lastPointY = (int) Math.floor(theCity.mapPosition.getY() / 64);
+						TCWmapX = (int) (lastPointX + Math.floor((mapMoveFromLastPointX + event.getX()) / 64));
+						TCWmapY = (int) (lastPointY + Math.floor((mapMoveFromLastPointY + event.getY() - controlPanelHeight - 39) / 64));
 					}
 				}
 			}
@@ -108,6 +140,19 @@ public class city {
 		else{
 			pause.mouseClicked(event);
 		}
+	}
+	
+	public static int getLinePrice(){
+		int totalPrice = 0;
+		totalPrice = line.length * 1000;
+		if(line.length > 1){
+			int counter = 1;
+			while(counter < line.length){
+				totalPrice = (int) (totalPrice + 500 * Functions.getPointsDistance(line[counter], line[counter - 1]));
+				counter++;
+			}
+		}
+		return totalPrice;
 	}
 
 	public static void pause(){
@@ -124,13 +169,6 @@ public class city {
 	
 	public static void mouseDragged(final MouseEvent event){
 		if(paused == false){
-			final int controlPanelHeight;
-			if(Variables.height > 800){
-				controlPanelHeight = 140;
-			}
-			else{
-				controlPanelHeight = Variables.height / 5 - 20;
-			}
 			final int spaceYStart;
 			if(Variables.height > 800){
 				spaceYStart = 179;
@@ -140,7 +178,7 @@ public class city {
 			}
 			if(showTCW){
 				if(event.getY() > spaceYStart){
-					if(new Rectangle(TCWposition.x, TCWposition.y + controlPanelHeight, TCWwidth, TCWwidth * 2).contains(event.getPoint())){
+					if(draggingTCW){
 						TCWposition.x = (int) (TCWposition.x + event.getX() - Variables.lastMousePosition.getX());
 						TCWposition.y = (int) (TCWposition.y + event.getY() - Variables.lastMousePosition.getY());
 					}

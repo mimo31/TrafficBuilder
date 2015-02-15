@@ -146,12 +146,18 @@ public class Gui extends JFrame{
 			if(Variables.InLoadCity){
 				screens.loadCity.mousePressed(event);
 			}
+			else if(Variables.InCity){
+				screens.City.city.mousePressed(event);
+			}
 		}
 
 		@Override
 		public void mouseReleased(final MouseEvent event) {
 			if(Variables.InLoadCity){
 				screens.loadCity.mouseReleased(event);
+			}
+			else if(Variables.InCity){
+				screens.City.city.mouseRelesed(event);
 			}
 		}
 	}
