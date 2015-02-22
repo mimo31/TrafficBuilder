@@ -1,5 +1,6 @@
 package screens.City;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class CityType {
 	public Point mapPosition;
 	public float money;
 	chunk[] Chunks = new chunk[0];
+	Line[] lines = new Line[0];
 
 	protected void addChunk(final chunk theChunk){
 		final chunk[] temp = new chunk[Chunks.length + 1];
@@ -26,6 +28,65 @@ public class CityType {
 		}
 		temp[counter] = theChunk;
 		Chunks = temp;
+	}
+	
+	public Color getNewLineColor(){
+		int[] colorCounts = new int[6];
+		int counter = 0;
+		while(counter < 6){
+			colorCounts[counter] = 0;
+			counter++;
+		}
+		counter = 0;
+		Color[] colors = new Color[6];
+		colors[0] = new Color(0, 204, 0);
+		colors[1] = new Color(0, 0, 255);
+		colors[2] = new Color(255, 0, 0);
+		colors[3] = new Color(255, 255, 0);
+		colors[4] = new Color(153, 76, 0);
+		colors[5] = new Color(255, 128, 0);
+		while(counter < lines.length){
+			final Color lineColor = lines[counter].lineColor;
+			int counter2 = 0;
+			while(counter2 < 6){
+				if(lineColor == colors[counter2]){
+					colorCounts[counter2]++;
+				}
+				counter2++;
+			}
+			counter++;
+		}
+		counter = 1;
+		int smallestColorCount = colorCounts[0];
+		while(counter < 6){
+			if(colorCounts[counter] < smallestColorCount){
+				smallestColorCount = colorCounts[counter];
+			}
+			counter++;
+		}
+		counter = 0;
+		int smallestCCC = 0;
+		while(counter < 6){
+			if(colorCounts[counter] == smallestColorCount){
+				smallestCCC++;
+			}
+			counter++;
+		}
+		int[] smallestColCouColors = new int[smallestCCC];
+		counter = 0;
+		int nextIndex = 0;
+		while(counter < 6){
+			if(colorCounts[counter] == smallestColorCount){
+				smallestColCouColors[nextIndex] = counter;
+				nextIndex++;
+			}
+			counter++;
+		}
+		return colors[smallestColCouColors[Functions.genRandom(0, smallestColorCount)]];
+	}
+	
+	byte randomByte(){
+		return (byte) Math.floor(Math.random() * 256);
 	}
 
 	public CityType(final String cityName){

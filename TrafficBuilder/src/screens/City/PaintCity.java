@@ -3,7 +3,10 @@ package screens.City;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 import data.ResourceHandler;
 import mainPackage.Functions;
@@ -130,7 +133,7 @@ public class PaintCity extends city {
 				controlPanelHeight - borderSize - pauseSize,
 				pauseSize,
 				pauseSize);
-		if(pauseButton.contains(Variables.lastMousePosition) && paused == false){
+		if(pauseButton.contains(Variables.lastMousePosition) && inPauseMenu == false){
 			graph2.setColor(new Color(255, 246, 143));
 		}
 		else{
@@ -149,14 +152,41 @@ public class PaintCity extends city {
 		moneyBounds.height = controlPanelHeight / 2 - borderSize;
 		StringDraw.drawMaxString(graph2, moneyRectBorder, String.format("%.2f", theCity.money) + " TBC", StringDraw.Left, moneyBounds);
 		if(makingLine){
-			drawPrice(graph2);
+			inMakingLine(graph2);
 		}
+	}
+	
+	public static void inMakingLine(Graphics2D graph2){
+		final int controlPanelHeight = getControlPHeight();
+		drawPrice(graph2);
+		graph2.setColor(new Color(255, 255, 255, 127));
+		graph2.fillRect(0, controlPanelHeight + 39, Variables.width, Variables.height - controlPanelHeight + 39);
+		final Rectangle cancelButton = new Rectangle(0, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
+		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), cancelButton);
+		graph2.setColor(Color.white);
+		StringDraw.drawMaxString(graph2, Variables.width / 128, "Cancel", cancelButton);
+		final Rectangle createButton = new Rectangle(Variables.width - Variables.width / 16, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
+		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), createButton);
+		graph2.setColor(Color.white);
+		StringDraw.drawMaxString(graph2, Variables.width / 128, "Create!", createButton);
+		final Point pointCoors;
+		if(expandingLineStart){
+			pointCoors = new Point(line.trace[0].x * 64 - theCity.mapPosition.x, line.trace[0].y * 64 - theCity.mapPosition.y + controlPanelHeight + 39);
+		}
+		else{
+			pointCoors = new Point(line.trace[line.trace.length - 1].x * 64 - theCity.mapPosition.x, line.trace[line.trace.length - 1].y * 64 - theCity.mapPosition.y + controlPanelHeight + 39);
+		}
+		graph2.setColor(line.lineColor);
+		Area circle = new Area(new Ellipse2D.Double((int) (pointCoors.x - (Math.sqrt(2) * 64 - 64) / 2), (int) (pointCoors.y - (Math.sqrt(2) * 64 - 64) / 2), (int) (Math.sqrt(2) * 64), (int) (Math.sqrt(2) * 64)));
+		final Area smallEll = new Area(new Ellipse2D.Double(pointCoors.x, pointCoors.y, 64, 64));
+		circle.subtract(smallEll);
+		graph2.fill(circle);
 	}
 
 	public static void drawPrice(Graphics2D graph2){
 		final int controlPanelHeight = getControlPHeight();
 		final int borderSize = controlPanelHeight / 10;
-		final int linePrice = getLinePrice();
+		final int linePrice = line.getPrice();
 		final Rectangle priceBounds = Functions.addBorders(new Rectangle(borderSize, controlPanelHeight / 2, Variables.width / 2 - borderSize, controlPanelHeight / 2 - borderSize), (controlPanelHeight / 2 - borderSize) / 16);
 		graph2.setFont(Variables.nowUsingFont.deriveFont(101f));
 		final Rectangle stringBounds = StringDraw.getStringBounds(graph2, "Total price: " + String.valueOf(linePrice) + "TBC", 0, 0);

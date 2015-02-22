@@ -29,7 +29,8 @@ public class city {
 	static long endTCWBlinking;
 	static boolean draggingTCW;
 	static boolean makingLine;
-	static Point[] line;
+	static Line line;
+	static boolean expandingLineStart;
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
@@ -45,6 +46,8 @@ public class city {
 		Variables.myGui.setMinimumSize(new Dimension(300, 300));
 		TCWframeBlack = true;
 		showTCW = false;
+		inPauseMenu = false;
+		makingLine = false;
 		theCity = city;
 		lastTime = System.currentTimeMillis();
 		repaint.start();
@@ -108,9 +111,11 @@ public class city {
 								showTCW = false;
 							}
 							else if(CLButton.contains(event.getPoint())){
+								pause();
 								makingLine = true;
-								line = new Point[1];
-								line[0] = new Point(TCWmapX, TCWmapY);
+								line = new Line(new Point[]{new Point(TCWmapX, TCWmapY)});
+								line.lineColor = theCity.getNewLineColor();
+								showTCW = false;
 							}
 						}
 						else{
@@ -118,21 +123,35 @@ public class city {
 						}
 					}
 					else{
-						showTCW = true;
-						if(Variables.width > Variables.height){
-							TCWwidth = Variables.height / 4;
+						if(makingLine == false){
+							showTCW = true;
+							if(Variables.width > Variables.height){
+								TCWwidth = Variables.height / 4;
+							}
+							else{
+								TCWwidth = Variables.width / 4;
+							}
+							TCWposition = event.getPoint();
+							TCWposition.y = TCWposition.y - controlPanelHeight;
+							final int mapMoveFromLastPointX = Functions.modulo((int) theCity.mapPosition.getX(), 64);
+							final int mapMoveFromLastPointY = Functions.modulo((int) theCity.mapPosition.getY(), 64);
+							final int lastPointX = (int) Math.floor(theCity.mapPosition.getX() / 64);
+							final int lastPointY = (int) Math.floor(theCity.mapPosition.getY() / 64);
+							TCWmapX = (int) (lastPointX + Math.floor((mapMoveFromLastPointX + event.getX()) / 64));
+							TCWmapY = (int) (lastPointY + Math.floor((mapMoveFromLastPointY + event.getY() - controlPanelHeight - 39) / 64));
 						}
 						else{
-							TCWwidth = Variables.width / 4;
+							final Rectangle cancelButton = new Rectangle(0, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
+							final Rectangle createButton = new Rectangle(Variables.width - Variables.width / 16, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
+							if(cancelButton.contains(event.getPoint())){
+								makingLine = false;
+								unpause();
+							}
+							else if(createButton.contains(event.getPoint())){
+								makingLine = false;
+								unpause();
+							}
 						}
-						TCWposition = event.getPoint();
-						TCWposition.y = TCWposition.y - controlPanelHeight;
-						final int mapMoveFromLastPointX = Functions.modulo((int) theCity.mapPosition.getX(), 64);
-						final int mapMoveFromLastPointY = Functions.modulo((int) theCity.mapPosition.getY(), 64);
-						final int lastPointX = (int) Math.floor(theCity.mapPosition.getX() / 64);
-						final int lastPointY = (int) Math.floor(theCity.mapPosition.getY() / 64);
-						TCWmapX = (int) (lastPointX + Math.floor((mapMoveFromLastPointX + event.getX()) / 64));
-						TCWmapY = (int) (lastPointY + Math.floor((mapMoveFromLastPointY + event.getY() - controlPanelHeight - 39) / 64));
 					}
 				}
 			}
@@ -141,34 +160,21 @@ public class city {
 			pause.mouseClicked(event);
 		}
 	}
-	
-	public static int getLinePrice(){
-		int totalPrice = 0;
-		totalPrice = line.length * 1000;
-		if(line.length > 1){
-			int counter = 1;
-			while(counter < line.length){
-				totalPrice = (int) (totalPrice + 500 * Functions.getPointsDistance(line[counter], line[counter - 1]));
-				counter++;
-			}
-		}
-		return totalPrice;
-	}
 
 	public static void pause(){
 		paused = true;
-		repaint.stop();
+		//repaint.stop();
 		Variables.myGui.repaint();
 	}
 
 	public static void unpause(){
 		paused = false;
-		repaint.start();
+		//repaint.start();
 		Variables.myGui.repaint();
 	}
 	
 	public static void mouseDragged(final MouseEvent event){
-		if(paused == false){
+		if(inPauseMenu == false){
 			final int spaceYStart;
 			if(Variables.height > 800){
 				spaceYStart = 179;
