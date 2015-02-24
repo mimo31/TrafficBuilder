@@ -34,8 +34,7 @@ public class city {
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
-		public final void actionPerformed(final ActionEvent arg0)
-		{
+		public final void actionPerformed(final ActionEvent arg0){
 			Variables.myGui.repaint();
 		}
 	};

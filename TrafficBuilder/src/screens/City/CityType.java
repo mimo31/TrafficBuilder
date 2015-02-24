@@ -82,7 +82,7 @@ public class CityType {
 			}
 			counter++;
 		}
-		return colors[smallestColCouColors[Functions.genRandom(0, smallestColorCount)]];
+		return colors[smallestColCouColors[Functions.genRandom(0, smallestCCC)]];
 	}
 	
 	byte randomByte(){

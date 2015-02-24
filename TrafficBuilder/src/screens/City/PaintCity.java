@@ -14,6 +14,7 @@ import mainPackage.StringDraw;
 import mainPackage.Variables;
 
 public class PaintCity extends city {
+	final static double sqrt2 = Math.round(Math.sqrt(2) * 100) / (double) (100);
 	public static void paint(Graphics2D graph2){
 		drawMap(graph2);
 		if(showTCW){
@@ -176,11 +177,31 @@ public class PaintCity extends city {
 		else{
 			pointCoors = new Point(line.trace[line.trace.length - 1].x * 64 - theCity.mapPosition.x, line.trace[line.trace.length - 1].y * 64 - theCity.mapPosition.y + controlPanelHeight + 39);
 		}
-		graph2.setColor(line.lineColor);
-		Area circle = new Area(new Ellipse2D.Double((int) (pointCoors.x - (Math.sqrt(2) * 64 - 64) / 2), (int) (pointCoors.y - (Math.sqrt(2) * 64 - 64) / 2), (int) (Math.sqrt(2) * 64), (int) (Math.sqrt(2) * 64)));
-		final Area smallEll = new Area(new Ellipse2D.Double(pointCoors.x, pointCoors.y, 64, 64));
+		drawEndStation(graph2, pointCoors, line.lineColor);
+	}
+	
+	public static void drawStation(Graphics2D graph2, Point coors, Color lineColor){
+		graph2.setColor(lineColor);
+		Area circle = new Area(new Ellipse2D.Double((int) (coors.x - (sqrt2 * 64 - 64) / 2), (int) (coors.y - (sqrt2 * 64 - 64) / 2), (int) (sqrt2 * 64), (int) (sqrt2 * 64)));
+		final Area smallEll = new Area(new Ellipse2D.Double(coors.x, coors.y, 64, 64));
 		circle.subtract(smallEll);
 		graph2.fill(circle);
+	}
+	
+	public static void drawEndStation(Graphics2D graph2, Point coors, Color lineColor){
+		drawStation(graph2, coors, lineColor);
+		double state = getEndStationState();
+		Area circle = new Area(new Ellipse2D.Double(coors.x, coors.y, 64, 64));
+		final Area smallEll = new Area(new Ellipse2D.Double(coors.x + (1 - state) * 32, coors.y + (1 - state) * 32, 64 * state, 64 * state));
+		circle.subtract(smallEll);
+		graph2.setColor(Color.black);
+		graph2.fill(circle);
+	}
+	
+	public static double getEndStationState(){
+		final int thousands = (int) (System.currentTimeMillis() * 4 % (2000 * Math.PI));
+		final double sinus = Math.round(Math.sin(thousands / (double) (1000)) * 100) / (double) (100);
+		return (sinus + 1) / 2;
 	}
 
 	public static void drawPrice(Graphics2D graph2){
