@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -14,7 +15,8 @@ import mainPackage.StringDraw;
 import mainPackage.Variables;
 
 public class PaintCity extends city {
-	final static double sqrt2 = Math.round(Math.sqrt(2) * 100) / (double) (100);
+	static long endStationUpdateTime;
+	static long lastEndStationRepaint;
 	public static void paint(Graphics2D graph2){
 		drawMap(graph2);
 		if(showTCW){
@@ -79,6 +81,9 @@ public class PaintCity extends city {
 		while(spaceUsed < Variables.height){
 			graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
 			spaceUsed = spaceUsed + 256;
+		}
+		if(makingLine){
+			inMakingLineNonCP(graph2);
 		}
 	}
 
@@ -153,15 +158,49 @@ public class PaintCity extends city {
 		moneyBounds.height = controlPanelHeight / 2 - borderSize;
 		StringDraw.drawMaxString(graph2, moneyRectBorder, String.format("%.2f", theCity.money) + " TBC", StringDraw.Left, moneyBounds);
 		if(makingLine){
-			inMakingLine(graph2);
+			drawPrice(graph2);
 		}
 	}
 	
-	public static void inMakingLine(Graphics2D graph2){
+	public static void inMakingLineNonCP(Graphics2D graph2){
 		final int controlPanelHeight = getControlPHeight();
-		drawPrice(graph2);
 		graph2.setColor(new Color(255, 255, 255, 127));
 		graph2.fillRect(0, controlPanelHeight + 39, Variables.width, Variables.height - controlPanelHeight + 39);
+		boolean lastInWindow = false;
+		if(isStationInWindow(line.trace[0])){
+			if(expandingLineStart){
+				drawEndStation(graph2, line.trace[0], line.lineColor);
+			}
+			else{
+				if(line.trace.length == 1){
+					drawEndStation(graph2, line.trace[0], line.lineColor);
+				}
+				else{
+					drawStation(graph2, line.trace[0], line.lineColor);
+				}
+			}
+			lastInWindow = true;
+		}
+		int lastStationDrawn = 0;
+		while(lastStationDrawn + 1 < line.trace.length){
+			if(isStationInWindow(line.trace[lastStationDrawn + 1])){
+				if(lastStationDrawn + 2 == line.trace.length && expandingLineStart == false){
+					drawEndStation(graph2, line.trace[lastStationDrawn + 1], line.lineColor);
+				}
+				else{
+					drawStation(graph2, line.trace[lastStationDrawn + 1], line.lineColor);
+				}
+				drawStationConnection(graph2, line.trace[lastStationDrawn + 1], line.trace[lastStationDrawn], line.lineColor);
+				lastInWindow = true;
+			}
+			else{
+				if(lastInWindow){
+					drawStationConnection(graph2, line.trace[lastStationDrawn + 1], line.trace[lastStationDrawn], line.lineColor);
+				}
+				lastInWindow = false;
+			}
+			lastStationDrawn++;
+		}
 		final Rectangle cancelButton = new Rectangle(0, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
 		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), cancelButton);
 		graph2.setColor(Color.white);
@@ -170,26 +209,59 @@ public class PaintCity extends city {
 		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), createButton);
 		graph2.setColor(Color.white);
 		StringDraw.drawMaxString(graph2, Variables.width / 128, "Create!", createButton);
-		final Point pointCoors;
-		if(expandingLineStart){
-			pointCoors = new Point(line.trace[0].x * 64 - theCity.mapPosition.x, line.trace[0].y * 64 - theCity.mapPosition.y + controlPanelHeight + 39);
+	}
+	
+	public static void drawStationConnection(Graphics2D graph2, final Point mapCoors1, final Point mapCoors2, final Color lineColor){
+		Point screenCoors1 = convertMapCoorsToScreenCoors(mapCoors1);
+		screenCoors1.x = screenCoors1.x + 32;
+		screenCoors1.y = screenCoors1.y + 32;
+		Point screenCoors2 = convertMapCoorsToScreenCoors(mapCoors2);
+		screenCoors2.x = screenCoors2.x + 32;
+		screenCoors2.y = screenCoors2.y + 32;
+		Area tunnelPolygon;
+		if(screenCoors1.y != screenCoors2.y){
+			final double tempA = -(screenCoors2.x - screenCoors1.x) / (double) (screenCoors2.y - screenCoors1.y);
+			final double tempB = Math.sqrt(1024 + 1024 * tempA * tempA) / (double) (2 * tempA * tempA + 2);
+			final Point p1 = new Point((int) (screenCoors1.x + tempB), (int) (screenCoors1.y + tempB * tempA));
+			final Point p2 = new Point((int) (screenCoors1.x - tempB), (int) (screenCoors1.y - tempB * tempA));
+			final Point p3 = new Point((int) (screenCoors2.x - tempB), (int) (screenCoors2.y - tempB * tempA));
+			final Point p4 = new Point((int) (screenCoors2.x + tempB), (int) (screenCoors2.y + tempB * tempA));
+			tunnelPolygon = new Area(new Polygon(new int[]{p1.x, p2.x, p3.x, p4.x}, new int[]{p1.y, p2.y, p3.y, p4.y}, 4));
 		}
 		else{
-			pointCoors = new Point(line.trace[line.trace.length - 1].x * 64 - theCity.mapPosition.x, line.trace[line.trace.length - 1].y * 64 - theCity.mapPosition.y + controlPanelHeight + 39);
+			if(screenCoors1.x < screenCoors2.x){
+				tunnelPolygon = new Area(new Rectangle(screenCoors1.x, screenCoors1.y - 16, screenCoors2.x - screenCoors1.x, 32));
+			}
+			else{
+				tunnelPolygon = new Area(new Rectangle(screenCoors2.x, screenCoors1.y - 16, screenCoors1.x - screenCoors2.x, 32));
+			}
 		}
-		drawEndStation(graph2, pointCoors, line.lineColor);
+		screenCoors1.x = screenCoors1.x - 32;
+		screenCoors1.y = screenCoors1.y - 32;
+		screenCoors2.x = screenCoors2.x - 32;
+		screenCoors2.y = screenCoors2.y - 32;
+		final Area circle1 = new Area(new Ellipse2D.Double(screenCoors1.x, screenCoors1.y, 64, 64));
+		final Area circle2 = new Area(new Ellipse2D.Double(screenCoors2.x, screenCoors2.y, 64, 64));
+		tunnelPolygon.subtract(circle1);
+		tunnelPolygon.subtract(circle2);
+		graph2.setColor(lineColor);
+		graph2.fill(tunnelPolygon);
+	}
+	
+	public static boolean isStationInWindow(Point mapCoors){
+		final Point allowedRectStart = new Point((int) Math.floor(theCity.mapPosition.x / 64) - 1, (int) Math.floor(theCity.mapPosition.y / 64) - 1);
+		final Point allowedRectEnd = new Point((int) Math.floor((theCity.mapPosition.x + Variables.width) / 64) + 1, (int) Math.floor((theCity.mapPosition.y + Variables.height) / 64) + 1);
+		return (mapCoors.x >= allowedRectStart.x && mapCoors.y >= allowedRectStart.y && mapCoors.x <= allowedRectEnd.x && mapCoors.y <= allowedRectEnd.y);
 	}
 	
 	public static void drawStation(Graphics2D graph2, Point coors, Color lineColor){
 		graph2.setColor(lineColor);
-		Area circle = new Area(new Ellipse2D.Double((int) (coors.x - (sqrt2 * 64 - 64) / 2), (int) (coors.y - (sqrt2 * 64 - 64) / 2), (int) (sqrt2 * 64), (int) (sqrt2 * 64)));
-		final Area smallEll = new Area(new Ellipse2D.Double(coors.x, coors.y, 64, 64));
-		circle.subtract(smallEll);
-		graph2.fill(circle);
+		graph2.fill(getStationRing(coors));
 	}
 	
 	public static void drawEndStation(Graphics2D graph2, Point coors, Color lineColor){
 		drawStation(graph2, coors, lineColor);
+		coors = convertMapCoorsToScreenCoors(coors);
 		double state = getEndStationState();
 		Area circle = new Area(new Ellipse2D.Double(coors.x, coors.y, 64, 64));
 		final Area smallEll = new Area(new Ellipse2D.Double(coors.x + (1 - state) * 32, coors.y + (1 - state) * 32, 64 * state, 64 * state));
@@ -199,8 +271,12 @@ public class PaintCity extends city {
 	}
 	
 	public static double getEndStationState(){
-		final int thousands = (int) (System.currentTimeMillis() * 4 % (2000 * Math.PI));
+		if(inPauseMenu == false){
+			endStationUpdateTime = endStationUpdateTime + System.currentTimeMillis() - lastEndStationRepaint;
+		}
+		final int thousands = (int) (endStationUpdateTime * 4 % (2000 * Math.PI));
 		final double sinus = Math.round(Math.sin(thousands / (double) (1000)) * 100) / (double) (100);
+		lastEndStationRepaint = System.currentTimeMillis();
 		return (sinus + 1) / 2;
 	}
 

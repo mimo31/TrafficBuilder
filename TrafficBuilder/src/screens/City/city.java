@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 import javax.swing.Timer;
 
@@ -31,6 +33,7 @@ public class city {
 	static boolean makingLine;
 	static Line line;
 	static boolean expandingLineStart;
+	final static double sqrt2 = Math.round(Math.sqrt(2) * 100) / (double) (100);
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
@@ -105,7 +108,7 @@ public class city {
 					if(showTCW){
 						if(Functions.buttonClicked(event, TCWposition.x, TCWposition.y + controlPanelHeight, TCWwidth, TCWwidth * 2)){
 							final int TCWborderSize = TCWwidth / 16;
-							final Rectangle CLButton = new Rectangle(TCWposition.x + borderSize, TCWposition.y + controlPanelHeight + TCWwidth * 2 - borderSize - TCWwidth / 8, TCWwidth - 2 * borderSize, TCWwidth / 8);
+							final Rectangle CLButton = new Rectangle(TCWposition.x + TCWborderSize, TCWposition.y + controlPanelHeight + TCWwidth * 2 - TCWborderSize - TCWwidth / 8, TCWwidth - 2 * TCWborderSize, TCWwidth / 8);
 							if(Functions.buttonClicked(event, TCWposition.x + TCWwidth - 3 * TCWborderSize, TCWposition.y + controlPanelHeight + TCWborderSize, 2 * TCWborderSize, 2 * TCWborderSize)){
 								showTCW = false;
 							}
@@ -150,6 +153,21 @@ public class city {
 								makingLine = false;
 								unpause();
 							}
+							else if(expandingLineStart && getStationRing(line.trace[line.trace.length - 1]).contains(event.getPoint())){
+								expandingLineStart = false;
+							}
+							else if((expandingLineStart == false) && getStationRing(line.trace[0]).contains(event.getPoint())){
+								expandingLineStart = true;
+							}
+							else{
+								if(expandingLineStart){
+									line.addStartStation(convertScreenCoorsToMapCoors(event.getPoint()));
+								}
+								else{
+									line.addEndStation(convertScreenCoorsToMapCoors(event.getPoint()));
+								}
+								doNothing();
+							}
 						}
 					}
 				}
@@ -158,6 +176,28 @@ public class city {
 		else{
 			pause.mouseClicked(event);
 		}
+	}
+	
+	public static void doNothing(){
+		
+	}
+	
+	public static Area getStationRing(Point stationCoors){
+		stationCoors = convertMapCoorsToScreenCoors(stationCoors);
+		Area circle = new Area(new Ellipse2D.Double((int) (stationCoors.x - (sqrt2 * 64 - 64) / 2), (int) (stationCoors.y - (sqrt2 * 64 - 64) / 2), (int) (sqrt2 * 64), (int) (sqrt2 * 64)));
+		final Area smallEll = new Area(new Ellipse2D.Double(stationCoors.x, stationCoors.y, 64, 64));
+		circle.subtract(smallEll);
+		return circle;
+	}
+	
+	public static Point convertMapCoorsToScreenCoors(Point mapCoors){
+		return new Point(mapCoors.x * 64 - theCity.mapPosition.x, mapCoors.y * 64 - theCity.mapPosition.y + getControlPHeight() + 39);
+	}
+	
+	public static Point convertScreenCoorsToMapCoors(Point screenCoors){
+		screenCoors.y = screenCoors.y - 39 - getControlPHeight();
+		final Point mapCoors = new Point((int) Math.floor((screenCoors.x + theCity.mapPosition.x) / (double) 64), (int) Math.floor((screenCoors.y + theCity.mapPosition.y) / (double) 64));
+		return mapCoors;
 	}
 
 	public static void pause(){
