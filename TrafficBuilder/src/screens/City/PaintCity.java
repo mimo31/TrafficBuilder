@@ -8,6 +8,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 
 import data.ResourceHandler;
 import mainPackage.Functions;
@@ -166,7 +167,6 @@ public class PaintCity extends city {
 		final int controlPanelHeight = getControlPHeight();
 		graph2.setColor(new Color(255, 255, 255, 127));
 		graph2.fillRect(0, controlPanelHeight + 39, Variables.width, Variables.height - controlPanelHeight + 39);
-		boolean lastInWindow = false;
 		if(isStationInWindow(line.trace[0])){
 			if(expandingLineStart){
 				drawEndStation(graph2, line.trace[0], line.lineColor);
@@ -179,7 +179,6 @@ public class PaintCity extends city {
 					drawStation(graph2, line.trace[0], line.lineColor);
 				}
 			}
-			lastInWindow = true;
 		}
 		int lastStationDrawn = 0;
 		while(lastStationDrawn + 1 < line.trace.length){
@@ -190,14 +189,9 @@ public class PaintCity extends city {
 				else{
 					drawStation(graph2, line.trace[lastStationDrawn + 1], line.lineColor);
 				}
-				drawStationConnection(graph2, line.trace[lastStationDrawn + 1], line.trace[lastStationDrawn], line.lineColor);
-				lastInWindow = true;
 			}
-			else{
-				if(lastInWindow){
-					drawStationConnection(graph2, line.trace[lastStationDrawn + 1], line.trace[lastStationDrawn], line.lineColor);
-				}
-				lastInWindow = false;
+			if(haveToDrawConnection(line.trace[lastStationDrawn], line.trace[lastStationDrawn + 1])){
+				drawStationConnection(graph2, line.trace[lastStationDrawn + 1], line.trace[lastStationDrawn], line.lineColor);
 			}
 			lastStationDrawn++;
 		}
@@ -209,6 +203,13 @@ public class PaintCity extends city {
 		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), createButton);
 		graph2.setColor(Color.white);
 		StringDraw.drawMaxString(graph2, Variables.width / 128, "Create!", createButton);
+	}
+	
+	public static boolean haveToDrawConnection(Point station1, Point station2){
+		final Rectangle viewRect = new Rectangle(theCity.mapPosition.x - 32, theCity.mapPosition.y - 32, Variables.width + 64, Variables.height - getControlPHeight() - 39 + 64);
+		final Point screenCoors1 = new Point(station1.x * 64 + 32, station1.y * 64 + 32);
+		final Point screenCoors2 = new Point(station2.x * 64 + 32, station2.y * 64 + 32);
+		return viewRect.intersectsLine(new Line2D.Double(screenCoors1, screenCoors2));
 	}
 	
 	public static void drawStationConnection(Graphics2D graph2, final Point mapCoors1, final Point mapCoors2, final Color lineColor){
