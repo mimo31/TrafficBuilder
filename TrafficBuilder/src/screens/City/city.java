@@ -207,7 +207,7 @@ public class city {
 								}
 								else{
 									theCity.addLine(line);
-									theCity.money = line.getPrice();
+									theCity.money = theCity.money - line.getPrice();
 									makingLine = false;
 									unpause();
 								}

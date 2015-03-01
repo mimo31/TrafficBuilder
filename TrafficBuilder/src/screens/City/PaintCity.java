@@ -30,7 +30,7 @@ public class PaintCity extends city {
 		}
 		lastTime = System.currentTimeMillis();
 	}
-
+	
 	public static void drawMap(final Graphics2D graph2){
 		graph2.setColor(new Color(255, 255, 255));
 		final int spaceYStart;
@@ -83,12 +83,37 @@ public class PaintCity extends city {
 			graph2.drawLine(0, spaceUsed, Variables.width, spaceUsed);
 			spaceUsed = spaceUsed + 256;
 		}
+		drawAllLines(graph2);
 		if(makingLine){
 			inMakingLineNonCP(graph2);
 		}
 		final Rectangle errorTextBounds = new Rectangle(Variables.width / 16, Variables.height * 5 / 6, Variables.width - Variables.width / 8, Variables.height / 6);
 		graph2.setColor(Color.red);
 		StringDraw.drawMaxString(graph2, errorTextBounds.height / 8, errorText, errorTextBounds);
+	}
+	
+	public static void drawAllLines(Graphics2D graph2){
+		int counter = 0;
+		while(counter < theCity.lines.length){
+			drawLine(graph2, theCity.lines[counter]);
+			counter++;
+		}
+	}
+	
+	public static void drawLine(Graphics2D graph2, Line lineToDraw){
+		int counter = 1;
+		if(isStationInWindow(lineToDraw.trace[0])){
+			drawStation(graph2, lineToDraw.trace[0], lineToDraw.lineColor);
+		}
+		while(counter < lineToDraw.trace.length){
+			if(isStationInWindow(lineToDraw.trace[counter])){
+				drawStation(graph2, lineToDraw.trace[counter], lineToDraw.lineColor);
+			}
+			if(haveToDrawConnection(lineToDraw.trace[counter], lineToDraw.trace[counter - 1])){
+				drawStationConnection(graph2, lineToDraw.trace[counter], lineToDraw.trace[counter - 1], lineToDraw.lineColor);
+			}
+			counter++;
+		}
 	}
 
 	public static void drawTCW(Graphics2D graph2){

@@ -31,7 +31,7 @@ public class CityType {
 	}
 	
 	public void addLine(final Line line){
-		final Line[] temp = new Line[this.Chunks.length + 1];
+		final Line[] temp = new Line[this.lines.length + 1];
 		int counter = 0;
 		while(counter < this.lines.length){
 			temp[counter] = this.lines[counter];
