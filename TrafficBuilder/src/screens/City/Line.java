@@ -37,6 +37,26 @@ public class Line {
 		this.trace = temp;
 	}
 	
+	public void removeStartStation(){
+		Point[] temp = new Point[trace.length - 1];
+		int counter = 0;
+		while(counter < temp.length){
+			temp[counter] = trace[counter + 1];
+			counter++;
+		}
+		trace = temp;
+	}
+	
+	public void removeEndStation(){
+		Point[] temp = new Point[trace.length - 1];
+		int counter = 0;
+		while(counter < temp.length){
+			temp[counter] = trace[counter];
+			counter++;
+		}
+		trace = temp;
+	}
+	
 	public float getLength(){
 		float totalLength = 0;
 		if(trace.length > 1){

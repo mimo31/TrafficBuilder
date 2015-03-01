@@ -71,6 +71,9 @@ public class Gui extends JFrame{
 			if(Variables.InNewCity){
 				screens.newCity.keyReleased(event);
 			}
+			else if(Variables.InCity){
+				screens.City.city.keyReleased(event);
+			}
 		}
 
 		@Override

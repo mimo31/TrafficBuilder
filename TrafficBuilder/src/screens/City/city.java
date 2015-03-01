@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -36,6 +37,7 @@ public class city {
 	final static double sqrt2 = Math.round(Math.sqrt(2) * 100) / (double) (100);
 	static String errorText;
 	static long errorDisappearTime;
+	static boolean makingHistory[];
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
@@ -96,6 +98,44 @@ public class city {
 		}
 	}
 	
+	public static void addHistoryValue(boolean value){
+		boolean[] temp = new boolean[makingHistory.length + 1];
+		int counter = 0;
+		while(counter < makingHistory.length){
+			temp[counter] = makingHistory[counter];
+			counter++;
+		}
+		temp[temp.length - 1] = value;
+		makingHistory = temp;
+	}
+	
+	public static void undoMakingStep(){
+		if(makingHistory.length > 0){
+			if(makingHistory[makingHistory.length - 1] == true){
+				line.removeStartStation();
+			}
+			else{
+				line.removeEndStation();
+			}
+			expandingLineStart = makingHistory[makingHistory.length - 1];
+			boolean[] temp = new boolean[makingHistory.length - 1];
+			int counter = 0;
+			while(counter < temp.length){
+				temp[counter] = makingHistory[counter];
+				counter++;
+			}
+			makingHistory = temp;
+		}
+	}
+	
+	public static void keyReleased(KeyEvent event){
+		if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+			if(makingLine){
+				undoMakingStep();
+			}
+		}
+	}
+	
 	public static void mouseClicked(final MouseEvent event){
 		if(inPauseMenu == false){
 			final int controlPanelHeight = getControlPHeight();
@@ -121,6 +161,7 @@ public class city {
 							else if(CLButton.contains(event.getPoint())){
 								pause();
 								makingLine = true;
+								makingHistory = new boolean[0];
 								line = new Line(new Point[]{new Point(TCWmapX, TCWmapY)});
 								line.lineColor = theCity.getNewLineColor();
 								showTCW = false;
@@ -177,6 +218,10 @@ public class city {
 							else if((expandingLineStart == false) && getStationRing(line.trace[0]).contains(event.getPoint())){
 								expandingLineStart = true;
 							}
+							else if(stationPlaceAllowed(convertScreenCoorsToMapCoors(event.getPoint())) == false){
+								errorText = "Line can't go twice through one station!";
+								errorDisappearTime = System.currentTimeMillis() + 2048;
+							}
 							else{
 								if(expandingLineStart){
 									line.addStartStation(convertScreenCoorsToMapCoors(event.getPoint()));
@@ -184,7 +229,7 @@ public class city {
 								else{
 									line.addEndStation(convertScreenCoorsToMapCoors(event.getPoint()));
 								}
-								doNothing();
+								addHistoryValue(expandingLineStart);
 							}
 						}
 					}
@@ -196,8 +241,17 @@ public class city {
 		}
 	}
 	
-	public static void doNothing(){
-		
+	public static boolean stationPlaceAllowed(Point station){
+		int counter = 0;
+		boolean stationExists = false;
+		while(counter < line.trace.length){
+			if(line.trace[counter].equals(station)){
+				stationExists = true;
+				break;
+			}
+			counter++;
+		}
+		return (stationExists == false);
 	}
 	
 	public static Area getStationRing(Point stationCoors){
