@@ -30,6 +30,17 @@ public class CityType {
 		Chunks = temp;
 	}
 	
+	public void addLine(final Line line){
+		final Line[] temp = new Line[this.Chunks.length + 1];
+		int counter = 0;
+		while(counter < this.lines.length){
+			temp[counter] = this.lines[counter];
+			counter++;
+		}
+		temp[counter] = line;
+		this.lines = temp;
+	}
+	
 	public Color getNewLineColor(){
 		int[] colorCounts = new int[6];
 		int counter = 0;

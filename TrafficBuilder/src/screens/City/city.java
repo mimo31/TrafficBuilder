@@ -34,11 +34,16 @@ public class city {
 	static Line line;
 	static boolean expandingLineStart;
 	final static double sqrt2 = Math.round(Math.sqrt(2) * 100) / (double) (100);
+	static String errorText;
+	static long errorDisappearTime;
 	
 	private static ActionListener timerAction = new ActionListener(){
 		@Override
 		public final void actionPerformed(final ActionEvent arg0){
 			Variables.myGui.repaint();
+			if(errorDisappearTime <= System.currentTimeMillis()){
+				errorText = "";
+			}
 		}
 	};
 	public final static Timer repaint = new Timer(25, timerAction);
@@ -50,6 +55,7 @@ public class city {
 		showTCW = false;
 		inPauseMenu = false;
 		makingLine = false;
+		errorText = "";
 		theCity = city;
 		lastTime = System.currentTimeMillis();
 		repaint.start();
@@ -150,8 +156,20 @@ public class city {
 								unpause();
 							}
 							else if(createButton.contains(event.getPoint())){
-								makingLine = false;
-								unpause();
+								if(line.trace.length < 2){
+									errorText = "Line has to contain at least two stations!";
+									errorDisappearTime = System.currentTimeMillis() + 4096;
+								}
+								else if(line.getPrice() > theCity.money){
+									errorText = "Not enough money!";
+									errorDisappearTime = System.currentTimeMillis() + 2048;
+								}
+								else{
+									theCity.addLine(line);
+									theCity.money = line.getPrice();
+									makingLine = false;
+									unpause();
+								}
 							}
 							else if(expandingLineStart && getStationRing(line.trace[line.trace.length - 1]).contains(event.getPoint())){
 								expandingLineStart = false;

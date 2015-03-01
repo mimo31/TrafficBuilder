@@ -86,6 +86,9 @@ public class PaintCity extends city {
 		if(makingLine){
 			inMakingLineNonCP(graph2);
 		}
+		final Rectangle errorTextBounds = new Rectangle(Variables.width / 16, Variables.height * 5 / 6, Variables.width - Variables.width / 8, Variables.height / 6);
+		graph2.setColor(Color.red);
+		StringDraw.drawMaxString(graph2, errorTextBounds.height / 8, errorText, errorTextBounds);
 	}
 
 	public static void drawTCW(Graphics2D graph2){
