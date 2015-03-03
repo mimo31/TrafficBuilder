@@ -60,7 +60,7 @@ public class CityType {
 			final Color lineColor = lines[counter].lineColor;
 			int counter2 = 0;
 			while(counter2 < 6){
-				if(lineColor == colors[counter2]){
+				if(lineColor.equals(colors[counter2])){
 					colorCounts[counter2]++;
 				}
 				counter2++;
@@ -162,6 +162,18 @@ public class CityType {
 			Chunks[counter].save();
 			counter++;
 		}
+		final File linesDirectory = new File(System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map\\lines");
+		final File[] listedLineFiles = linesDirectory.listFiles();
+		counter = 0;
+		while(counter < listedLineFiles.length){
+			listedLineFiles[counter].delete();
+			counter++;
+		}
+		counter = 0;
+		while(counter < lines.length){
+			Functions.writeBytesToFile(lines[counter].toBytes(), System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map\\lines\\" + counter + ".byt", false);
+			counter++;
+		}
 	}
 
 
@@ -192,22 +204,32 @@ public class CityType {
 			chunks[counter] = chunk.load(chunkX, chunkY, folderName);
 			counter++;
 		}
+		final File linesDirectory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\lines");
+		final File[] listedLines = linesDirectory.listFiles();
+		Line[] lines = new Line[listedLines.length];
+		counter = 0;
+		while(counter < lines.length){
+			lines[counter] = new Line(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\lines\\" + counter + ".byt"));
+			counter++;
+		}
 		return new CityType(
 				Functions.bytesToLong(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\time.byt")),
 				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"),
 				folderName,
 				new Point(mapX, mapY),
 				chunks,
-				money);
+				money,
+				lines);
 	}
 
-	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final chunk[] chunks, final float cityMoney){
+	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final chunk[] chunks, final float cityMoney, final Line[] cityLines){
 		this.time = cityTime;
 		this.name = cityName;
 		this.folderName = cityFolderName;
 		this.mapPosition = cityMapPosition;
 		this.Chunks = chunks;
 		this.money = cityMoney;
+		this.lines = cityLines;
 	}
 
 	static String getNewCityFolderName(String name){
