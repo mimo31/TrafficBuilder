@@ -95,6 +95,8 @@ public class CityType {
 		this.time = 0;
 		this.mapPosition = new Point(0, 0);
 		this.money = 65000;
+		this.popMap = new IntMap();
+		this.popMap.setValue(new Point(0, 0), 1);
 		try {
 			Files.createDirectory(Paths.get(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName));
 			Files.createDirectory(Paths.get(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map"));
@@ -104,7 +106,6 @@ public class CityType {
 			e.printStackTrace();
 		}
 		Functions.writeTextToFile(name, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\name.txt", true);
-		popMap.setValue(new Point(0, 0), 1);
 	}
 
 	public int getPopulation(final Point position){
