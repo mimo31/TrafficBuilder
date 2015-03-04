@@ -28,7 +28,7 @@ public class pause extends city{
 		if(Functions.buttonClicked(event, Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16)){
 			inPauseMenu = false;
 			if(makingLine == false){
-				unpause();
+				paused = false;
 			}
 		}
 		else if(Functions.buttonClicked(event, Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16)){

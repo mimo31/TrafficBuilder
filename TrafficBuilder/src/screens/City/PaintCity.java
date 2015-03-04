@@ -17,7 +17,6 @@ import mainPackage.Variables;
 
 public class PaintCity extends city {
 	static long endStationUpdateTime;
-	static long lastEndStationRepaint;
 	public static void paint(Graphics2D graph2){
 		drawMap(graph2);
 		if(showTCW){
@@ -28,7 +27,6 @@ public class PaintCity extends city {
 		if(inPauseMenu){
 			pause.paint(graph2);
 		}
-		lastTime = System.currentTimeMillis();
 	}
 	
 	public static void drawMap(final Graphics2D graph2){
@@ -153,9 +151,6 @@ public class PaintCity extends city {
 		graph2.fillRect(0, 0, Variables.width, controlPanelHeight);
 		graph2.setColor(Color.blue);
 		graph2.fillRect(borderSize, borderSize, Variables.width - borderSize * 2, controlPanelHeight - borderSize * 2);
-		if(paused == false){
-			theCity.time = theCity.time + System.currentTimeMillis() - lastTime;
-		}
 		graph2.setColor(Color.white);
 		final Rectangle timeBounds = new Rectangle();
 		timeBounds.x = borderSize + (Variables.width - borderSize * 2) / 3 * 2;
@@ -300,12 +295,8 @@ public class PaintCity extends city {
 	}
 	
 	public static double getEndStationState(){
-		if(inPauseMenu == false){
-			endStationUpdateTime = endStationUpdateTime + System.currentTimeMillis() - lastEndStationRepaint;
-		}
 		final int thousands = (int) (endStationUpdateTime * 4 % (2000 * Math.PI));
 		final double sinus = Math.round(Math.sin(thousands / (double) (1000)) * 100) / (double) (100);
-		lastEndStationRepaint = System.currentTimeMillis();
 		return (sinus + 1) / 2;
 	}
 
@@ -348,9 +339,6 @@ public class PaintCity extends city {
 		}
 		graph2.setColor(Color.white);
 		graph2.fillRect(0, linePosition - 15, Variables.width, 30);
-		if(paused == false){
-			powerLineState = powerLineState + System.currentTimeMillis() - lastTime;
-		}
 		int counter = 0;
 		graph2.setColor(Color.red);
 		double sin;

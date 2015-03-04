@@ -5,21 +5,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-
-import javax.swing.Timer;
 
 import mainPackage.Functions;
 import mainPackage.Variables;
 
 public class city {
 	public static CityType theCity;
-	static long lastTime;
 	public static boolean paused;
 	public static boolean inPauseMenu;
 	static long powerLineState;
@@ -38,17 +33,6 @@ public class city {
 	static String errorText;
 	static long errorDisappearTime;
 	static boolean makingHistory[];
-	
-	private static ActionListener timerAction = new ActionListener(){
-		@Override
-		public final void actionPerformed(final ActionEvent arg0){
-			Variables.myGui.repaint();
-			if(errorDisappearTime <= System.currentTimeMillis()){
-				errorText = "";
-			}
-		}
-	};
-	public final static Timer repaint = new Timer(25, timerAction);
 
 	public static void load(final CityType city){
 		Variables.InCity = true;
@@ -59,14 +43,13 @@ public class city {
 		makingLine = false;
 		errorText = "";
 		theCity = city;
-		lastTime = System.currentTimeMillis();
-		repaint.start();
+		Tick.ticker.start();
 	}
 
 	public static void close(){
 		Variables.InCity = false;
 		theCity.save();
-		repaint.stop();
+		Tick.ticker.stop();
 		paused = false;
 		powerLineState = 0;
 	}
@@ -147,7 +130,7 @@ public class city {
 					pauseSize);
 			if(pauseButton.contains(event.getPoint())){
 				inPauseMenu = true;
-				pause();
+				paused = true;
 			}
 			else{
 				if(event.getY() > controlPanelHeight + 39){
@@ -159,7 +142,7 @@ public class city {
 								showTCW = false;
 							}
 							else if(CLButton.contains(event.getPoint())){
-								pause();
+								paused = true;
 								makingLine = true;
 								makingHistory = new boolean[0];
 								line = new Line(new Point[]{new Point(TCWmapX, TCWmapY)});
@@ -194,7 +177,7 @@ public class city {
 							final Rectangle createButton = new Rectangle(Variables.width - Variables.width / 16, Variables.height - Variables.width / 32, Variables.width / 16, Variables.width / 32);
 							if(cancelButton.contains(event.getPoint())){
 								makingLine = false;
-								unpause();
+								paused = false;
 							}
 							else if(createButton.contains(event.getPoint())){
 								if(line.trace.length < 2){
@@ -209,7 +192,7 @@ public class city {
 									theCity.addLine(line);
 									theCity.money = theCity.money - line.getPrice();
 									makingLine = false;
-									unpause();
+									paused = false;
 								}
 							}
 							else if(expandingLineStart && getStationRing(line.trace[line.trace.length - 1]).contains(event.getPoint())){
@@ -271,18 +254,6 @@ public class city {
 		final Point mapCoors = new Point((int) Math.floor((screenCoors.x + theCity.mapPosition.x) / (double) 64), (int) Math.floor((screenCoors.y + theCity.mapPosition.y) / (double) 64));
 		return mapCoors;
 	}
-
-	public static void pause(){
-		paused = true;
-		//repaint.stop();
-		Variables.myGui.repaint();
-	}
-
-	public static void unpause(){
-		paused = false;
-		//repaint.start();
-		Variables.myGui.repaint();
-	}
 	
 	public static void mouseDragged(final MouseEvent event){
 		if(inPauseMenu == false){
@@ -313,21 +284,7 @@ public class city {
 		}
 	}
 	
-	private static ActionListener blink = new ActionListener(){
-		@Override
-		public final void actionPerformed(final ActionEvent arg0)
-		{
-			TCWframeBlack = (TCWframeBlack == false);
-			if(System.currentTimeMillis() >= endTCWBlinking){
-				blinking.stop();
-				TCWframeBlack = true;
-			}
-		}
-	};
-	public final static Timer blinking = new Timer(25, blink);
-	
 	public static void blinkTCW() {
 		endTCWBlinking = System.currentTimeMillis() + 100;
-		blinking.start();
 	}
 }
