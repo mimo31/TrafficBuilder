@@ -129,7 +129,7 @@ public class PaintCity extends city {
 		graph2.setColor(Color.red);
 		graph2.fillRect(TCWposition.x + TCWwidth - 3 * borderSize, TCWposition.y + controlPanelHeight + borderSize, 2 * borderSize, 2 * borderSize);
 		graph2.setColor(new Color(205, 133, 0));
-		StringDraw.drawMaxString(graph2, 2, "Population lvl. " + theCity.getPopulation(TCWmapX, TCWmapY), StringDraw.Left, new Rectangle(TCWposition.x + borderSize, TCWposition.y + 4 * borderSize + controlPanelHeight, TCWwidth - 2 * borderSize, TCWwidth / 8));
+		StringDraw.drawMaxString(graph2, 2, "Population lvl. " + theCity.getPopulation(new Point(TCWmapX, TCWmapY)), StringDraw.Left, new Rectangle(TCWposition.x + borderSize, TCWposition.y + 4 * borderSize + controlPanelHeight, TCWwidth - 2 * borderSize, TCWwidth / 8));
 		graph2.setColor(Color.green);
 		final Rectangle CLButton = new Rectangle(TCWposition.x + borderSize, TCWposition.y + controlPanelHeight + TCWwidth * 2 - borderSize - TCWwidth / 8, TCWwidth - 2 * borderSize, TCWwidth / 8);
 		Functions.drawChangRect(graph2, Color.green, new Color(0, 200, 0), CLButton);
@@ -138,8 +138,8 @@ public class PaintCity extends city {
 	}
 
 	public static void drawSquarePopulation(final Graphics2D graph2, final int pixelX, final int pixelY, final int squareX, final int squareY){
-		if(theCity.getPopulation(squareX, squareY) != 0){
-			final Image texture = ResourceHandler.getPopulationImage(theCity.getPopulation(squareX, squareY));
+		if(theCity.getPopulation(new Point(squareX, squareY)) != 0){
+			final Image texture = ResourceHandler.getPopulationImage(theCity.getPopulation(new Point(squareX, squareY)));
 			graph2.drawImage(texture, pixelX, pixelY, null);
 		}
 	}

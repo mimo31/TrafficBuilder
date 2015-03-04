@@ -16,19 +16,8 @@ public class CityType {
 	public String folderName;
 	public Point mapPosition;
 	public float money;
-	chunk[] Chunks = new chunk[0];
+	public IntMap popMap;
 	Line[] lines = new Line[0];
-
-	protected void addChunk(final chunk theChunk){
-		final chunk[] temp = new chunk[Chunks.length + 1];
-		int counter = 0;
-		while(counter < Chunks.length){
-			temp[counter] = Chunks[counter];
-			counter++;
-		}
-		temp[counter] = theChunk;
-		Chunks = temp;
-	}
 	
 	public void addLine(final Line line){
 		final Line[] temp = new Line[this.lines.length + 1];
@@ -115,38 +104,11 @@ public class CityType {
 			e.printStackTrace();
 		}
 		Functions.writeTextToFile(name, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\name.txt", true);
-		final chunk firstChunk = new chunk(0, 0);
-		firstChunk.setPopulation(1, 0, 0);
-		addChunk(firstChunk);
+		popMap.setValue(new Point(0, 0), 1);
 	}
 
-	public int getPopulation(final int x, final int y){
-		final int chunkX;
-		final int chunkY;
-		final int XInChunk;
-		final int YInChunk;
-		if(x >= 0){
-			chunkX = (int) Math.floor(x / 4);
-		}
-		else{
-			chunkX = (int) Math.ceil(x / 4);
-		}
-		if(y >= 0){
-			chunkY = (int) Math.floor(y / 4);
-		}
-		else{
-			chunkY = (int) Math.ceil(y / 4);
-		}
-		XInChunk = Functions.modulo(x, 4);
-		YInChunk = Functions.modulo(y, 4);
-		int counter = 0;
-		while(counter < Chunks.length){
-			if(Chunks[counter].positionX == chunkX && Chunks[counter].positionY == chunkY){
-				return Chunks[counter].getPopulation(XInChunk, YInChunk);
-			}
-			counter++;
-		}
-		return 0;
+	public int getPopulation(final Point position){
+		return popMap.getValue(position);
 	}
 
 	public void save(){
@@ -158,8 +120,8 @@ public class CityType {
 				System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\mapPosition.byt", false);
 		Functions.writeBytesToFile(Functions.floatToBytes(this.money), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\money.byt", false);
 		int counter = 0;
-		while(counter < Chunks.length){
-			Chunks[counter].save();
+		while(counter < popMap.chunks.length){
+			popMap.chunks[counter].save();
 			counter++;
 		}
 		final File linesDirectory = new File(System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map\\lines");
@@ -182,12 +144,11 @@ public class CityType {
 		final int mapX = Functions.bytesToInt(getFirst4ofByte(mapBytes));
 		final int mapY = Functions.bytesToInt(getLast4ofByte(mapBytes));
 		final float money = Functions.bytesToFloat(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\money.byt"));
-		chunk[] chunks;
 		final File directory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks");
 		final File[] listed = directory.listFiles();
-		chunks = new chunk[listed.length];
+		IntMap popMap = new IntMap();
 		int counter = 0;
-		while(counter < chunks.length){
+		while(counter < listed.length){
 			int counter2 = listed[counter].toString().length() - 1;
 			while(listed[counter].toString().toCharArray()[counter2] != '\\'){
 				counter2--;
@@ -201,7 +162,7 @@ public class CityType {
 			}
 			chunkX = Integer.parseInt(fileName.substring(0, counter2));
 			chunkY = Integer.parseInt(fileName.substring(counter2 + 1));
-			chunks[counter] = chunk.load(chunkX, chunkY, folderName);
+			popMap.addChunk(chunk.load(new Point(chunkX, chunkY), folderName));
 			counter++;
 		}
 		final File linesDirectory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\lines");
@@ -217,17 +178,17 @@ public class CityType {
 				Functions.readTextFile(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\name.txt"),
 				folderName,
 				new Point(mapX, mapY),
-				chunks,
+				popMap,
 				money,
 				lines);
 	}
 
-	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final chunk[] chunks, final float cityMoney, final Line[] cityLines){
+	protected CityType(final long cityTime, final String cityName, final String cityFolderName, final Point cityMapPosition, final IntMap popMap, final float cityMoney, final Line[] cityLines){
 		this.time = cityTime;
 		this.name = cityName;
 		this.folderName = cityFolderName;
 		this.mapPosition = cityMapPosition;
-		this.Chunks = chunks;
+		this.popMap = popMap;
 		this.money = cityMoney;
 		this.lines = cityLines;
 	}

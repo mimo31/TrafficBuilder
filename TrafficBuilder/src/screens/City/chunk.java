@@ -1,11 +1,12 @@
 package screens.City;
 
+import java.awt.Point;
+
 import mainPackage.Functions;
 
 public class chunk {
 	int[][] Lands;
-	int positionX;
-	int positionY;
+	Point position;
 
 	public int getPopulation(final int x, final int y){
 		return this.Lands[x][y];
@@ -15,24 +16,22 @@ public class chunk {
 		this.Lands[x][y] = population;
 	}
 
-	public chunk(final int x, final int y) {
+	public chunk(final Point position) {
 		Lands = new int[4][4];
-		positionX = x;
-		positionY = y;
+		this.position = position;
 	}
 
-	protected chunk(final int[][] chunkLands, final int x, final int y) {
+	protected chunk(final int[][] chunkLands, final Point position) {
 		Lands = chunkLands;
-		positionX = x;
-		positionY = y;
+		this.position = position;
 	}
 
-	public static chunk load(final int x, final int y, final String folderName) {
+	public static chunk load(final Point position, final String folderName) {
 		final int chunkLands[][] = new int[4][4];
 		byte[] readedBytes = null;
 		try {
 			readedBytes = Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\chunks\\" +
-					x + "," + y);
+					position.x + "," + position.y);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -51,7 +50,7 @@ public class chunk {
 			}
 			counter++;
 		}
-		return new chunk(chunkLands, x, y);
+		return new chunk(chunkLands, position);
 	}
 
 	public void save() {
@@ -71,6 +70,6 @@ public class chunk {
 			counter++;
 		}
 		Functions.writeBytesToFile(bytesToWrite, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" +
-				this.positionX + "," + this.positionY, false);
+				this.position.x + "," + this.position.y, false);
 	}
 }
