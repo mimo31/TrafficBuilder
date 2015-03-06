@@ -30,6 +30,10 @@ public class CityType {
 		this.lines = temp;
 	}
 	
+	public int getMaxPopulation(){
+		return 3;
+	}
+	
 	public Color getNewLineColor(){
 		int[] colorCounts = new int[6];
 		int counter = 0;

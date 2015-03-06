@@ -25,6 +25,20 @@ public class chunk {
 		Lands = chunkLands;
 		this.position = position;
 	}
+	
+	public DoubleChunk toDoubleChunk(){
+		double[][] tempValues = new double[4][4];
+		int counter = 0;
+		while(counter < 4){
+			int counter2 = 0;
+			while(counter2 < 4){
+				tempValues[counter][counter2] = Lands[counter][counter2];
+				counter2++;
+			}
+			counter++;
+		}
+		return new DoubleChunk(tempValues, position);
+	}
 
 	public static chunk load(final Point position, final String folderName) {
 		final int chunkLands[][] = new int[4][4];
