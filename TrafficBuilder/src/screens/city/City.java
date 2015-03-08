@@ -75,7 +75,7 @@ public class City extends Components {
 
 	public static void load(final CityType city){
 		Variables.InCity = true;
-		Variables.myGui.setMinimumSize(new Dimension(300, 300));
+		Variables.gui.setMinimumSize(new Dimension(300, 300));
 		TCWframeBlack = true;
 		showTCW = false;
 		inPauseMenu = false;

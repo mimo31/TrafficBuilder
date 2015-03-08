@@ -37,7 +37,7 @@ public class Tick extends PaintCity{
 		else{
 			TCWframeBlack = (TCWframeBlack == false);
 		}
-		Variables.myGui.repaint();
+		Variables.gui.repaint();
 	}
 	
 	public static void changePopAndAddMoney(){

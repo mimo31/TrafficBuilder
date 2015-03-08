@@ -8,7 +8,7 @@ public class StartClass {
 	public static void main(final String[] args){
 		Variables.lastMousePosition = new Point(0, 0);
 		ResourceHandler.start();
-		Variables.myGui = new Gui();
+		Gui.initializeGraphics();
 		screens.Title.load();
 		Gui.updateGui();
 	}

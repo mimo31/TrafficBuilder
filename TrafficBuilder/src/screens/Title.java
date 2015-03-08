@@ -31,7 +31,7 @@ public class Title {
 
 	public static void load(){
 		Variables.InStart = true;
-		Variables.myGui.setMinimumSize(new Dimension(100, 100));
+		Variables.gui.setMinimumSize(new Dimension(100, 100));
 	}
 
 	public static void close(){

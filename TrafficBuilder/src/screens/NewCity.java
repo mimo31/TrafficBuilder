@@ -29,7 +29,7 @@ public class NewCity {
 		@Override
 		public void actionPerformed(final ActionEvent arg0)
 		{
-			Variables.myGui.repaint();
+			Variables.gui.repaint();
 		}
 	};
 	static Timer repaint = new Timer(500, timerAction);
@@ -86,7 +86,7 @@ public class NewCity {
 			else{
 				showBlankWarning = false;
 				nameTextbox.keyPressed(event);
-				Variables.myGui.repaint();
+				Variables.gui.repaint();
 			}
 		}
 	}
@@ -98,12 +98,12 @@ public class NewCity {
 		else{
 			close();
 			City.load(new CityType(nameTextbox.text));
-			Variables.myGui.repaint();
+			Variables.gui.repaint();
 		}
 	}
 
 	public static void mouseClicked(final MouseEvent event){
-		Variables.myGui.repaint();
+		Variables.gui.repaint();
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
 			if(backToTitle){

@@ -12,55 +12,56 @@ import javax.swing.JFrame;
 import javax.swing.event.MouseInputAdapter;
 
 @SuppressWarnings("serial")
-public class Gui extends JFrame{
-	public Gui() {
-		this.setSize(200, 200);
-		this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Traffic Builder");
-		this.getContentPane().addMouseListener(new InterfaceMouseEvents());
-		this.addComponentListener(new InterfaceComponentEvents());
-		this.addKeyListener(new InterfaceKeyEvents());
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+public class Gui extends Variables{
+	public static void initializeGraphics() {
+		gui = new JFrame();
+		gui.setSize(200, 200);
+		gui.setExtendedState(gui.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		gui.setVisible(true);
+		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gui.setTitle("Traffic Builder");
+		gui.getContentPane().addMouseListener(mouseEvents);
+		gui.addComponentListener(componentEvents);
+		gui.addKeyListener(keyEvents);
+		gui.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
-			public void windowClosing(final java.awt.event.WindowEvent windowEvent) {
-				if (Variables.InCity == true){
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if(InCity == true){
 					screens.city.City.close();
 				}
 			}
 		});
-		this.getContentPane().addMouseMotionListener(new InterfaceMouseEvents());
-		this.add(new paintIt());
+		gui.getContentPane().addMouseMotionListener(mouseEvents);
+		gui.add(new paintIt());
 	}
 
 	public static void updateGui(){
-		final Container Test = Variables.myGui.getContentPane();
-		Variables.height = Test.getHeight();
-		Variables.width = Test.getWidth();
-		Variables.myGui.repaint();
+		final Container Test = gui.getContentPane();
+		height = Test.getHeight();
+		width = Test.getWidth();
+		gui.repaint();
 	}
 
 	public static class paintIt extends JComponent{
 		@Override
 		public void paint(final Graphics g){
-			if(Variables.InStart){
+			if(InStart){
 				screens.Title.paint(g);
 			}
-			else if(Variables.InNewCity) {
+			else if(InNewCity) {
 				screens.NewCity.paint(g);
 			}
-			else if(Variables.InCity){
+			else if(InCity){
 				screens.city.City.paint(g);
 			}
-			else if(Variables.InLoadCity){
+			else if(InLoadCity){
 				screens.LoadCity.paint(g);
 			}
 		}
 	}
-
-	public class InterfaceKeyEvents implements KeyListener{
-
+	
+	private static KeyListener keyEvents = new KeyListener(){
+		
 		@Override
 		public void keyPressed(final KeyEvent event) {
 
@@ -68,10 +69,10 @@ public class Gui extends JFrame{
 
 		@Override
 		public void keyReleased(final KeyEvent event) {
-			if(Variables.InNewCity){
+			if(InNewCity){
 				screens.NewCity.keyReleased(event);
 			}
-			else if(Variables.InCity){
+			else if(InCity){
 				screens.city.City.keyReleased(event);
 			}
 		}
@@ -81,9 +82,9 @@ public class Gui extends JFrame{
 
 		}
 
-	}
-
-	public class InterfaceComponentEvents implements ComponentListener{
+	};
+	
+	private static ComponentListener componentEvents = new ComponentListener(){
 
 		@Override
 		public void componentMoved(final ComponentEvent e) {
@@ -107,61 +108,61 @@ public class Gui extends JFrame{
 
 
 		}
-
-	}
-
-	private class InterfaceMouseEvents extends MouseInputAdapter {
+		
+	};
+	
+	private static MouseInputAdapter mouseEvents = new MouseInputAdapter(){
 		@Override
 		public void mouseClicked(final MouseEvent event) {
-			if(Variables.InStart){
+			if(InStart){
 				screens.Title.mouseClicked(event);
 			}
-			else if(Variables.InNewCity){
+			else if(InNewCity){
 				screens.NewCity.mouseClicked(event);
 			}
-			else if(Variables.InLoadCity){
+			else if(InLoadCity){
 				screens.LoadCity.mouseClicked(event);
 			}
-			else if(Variables.InCity){
+			else if(InCity){
 				screens.city.City.mouseClicked(event);
 			}
 		}
 
 		@Override
 		public void mouseDragged(final MouseEvent event) {
-			if(Variables.InCity){
+			if(InCity){
 				screens.city.City.mouseDragged(event);
 			}
-			Variables.lastMousePosition = event.getPoint();
+			lastMousePosition = event.getPoint();
 			updateGui();
 			event.consume();
 		}
 
 		@Override
 		public void mouseMoved(final MouseEvent event) {
-			Variables.lastMousePosition = event.getPoint();
+			lastMousePosition = event.getPoint();
 			updateGui();
 			event.consume();
 		}
 
 		@Override
 		public void mousePressed(final MouseEvent event) {
-			if(Variables.InLoadCity){
+			if(InLoadCity){
 				screens.LoadCity.mousePressed(event);
 			}
-			else if(Variables.InCity){
+			else if(InCity){
 				screens.city.City.mousePressed(event);
 			}
 		}
 
 		@Override
 		public void mouseReleased(final MouseEvent event) {
-			if(Variables.InLoadCity){
+			if(InLoadCity){
 				screens.LoadCity.mouseReleased(event);
 			}
-			else if(Variables.InCity){
+			else if(InCity){
 				screens.city.City.mouseRelesed(event);
 			}
 		}
-	}
+	};
 }

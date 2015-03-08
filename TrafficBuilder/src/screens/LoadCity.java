@@ -38,7 +38,7 @@ public class LoadCity {
 				listPosition = 0;
 				scrollUp.stop();
 			}
-			Variables.myGui.repaint();
+			Variables.gui.repaint();
 		}
 	};
 	static Timer scrollUp = new Timer(25, scrollUp1);
@@ -56,7 +56,7 @@ public class LoadCity {
 				listPosition = names.length - 0.5;
 				scrollUp.stop();
 			}
-			Variables.myGui.repaint();
+			Variables.gui.repaint();
 		}
 	};
 	static Timer scrollDown = new Timer(25, scrollDown1);
