@@ -17,10 +17,10 @@ import mainPackage.Functions;
 import mainPackage.StringDraw;
 import mainPackage.Textbox;
 import mainPackage.Variables;
-import screens.City.CityType;
-import screens.City.city;
+import screens.city.City;
+import screens.city.CityType;
 
-public class newCity {
+public class NewCity {
 	static Textbox nameTextbox;
 	static boolean showBlankWarning;
 	static boolean backToTitle;
@@ -97,7 +97,7 @@ public class newCity {
 		}
 		else{
 			close();
-			city.load(new CityType(nameTextbox.text));
+			City.load(new CityType(nameTextbox.text));
 			Variables.myGui.repaint();
 		}
 	}
@@ -107,10 +107,10 @@ public class newCity {
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
 			if(backToTitle){
-				title.load();
+				Title.load();
 			}
 			else{
-				loadCity.load();
+				LoadCity.load();
 			}
 		}
 		else if(Functions.buttonClicked(event, Variables.width / 4 * 3 - Variables.width / 12, Variables.height / 8 * 5 + Variables.height / 16, Variables.width / 12, Variables.height / 16)){

@@ -26,7 +26,7 @@ public class Gui extends JFrame{
 			@Override
 			public void windowClosing(final java.awt.event.WindowEvent windowEvent) {
 				if (Variables.InCity == true){
-					screens.City.city.close();
+					screens.city.City.close();
 				}
 			}
 		});
@@ -45,16 +45,16 @@ public class Gui extends JFrame{
 		@Override
 		public void paint(final Graphics g){
 			if(Variables.InStart){
-				screens.title.paint(g);
+				screens.Title.paint(g);
 			}
 			else if(Variables.InNewCity) {
-				screens.newCity.paint(g);
+				screens.NewCity.paint(g);
 			}
 			else if(Variables.InCity){
-				screens.City.city.paint(g);
+				screens.city.City.paint(g);
 			}
 			else if(Variables.InLoadCity){
-				screens.loadCity.paint(g);
+				screens.LoadCity.paint(g);
 			}
 		}
 	}
@@ -69,10 +69,10 @@ public class Gui extends JFrame{
 		@Override
 		public void keyReleased(final KeyEvent event) {
 			if(Variables.InNewCity){
-				screens.newCity.keyReleased(event);
+				screens.NewCity.keyReleased(event);
 			}
 			else if(Variables.InCity){
-				screens.City.city.keyReleased(event);
+				screens.city.City.keyReleased(event);
 			}
 		}
 
@@ -114,23 +114,23 @@ public class Gui extends JFrame{
 		@Override
 		public void mouseClicked(final MouseEvent event) {
 			if(Variables.InStart){
-				screens.title.mouseClicked(event);
+				screens.Title.mouseClicked(event);
 			}
 			else if(Variables.InNewCity){
-				screens.newCity.mouseClicked(event);
+				screens.NewCity.mouseClicked(event);
 			}
 			else if(Variables.InLoadCity){
-				screens.loadCity.mouseClicked(event);
+				screens.LoadCity.mouseClicked(event);
 			}
 			else if(Variables.InCity){
-				screens.City.city.mouseClicked(event);
+				screens.city.City.mouseClicked(event);
 			}
 		}
 
 		@Override
 		public void mouseDragged(final MouseEvent event) {
 			if(Variables.InCity){
-				screens.City.city.mouseDragged(event);
+				screens.city.City.mouseDragged(event);
 			}
 			Variables.lastMousePosition = event.getPoint();
 			updateGui();
@@ -147,20 +147,20 @@ public class Gui extends JFrame{
 		@Override
 		public void mousePressed(final MouseEvent event) {
 			if(Variables.InLoadCity){
-				screens.loadCity.mousePressed(event);
+				screens.LoadCity.mousePressed(event);
 			}
 			else if(Variables.InCity){
-				screens.City.city.mousePressed(event);
+				screens.city.City.mousePressed(event);
 			}
 		}
 
 		@Override
 		public void mouseReleased(final MouseEvent event) {
 			if(Variables.InLoadCity){
-				screens.loadCity.mouseReleased(event);
+				screens.LoadCity.mouseReleased(event);
 			}
 			else if(Variables.InCity){
-				screens.City.city.mouseRelesed(event);
+				screens.city.City.mouseRelesed(event);
 			}
 		}
 	}

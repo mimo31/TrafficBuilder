@@ -1,10 +1,10 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Point;
 
 import mainPackage.Functions;
 
-public class chunk {
+public class Chunk {
 	int[][] Lands;
 	Point position;
 
@@ -16,12 +16,12 @@ public class chunk {
 		this.Lands[x][y] = population;
 	}
 
-	public chunk(final Point position) {
+	public Chunk(final Point position) {
 		Lands = new int[4][4];
 		this.position = position;
 	}
 
-	protected chunk(final int[][] chunkLands, final Point position) {
+	protected Chunk(final int[][] chunkLands, final Point position) {
 		Lands = chunkLands;
 		this.position = position;
 	}
@@ -40,7 +40,7 @@ public class chunk {
 		return new DoubleChunk(tempValues, position);
 	}
 
-	public static chunk load(final Point position, final String folderName) {
+	public static Chunk load(final Point position, final String folderName) {
 		final int chunkLands[][] = new int[4][4];
 		byte[] readedBytes = null;
 		try {
@@ -64,7 +64,7 @@ public class chunk {
 			}
 			counter++;
 		}
-		return new chunk(chunkLands, position);
+		return new Chunk(chunkLands, position);
 	}
 
 	public void save() {
@@ -83,7 +83,7 @@ public class chunk {
 			}
 			counter++;
 		}
-		Functions.writeBytesToFile(bytesToWrite, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + city.theCity.folderName + "\\map\\chunks\\" +
+		Functions.writeBytesToFile(bytesToWrite, System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + City.theCity.folderName + "\\map\\chunks\\" +
 				this.position.x + "," + this.position.y, false);
 	}
 }

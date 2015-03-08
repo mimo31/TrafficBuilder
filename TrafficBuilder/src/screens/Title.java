@@ -13,18 +13,18 @@ import mainPackage.Gui;
 import mainPackage.StringDraw;
 import mainPackage.Variables;
 
-public class title {
+public class Title {
 	static Point mousePosition;
 
 	public static void mouseClicked(final MouseEvent event){
 		if(new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){
-			title.close();
-			newCity.load(true);
+			Title.close();
+			NewCity.load(true);
 			Gui.updateGui();
 		}
 		else if(new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16).contains(event.getPoint())){
-			title.close();
-			loadCity.load();
+			Title.close();
+			LoadCity.load();
 			Gui.updateGui();
 		}
 	}

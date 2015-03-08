@@ -1,4 +1,4 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -167,7 +167,7 @@ public class CityType {
 			}
 			chunkX = Integer.parseInt(fileName.substring(0, counter2));
 			chunkY = Integer.parseInt(fileName.substring(counter2 + 1));
-			popMap.addChunk(chunk.load(new Point(chunkX, chunkY), folderName));
+			popMap.addChunk(Chunk.load(new Point(chunkX, chunkY), folderName));
 			counter++;
 		}
 		final File linesDirectory = new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\lines");

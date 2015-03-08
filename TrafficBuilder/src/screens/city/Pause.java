@@ -1,4 +1,4 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,10 +8,10 @@ import java.awt.event.MouseEvent;
 import mainPackage.Functions;
 import mainPackage.StringDraw;
 import mainPackage.Variables;
-import screens.title;
+import screens.Title;
 
-public class pause extends city{
-	public static void paint(final Graphics2D graph2){
+public class Pause extends City{
+	public static void paint(Graphics2D graph2){
 		graph2.setColor(new Color(255, 255, 255, 127));
 		graph2.fillRect(0, 0, Variables.width, Variables.height);
 		Functions.drawChangRect(graph2, Color.black, new Color(40, 40, 40), Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16);
@@ -35,8 +35,8 @@ public class pause extends city{
 
 		}
 		else if(Functions.buttonClicked(event, Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16)){
-			city.close();
-			title.load();
+			City.close();
+			Title.load();
 		}
 	}
 }

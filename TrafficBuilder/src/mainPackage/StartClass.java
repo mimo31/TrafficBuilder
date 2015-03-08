@@ -9,7 +9,7 @@ public class StartClass {
 		Variables.lastMousePosition = new Point(0, 0);
 		ResourceHandler.start();
 		Variables.myGui = new Gui();
-		screens.title.load();
+		screens.Title.load();
 		Gui.updateGui();
 	}
 }

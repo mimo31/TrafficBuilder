@@ -1,4 +1,4 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;

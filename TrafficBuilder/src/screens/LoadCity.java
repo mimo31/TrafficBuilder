@@ -17,9 +17,9 @@ import javax.swing.Timer;
 import mainPackage.Functions;
 import mainPackage.StringDraw;
 import mainPackage.Variables;
-import screens.City.CityType;
+import screens.city.CityType;
 
-public class loadCity {
+public class LoadCity {
 	static String[] names;
 	static Calendar[] lastPlays;
 	static String[] folders;
@@ -228,13 +228,13 @@ public class loadCity {
 	public static void mouseClicked(final MouseEvent event){
 		if(Functions.buttonClicked(event, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24)){
 			close();
-			title.load();
+			Title.load();
 		}
 		else if(names.length == 0){
 			Rectangle button = new Rectangle(Variables.width / 2 - Variables.width / 12, Variables.height * 5 / 12, Variables.width / 6, Variables.height / 16);
 			if(button.contains(event.getPoint())){
 				close();
-				newCity.load(false);
+				NewCity.load(false);
 			}
 		}
 		else if(event.getY() > Variables.height / 6){
@@ -256,8 +256,8 @@ public class loadCity {
 				final double relToListClickPos =  listPosition + (double) (event.getY() - Variables.height / 6) / (double) (cityBlockWidth / 3 + gapSize);
 				if(relToListClickPos % 1 > (double) (1) / 11){
 					try {
-						screens.City.city.load(CityType.load(folders[(int) Math.floor(relToListClickPos)]));
-						screens.loadCity.close();
+						screens.city.City.load(CityType.load(folders[(int) Math.floor(relToListClickPos)]));
+						screens.LoadCity.close();
 					} catch (final Exception e) {
 						e.printStackTrace();
 					}

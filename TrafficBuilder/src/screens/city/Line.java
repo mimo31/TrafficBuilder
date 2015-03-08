@@ -1,4 +1,4 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Color;
 import java.awt.Point;

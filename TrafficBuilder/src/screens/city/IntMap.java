@@ -1,11 +1,11 @@
-package screens.City;
+package screens.city;
 
 import java.awt.Point;
 
 import mainPackage.Functions;
 
 public class IntMap {
-	public chunk[] chunks = new chunk[0];
+	public Chunk[] chunks = new Chunk[0];
 	
 	public IntMap(){
 		
@@ -37,7 +37,7 @@ public class IntMap {
 			chunks[counter].setPopulation(value, posInChunk.x, posInChunk.y);
 		}
 		else{
-			chunk newChunk = new chunk(chunkPos);
+			Chunk newChunk = new Chunk(chunkPos);
 			newChunk.setPopulation(value, posInChunk.x, posInChunk.y);
 			addChunk(newChunk);
 		}
@@ -59,7 +59,7 @@ public class IntMap {
 			chunks[counter].setPopulation(chunks[counter].getPopulation(posInChunk.x, posInChunk.y) + increaseBy, posInChunk.x, posInChunk.y);
 		}
 		else{
-			chunk newChunk = new chunk(chunkPos);
+			Chunk newChunk = new Chunk(chunkPos);
 			newChunk.setPopulation(increaseBy, posInChunk.x, posInChunk.y);
 			addChunk(newChunk);
 		}
@@ -97,8 +97,8 @@ public class IntMap {
 		}
 	}
 	
-	public void addChunk(chunk chunkToAdd){
-		chunk[] temp = new chunk[this.chunks.length + 1];
+	public void addChunk(Chunk chunkToAdd){
+		Chunk[] temp = new Chunk[this.chunks.length + 1];
 		int counter = 0;
 		while(counter < this.chunks.length){
 			temp[counter] = this.chunks[counter];
