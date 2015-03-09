@@ -34,6 +34,36 @@ public class CityType {
 		return 3;
 	}
 	
+	public char getNewLineCodeChar(){
+		if(lines.length == 0){
+			return 'A';
+		}
+		else{
+			final char lastLineChar = lines[lines.length - 1].codeChar;
+			if(lastLineChar == 'Z'){
+				return 'A';
+			}
+			else{
+				return (char) (lastLineChar + 1);
+			}
+		}
+	}
+	
+	public int getNewLineCodeNumber(){
+		if(lines.length == 0){
+			return 0;
+		}
+		else{
+			final char lastLineChar = lines[lines.length - 1].codeChar;
+			if(lastLineChar == 'Z'){
+				return lines[lines.length - 1].codeNumber + 1;
+			}
+			else{
+				return lines[lines.length - 1].codeNumber;
+			}
+		}
+	}
+	
 	public Color getNewLineColor(){
 		int[] colorCounts = new int[6];
 		int counter = 0;
@@ -138,7 +168,8 @@ public class CityType {
 		}
 		counter = 0;
 		while(counter < lines.length){
-			Functions.writeBytesToFile(lines[counter].toBytes(), System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map\\lines\\" + counter + ".byt", false);
+			final String path = System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + this.folderName + "\\map\\lines\\" + String.valueOf(lines[counter].codeChar) + String.valueOf(lines[counter].codeNumber) + ".byt";
+			Functions.writeBytesToFile(lines[counter].toBytes(), path, false);
 			counter++;
 		}
 	}
@@ -175,7 +206,15 @@ public class CityType {
 		Line[] lines = new Line[listedLines.length];
 		counter = 0;
 		while(counter < lines.length){
-			lines[counter] = new Line(Functions.readBytes(System.getenv("APPDATA") + "\\TrafficBuilder\\Saves\\" + folderName + "\\map\\lines\\" + counter + ".byt"));
+			final String filePath = listedLines[counter].toString();
+			int counter2 = filePath.length() - 1;
+			while(filePath.charAt(counter2) == '\\'){
+				counter--;
+			}
+			final String lineCodeName = filePath.substring(counter2 + 1);
+			final char lineCodeChar = lineCodeName.charAt(0);
+			final int lineCodeNumber = Integer.parseInt(lineCodeName.substring(1));
+			lines[counter] = new Line(Functions.readBytes(listedLines[counter]), lineCodeChar, lineCodeNumber);
 			counter++;
 		}
 		return new CityType(

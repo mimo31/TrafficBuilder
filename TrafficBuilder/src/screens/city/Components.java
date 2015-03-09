@@ -9,7 +9,7 @@ import mainPackage.Variables;
 public class Components {
 
 	static boolean makingLine;
-	
+	static boolean inPauseMenu;
 	static boolean showTCW;
 	static Point TCWposition;
 	static int TCWwidth;
@@ -40,6 +40,10 @@ public class Components {
 	static Rectangle TCWCreateLine;
 	static Rectangle TCWCreateLineText;
 	static Rectangle TCWPopText;
+	
+	static Rectangle backToCity;
+	static Rectangle enterSettings;
+	static Rectangle goToTitle;
 	
 	public static void updateComponents(){
 		if(Variables.height > 800){
@@ -91,6 +95,12 @@ public class Components {
 			TCWCreateLineText = Functions.addBorders(TCWCreateLine, TCWwidth / 64);
 			TCWPopText = new Rectangle(TCWInside.x, TCW.y + TCWBorderSize * 4, TCWInside.width, TCWBorderSize * 2);
 			TCWPopText = Functions.addBorders(TCWPopText, 2);
+		}
+		
+		if(inPauseMenu){
+			backToCity = new Rectangle(Variables.width / 4, Variables.height / 4, Variables.width / 2, Variables.height / 16);
+			enterSettings = new Rectangle(Variables.width / 4, Variables.height / 32 * 11, Variables.width / 2, Variables.height / 16);
+			goToTitle = new Rectangle(Variables.width / 4, Variables.height / 16 * 7, Variables.width / 2, Variables.height / 16);
 		}
 	}
 }

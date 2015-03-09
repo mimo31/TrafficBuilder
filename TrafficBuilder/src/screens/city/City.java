@@ -12,9 +12,8 @@ import java.awt.geom.Ellipse2D;
 import mainPackage.Variables;
 
 public class City extends Components {
-	public static CityType theCity;
-	public static boolean paused;
-	public static boolean inPauseMenu;
+	static CityType theCity;
+	static boolean paused;
 	static long powerLineState;
 	static boolean TCWframeBlack;
 	static long endTCWBlinking;
@@ -27,6 +26,7 @@ public class City extends Components {
 	static String errorText;
 	static long errorDisappearTime;
 	static boolean makingHistory[];
+	static boolean inViewSettings;
 
 	public static void addHistoryValue(boolean value){
 		boolean[] temp = new boolean[makingHistory.length + 1];
@@ -67,8 +67,20 @@ public class City extends Components {
 
 	public static void keyReleased(KeyEvent event){
 		if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE){
-			if(makingLine){
+			if(makingLine && (inPauseMenu == false)){
 				undoMakingStep();
+			}
+		}
+		else if(event.getKeyCode() == KeyEvent.VK_ESCAPE){
+			if(inPauseMenu){
+				inPauseMenu = false;
+				if(makingLine == false){
+					paused = false;
+				}
+			}
+			else{
+				inPauseMenu = true;
+				paused = true;
 			}
 		}
 	}

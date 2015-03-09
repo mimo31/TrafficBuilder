@@ -26,7 +26,7 @@ public class Gui extends Variables{
 		gui.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if(InCity == true){
+				if(InCity){
 					screens.city.City.close();
 				}
 			}

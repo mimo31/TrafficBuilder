@@ -15,7 +15,7 @@ public class ViewSettings extends City{
 		graph2.setColor(Color.black);
 		graph2.fill(titleRect);
 		graph2.setColor(Color.white);
-		StringDraw.drawMaxString(graph2, Variables.width / 8, "View Settigns", titleRect);
+		StringDraw.drawMaxString(graph2, Variables.height / 48, "View Settigns", titleRect);
 	}
 	
 	public static void mouseClicked(MouseEvent event){

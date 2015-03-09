@@ -421,14 +421,19 @@ public class PaintCity extends City {
 
 	public static void paint(Graphics2D graph2){
 		updateComponents();
-		drawMap(graph2);
-		if(showTCW){
-			drawTCW(graph2);
+		if(inViewSettings){
+			ViewSettings.paint(graph2);
 		}
-		drawPowerLine(graph2);
-		drawControlPanel(graph2);
-		if(inPauseMenu){
-			Pause.paint(graph2);
+		else{
+			drawMap(graph2);
+			if(showTCW){
+				drawTCW(graph2);
+			}
+			drawPowerLine(graph2);
+			drawControlPanel(graph2);
+			if(inPauseMenu){
+				Pause.paint(graph2);
+			}
 		}
 	}
 }

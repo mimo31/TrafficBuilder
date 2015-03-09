@@ -128,21 +128,22 @@ public class Functions {
 			return d;
 		}
 	}
-	
-	public static byte[] readBytes(final String path) throws Exception{
-		InputStream input;
-		input = new FileInputStream(new File(path));
+
+	public static byte[] readBytes(File path) throws Exception {
+		InputStream input = new FileInputStream(path);
 		final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		final byte[] data = new byte[1024];
 		int nRead;
-
-
 		while ((nRead = input.read(data, 0, data.length)) != -1){
 			buffer.write(data, 0, nRead);
 		}
 		buffer.flush();
 		input.close();
 		return buffer.toByteArray();
+	}
+	
+	public static byte[] readBytes(final String path) throws Exception{
+		return readBytes(new File(path));
 	}
 	
 	public static String readTextFile(final String path){

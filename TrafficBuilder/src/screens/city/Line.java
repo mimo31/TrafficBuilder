@@ -10,9 +10,13 @@ public class Line {
 	public Point[] trace;
 	public boolean upgraded;
 	public Color lineColor;
+	public char codeChar;
+	public int codeNumber;
 	
-	public Line(Point[] trace){
+	public Line(Point[] trace, char codeChar, int codeNumber){
 		this.trace = trace;
+		this.codeChar = codeChar;
+		this.codeNumber = codeNumber;
 	}
 	
 	public void addStartStation(Point station){
@@ -69,7 +73,7 @@ public class Line {
 		return totalLength;
 	}
 	
-	public Line(byte[] bytes){
+	public Line(byte[] bytes, char codeChar, int codeNumber){
 		if(bytes[0] == 127){
 			this.upgraded = true;
 		}
