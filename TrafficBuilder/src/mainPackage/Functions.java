@@ -80,7 +80,7 @@ public class Functions {
 	}
 
 	public static void drawPauseButton(final Graphics2D graph2, final Color onMouseColor){
-		Functions.drawChangRect(graph2, Color.black, onMouseColor, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24);
+		drawChangRect(graph2, Color.black, onMouseColor, Variables.width / 200, Variables.height / 200, Variables.width / 16, Variables.height / 24);
 		graph2.setColor(Color.WHITE);
 		StringDraw.drawMaxString(graph2, "<<", new Rectangle(Variables.width / 200 + Variables.width / 100, Variables.height / 200 + Variables.height / 100, Variables.width / 16 * 1 / 2, Variables.height / 24 / 2));
 	}

@@ -26,7 +26,6 @@ public class City extends Components {
 	static String errorText;
 	static long errorDisappearTime;
 	static boolean makingHistory[];
-	static boolean inViewSettings;
 
 	public static void addHistoryValue(boolean value){
 		boolean[] temp = new boolean[makingHistory.length + 1];

@@ -10,16 +10,20 @@ import mainPackage.Variables;
 public class MouseEvents extends City {
 
 	public static void mouseClicked(final MouseEvent event){
-		if(inPauseMenu){
-			Pause.mouseClicked(event);
+		if(inViewSettings){
+			ViewSettings.mouseClicked(event);
 		}
-		
 		else{
-			if(event.getY() > controlPanel.height + 39){
-				mapClicked(event);	
+			if(inPauseMenu){
+				Pause.mouseClicked(event);
 			}
 			else{
-				controlPanelClicked(event);
+				if(event.getY() > controlPanel.height + 39){
+					mapClicked(event);	
+				}
+				else{
+					controlPanelClicked(event);
+				}
 			}
 		}
 	}
