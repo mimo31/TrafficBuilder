@@ -1,12 +1,15 @@
-package mainPackage;
+package tb;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 
-public class StringDraw {
+
+public class ExtendedGraphics2D {
+
 	public static final int Middle = 0;
 	public static final int Up = 1;
 	public static final int UpRight = 2;
@@ -16,28 +19,48 @@ public class StringDraw {
 	public static final int DownLeft = 6;
 	public static final int Left = 7;
 	public static final int UpLeft = 8;
-
-	static int getSpaceSize(final Graphics2D graph2){
-		return getStringBounds(graph2, "h h", 0, 0).width - getStringBounds(graph2, "hh", 0, 0).width;
+	
+	public Graphics2D graph2;
+	
+	public ExtendedGraphics2D(Graphics2D graph2){
+		this.graph2 = graph2;
+	}
+	
+	public void setColor(Color color){
+		this.graph2.setColor(color);
+	}
+	
+	public void drawChangingRect(Rectangle rect, Color normalColor, Color onMouseColor){
+		if(rect.contains(Main.mousePosition)){
+			graph2.setColor(onMouseColor);
+		}
+		else{
+			graph2.setColor(normalColor);
+		}
+		graph2.fill(rect);
 	}
 
-	public static void drawMaxString(final Graphics2D graph2, final int borderSize, final String str, final int align, Rectangle bounds, final int fontType){
+	int getSpaceSize(){
+		return getStringBounds("h h", 0, 0).width - getStringBounds("hh", 0, 0).width;
+	}
+
+	public void drawMaxString(final int borderSize, final String str, final int align, Rectangle bounds, final int fontType){
 		bounds.x = bounds.x + borderSize;
 		bounds.y = bounds.y + borderSize;
 		bounds.width = bounds.width - borderSize * 2;
 		bounds.height = bounds.height - borderSize * 2;
 		if(bounds.width > 0 && bounds.height > 0){
-			graph2.setFont(Variables.nowUsingFont.deriveFont(fontType, 101f));
-			Rectangle s1Size = getStringBounds(graph2, str, 0, 0);
+			graph2.setFont(Main.usingFont.deriveFont(fontType, 101f));
+			Rectangle s1Size = getStringBounds(str, 0, 0);
 			final Double s1Per1Width = ((double) s1Size.width) / 101;
 			final Double s1Per1Height = ((double) s1Size.height) / 101;
 			if(s1Per1Width / s1Per1Height > bounds.width / bounds.height){
-				graph2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.width / s1Per1Width)));
+				graph2.setFont(Main.usingFont.deriveFont(fontType, (float) (bounds.width / s1Per1Width)));
 			}
 			else{
-				graph2.setFont(Variables.nowUsingFont.deriveFont(fontType, (float) (bounds.height / s1Per1Height)));
+				graph2.setFont(Main.usingFont.deriveFont(fontType, (float) (bounds.height / s1Per1Height)));
 			}
-			s1Size = getStringBounds(graph2, str, 0, 0);
+			s1Size = getStringBounds(str, 0, 0);
 			final int up = bounds.y - s1Size.y;
 			final int down = bounds.y + bounds.height - s1Size.height - s1Size.y;
 			final int left = bounds.x;
@@ -76,41 +99,41 @@ public class StringDraw {
 		}
 	}
 	
-	public static void drawMaxString(final Graphics2D graph2, final int borderSize, final String str, final int align, Rectangle bounds){
-		drawMaxString(graph2, borderSize, str, align, bounds, Font.PLAIN);
+	public void drawMaxString(final int borderSize, final String str, final int align, Rectangle bounds){
+		this.drawMaxString(borderSize, str, align, bounds, Font.PLAIN);
 	}
 
-	public static void drawMaxString(final Graphics2D graph2, final String str, final int align, Rectangle bounds){
-		drawMaxString(graph2, 0, str, align, bounds, Font.PLAIN);
+	public void drawMaxString(final String str, final int align, Rectangle bounds){
+		this.drawMaxString(0, str, align, bounds, Font.PLAIN);
 	}
 	
-	public static void drawMaxString(final Graphics2D graph2, final int borderSize, final String str, Rectangle bounds){
-		drawMaxString(graph2, borderSize, str, 0, bounds, Font.PLAIN);
+	public void drawMaxString(final int borderSize, final String str, Rectangle bounds){
+		this.drawMaxString(borderSize, str, 0, bounds, Font.PLAIN);
 	}
 	
-	public static void drawMaxString(final Graphics2D graph2, final String str, Rectangle bounds){
-		drawMaxString(graph2, 0, str, 0, bounds, Font.PLAIN);
+	public void drawMaxString(final String str, Rectangle bounds){
+		this.drawMaxString(0, str, 0, bounds, Font.PLAIN);
 	}
 
-	public static void drawMaxString(final Graphics2D graph2, final String str, Rectangle bounds, final int fontType){
-		drawMaxString(graph2, 0, str, 0, bounds, fontType);
+	public void drawMaxString( final String str, Rectangle bounds, final int fontType){
+		this.drawMaxString(0, str, 0, bounds, fontType);
 	}
 	
-	public static Rectangle getStringBounds(final Graphics2D g2, final String str, final float x, final float y) {
+	public Rectangle getStringBounds(final String str, final float x, final float y) {
 		if(str.length() != 0){
-			final FontRenderContext frc = g2.getFontRenderContext();
-			final GlyphVector gv = g2.getFont().createGlyphVector(frc, str);
+			final FontRenderContext frc = graph2.getFontRenderContext();
+			final GlyphVector gv = graph2.getFont().createGlyphVector(frc, str);
 			final Rectangle result = gv.getPixelBounds(null, x, y);
 			result.x = 0;
 			if(str.toCharArray()[0] == ' ' || str.toCharArray()[str.length() - 1] == ' '){
 				int counter = 0;
 				while(counter < str.length()){
 					if(str.toCharArray()[counter] != ' '){
-						result.width = result.width + counter * getSpaceSize(g2);
+						result.width = result.width + counter * this.getSpaceSize();
 						counter = str.length() - 1;
 						while(counter >= 0){
 							if(str.toCharArray()[counter] != ' '){
-								result.width = result.width + (str.length() - 1 - counter) * getSpaceSize(g2);
+								result.width = result.width + (str.length() - 1 - counter) * this.getSpaceSize();
 								return result;
 							}
 							counter--;
@@ -119,11 +142,11 @@ public class StringDraw {
 					counter++;
 				}
 				if(counter == str.length()){
-					return new Rectangle(0, 0, getSpaceSize(g2) * str.length(), 0);
+					return new Rectangle(0, 0, this.getSpaceSize() * str.length(), 0);
 				}
 			}
 			return result;
 		}else{return new Rectangle(0, 0, 0, 0);}
 	}
-
+	
 }
