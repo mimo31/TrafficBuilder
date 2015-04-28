@@ -2,6 +2,7 @@ package tb;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -15,6 +16,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.event.MouseInputAdapter;
 
+import tb.cityType.City;
+
 public class Main {
 
 	public static JFrame gui;
@@ -23,13 +26,16 @@ public class Main {
 	public static Point mousePosition = new Point(0, 0);
 	public static Font usingFont;
 	public static String resourcePackName;
+	public static City city;
 	static UI[] interfaces = new UI[4];
 	static int activeInterfaceId;
 	static int lastInterfaceId = 0;
 
 	public static void main(String arg0[]) {
 		interfaces[0] = new tb.uis.title.Interface();
+		interfaces[1] = new tb.uis.newCity.Interface();
 		interfaces[2] = new tb.uis.loadCity.Interface();
+		interfaces[3] = new tb.uis.city.Interface();
 		activeInterfaceId = 0;
 		tb.data.Initialization.initializeData();
 		initializeGui();
@@ -39,13 +45,20 @@ public class Main {
 		if (result != null) {
 			if (result.close) {
 				if (result.closeId == -1) {
+					interfaces[activeInterfaceId].close();
 					int closingInterfaceId = activeInterfaceId;
 					activeInterfaceId = lastInterfaceId;
 					lastInterfaceId = closingInterfaceId;
+					processResult(interfaces[activeInterfaceId].load());
 				} else {
+					interfaces[activeInterfaceId].close();
 					lastInterfaceId = activeInterfaceId;
 					activeInterfaceId = result.closeId;
+					processResult(interfaces[activeInterfaceId].load());
 				}
+			}
+			if (result.repaint) {
+				gui.repaint();
 			}
 		}
 	}
@@ -53,7 +66,7 @@ public class Main {
 	public static void initializeGui() {
 		gui = new JFrame();
 		gui.setSize(200, 200);
-		gui.setExtendedState(gui.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		gui.setExtendedState(gui.getExtendedState() | Frame.MAXIMIZED_BOTH);
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gui.setTitle("Traffic Builder");
 		gui.getContentPane().addMouseListener(mouseEvents);
@@ -76,8 +89,7 @@ public class Main {
 		public void paint(Graphics g) {
 			Graphics2D graph2 = (Graphics2D) g;
 			ExtendedGraphics2D exGraph = new ExtendedGraphics2D(graph2);
-			ActionResult result = interfaces[activeInterfaceId].paint(graph2, exGraph);
-			processResult(result);
+			processResult(interfaces[activeInterfaceId].paint(graph2, exGraph));
 		}
 	}
 

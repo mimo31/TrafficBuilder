@@ -20,10 +20,10 @@ public class Interface extends UI{
 	public ActionResult mouseClicked(MouseEvent event){
 		ActionResult result;
 		if(Components.newCityButton.contains(event.getPoint())){
-			result = new ActionResult(true, 1);
+			result = new ActionResult(true, 1, true);
 		}
 		else if(Components.loadCityButton.contains(event.getPoint())){
-			result = new ActionResult(true, 2);
+			result = new ActionResult(true, 2, true);
 		}
 		else{
 			result = null;

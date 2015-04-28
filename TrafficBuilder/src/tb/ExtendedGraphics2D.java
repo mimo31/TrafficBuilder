@@ -148,5 +148,13 @@ public class ExtendedGraphics2D {
 			return result;
 		}else{return new Rectangle(0, 0, 0, 0);}
 	}
+
+	public void setFont(Font deriveFont) {
+		graph2.setFont(deriveFont);
+	}
+
+	public void drawString(String str, float x, float y) {
+		graph2.drawString(str, x, y);
+	}
 	
 }
