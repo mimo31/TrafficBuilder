@@ -1,11 +1,14 @@
 package tb.data;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
+
+import javax.imageio.ImageIO;
 
 import tb.CityInfo;
 import tb.cityType.Chunk;
@@ -14,8 +17,12 @@ import tb.cityType.IntMap;
 import tb.cityType.Line;
 
 public class Cities {
+	
+	static Image[] pops = new Image[128];
+	static int[] popLevels = new int[128];
+	static int nextIndex = 0;
 
-	static Calendar bytesToCalendar(byte[] bytes) {
+	public static Calendar bytesToCalendar(byte[] bytes) {
 		Calendar result = Calendar.getInstance();
 		result.set(Calendar.YEAR, bytes[0] + 2000);
 		result.set(Calendar.MONTH, bytes[1]);
@@ -37,7 +44,7 @@ public class Cities {
 		}
 		IO.writeTextToFile(name, IO.getInGameDir("\\Saves\\" + folderName + "\\name.txt"), true);
 	}
-	
+
 	public static CityInfo[] getCityInfos() {
 		File[] listedCities = IO.getInGameFile("\\Saves").listFiles();
 		CityInfo[] result = new CityInfo[listedCities.length];
@@ -75,6 +82,26 @@ public class Cities {
 			}
 		}
 		return result;
+	}
+	
+	public static Image getPopulationImage(int level){
+		int counter = 0;
+		while(counter < 128){
+			if(popLevels[counter] == level){
+				return pops[counter];
+			}
+			counter++;
+		}
+		Image image = null;
+		try {
+			image = ImageIO.read(new File(System.getenv("APPDATA") + "\\TrafficBuilder\\Resources\\Default\\pop" + String.valueOf(level) + ".png"));
+		} catch (final IOException e1) {
+			e1.printStackTrace();
+		}
+		pops[nextIndex] = image;
+		popLevels[nextIndex] = level;
+		nextIndex = (nextIndex + 1) % 128;
+		return image;
 	}
 
 	public static Chunk loadChunk(Point position, String folderName){
