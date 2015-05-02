@@ -16,62 +16,6 @@ public class Paint {
 	
 	static long endStationUpdateTime;
 	
-	public static void paint(Graphics2D graph2, ExtendedGraphics2D exGraph){
-		Components.updateComponents();
-		if(Interface.inViewSettings){
-			paintViewSettings(graph2, exGraph);
-		}
-		else{
-			drawMap(graph2, exGraph);
-			if(Interface.showTCW){
-				drawTCW(graph2, exGraph);
-			}
-			drawPowerLine(graph2);
-			drawControlPanel(graph2, exGraph);
-			if(Interface.inPauseMenu){
-				paintPauseMenu(graph2, exGraph);
-			}
-		}
-	}
-	
-	public static void paintPauseMenu(Graphics2D graph2, ExtendedGraphics2D exGraph){
-		
-	}
-	
-	public static void paintViewSettings(Graphics2D graph2, ExtendedGraphics2D exGraph){
-		
-	}
-	
-	public static void drawLines(Graphics2D graph2){
-		int indexToHighlight = -1;
-		if (Interface.makingLine == false) {
-			for(int i = 0; i < Components.lineComponents.length; i++){
-				if (Components.lineComponents[i].area.contains(Main.mousePosition)) {
-					indexToHighlight = i;
-				}
-			}
-		}
-		for(int i = 0; i < Components.lineComponents.length; i++){
-			if (i == indexToHighlight){
-				graph2.setColor(Main.city.lines[Components.lineComponents[i].lineIndex].lineColor.darker());
-			} else {
-				graph2.setColor(Main.city.lines[Components.lineComponents[i].lineIndex].lineColor);
-			}
-			graph2.fill(Components.lineComponents[i].area);
-		}
-		if (Interface.makingLine) {
-			graph2.setColor(Interface.line.lineColor);
-			for(int i = 0; i < Components.makingLineComponents.length; i++){
-				graph2.fill(Components.makingLineComponents[i]);
-			}
-			if (Interface.expandingLineStart) {
-				drawEndStation(graph2, Interface.line.trace[0]);
-			} else {
-				drawEndStation(graph2, Interface.line.trace[Interface.line.trace.length - 1]);
-			}
-		}
-	}
-
 	public static void drawControlPanel(Graphics2D graph2, ExtendedGraphics2D exGraph){
 		graph2.setColor(Color.black);
 		graph2.fill(Components.controlPanel);
@@ -124,7 +68,7 @@ public class Paint {
 		}
 	}
 
-	public static void drawEndStation(Graphics2D graph2, Point coors){
+	public static void drawEndStation(Graphics2D graph2, Point coors) {
 		coors = Interface.convertMapCoorsToScreenCoors(coors);
 		double state = getEndStationState();
 		Area circle = new Area(new Ellipse2D.Double(coors.x, coors.y, 64, 64));
@@ -134,6 +78,83 @@ public class Paint {
 		graph2.fill(circle);
 	}
 
+	public static boolean isStation(LineComponentGraphics component) {
+		return (component.componentIndex % 2) == 0;
+	}
+	
+	public static void drawLines(Graphics2D graph2) {
+		int indexToHighlight = -2;
+		boolean isHighlitedStation = false;
+		int highlitedLineIndex = -1;
+		if (Interface.makingLine == false) {
+			for (int i = 0; i < Components.lineComponents.length; i++) {
+				boolean isIn = Components.lineComponents[i].area.contains(Main.mousePosition);
+				if (isIn) {
+					if (isHighlitedStation == false) {
+						indexToHighlight = i;
+						isHighlitedStation = isStation(Components.lineComponents[i]);
+						highlitedLineIndex = Components.lineComponents[i].lineIndex;
+					} else {
+						if (isStation(Components.lineComponents[i]) || Components.lineComponents[i].lineIndex != highlitedLineIndex) {
+							indexToHighlight = i;
+							isHighlitedStation = isStation(Components.lineComponents[i]);
+							highlitedLineIndex = Components.lineComponents[i].lineIndex;
+						}
+					}
+				}
+			}
+		}
+		if (Components.lineComponents.length != 0) {
+			int nextIndex = 0;
+			for (int i = 0; i <= Components.lineComponents[Components.lineComponents.length - 1].lineIndex; i++) {
+				int lineStartingIndex = nextIndex;
+				if (Components.lineComponents[nextIndex].lineIndex == i) {
+					while (Components.lineComponents[nextIndex].lineIndex == i) {
+						if (isStation(Components.lineComponents[nextIndex]) == false) {
+							if (nextIndex == indexToHighlight) {
+								graph2.setColor(Main.city.lines[i].lineColor.darker());
+							} else {
+								graph2.setColor(Main.city.lines[i].lineColor);
+							}
+							graph2.fill(Components.lineComponents[nextIndex].area);
+						}
+						nextIndex++;
+						if (nextIndex == Components.lineComponents.length) {
+							break;
+						}
+					}
+					nextIndex = lineStartingIndex;
+					while (Components.lineComponents[nextIndex].lineIndex == i) {
+						if (isStation(Components.lineComponents[nextIndex])) {
+							if (nextIndex == indexToHighlight) {
+								graph2.setColor(Main.city.lines[i].lineColor.darker());
+							} else {
+								graph2.setColor(Main.city.lines[i].lineColor);
+							}
+							graph2.fill(Components.lineComponents[nextIndex].area);
+						}
+						nextIndex++;
+						if (nextIndex == Components.lineComponents.length) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		if (Interface.makingLine) {
+			graph2.setColor(Interface.line.lineColor);
+			for (int i = 0; i < Components.makingLineComponents.length; i++) {
+				graph2.fill(Components.makingLineComponents[i]);
+			}
+			if (Interface.expandingLineStart) {
+				drawEndStation(graph2, Interface.line.trace[0]);
+			} else {
+				drawEndStation(graph2,
+						Interface.line.trace[Interface.line.trace.length - 1]);
+			}
+		}
+	}
+	
 	public static void drawMap(final Graphics2D graph2, ExtendedGraphics2D exGraph){
 		graph2.setColor(Color.white);
 		final int spaceYStart = Components.controlPanel.height + 39;
@@ -291,7 +312,7 @@ public class Paint {
 		exGraph.setColor(Color.white);
 		exGraph.drawMaxString(Main.guiWidth / 128, "Create!", Components.createButton);
 	}
-	
+
 	static String longTimeToDate(long longTime){
 		longTime = longTime / 250 * 3;
 		int year;
@@ -361,5 +382,31 @@ public class Paint {
 			minute = String.valueOf(longTime % 60);
 		}
 		return day + " " + month + ", " + year + " " + hour + ":" + minute;
+	}
+
+	public static void paint(Graphics2D graph2, ExtendedGraphics2D exGraph){
+		Components.updateComponents();
+		if(Interface.inViewSettings){
+			paintViewSettings(graph2, exGraph);
+		}
+		else{
+			drawMap(graph2, exGraph);
+			if(Interface.showTCW){
+				drawTCW(graph2, exGraph);
+			}
+			drawPowerLine(graph2);
+			drawControlPanel(graph2, exGraph);
+			if(Interface.inPauseMenu){
+				paintPauseMenu(graph2, exGraph);
+			}
+		}
+	}
+
+	public static void paintPauseMenu(Graphics2D graph2, ExtendedGraphics2D exGraph){
+		
+	}
+	
+	public static void paintViewSettings(Graphics2D graph2, ExtendedGraphics2D exGraph){
+		
 	}
 }

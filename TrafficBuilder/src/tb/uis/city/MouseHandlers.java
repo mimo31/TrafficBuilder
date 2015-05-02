@@ -4,28 +4,31 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import tb.cityType.Line;
+import tb.ActionResult;
 import tb.Main;
 
 public class MouseHandlers {
 	
-	public static void mouseClicked(final MouseEvent event){
+	public static ActionResult mouseClicked(final MouseEvent event){
 		if(Interface.inViewSettings){
 			viewSettingsClicked(event);
+			return null;
 		} else {
 			if(Interface.inPauseMenu){
-				pauseMenuClicked(event);
+				return pauseMenuClicked(event);
 			} else {
 				if(event.getY() > Components.controlPanel.height + 39){
 					mapClicked(event);	
 				} else {
 					controlPanelClicked(event);
 				}
+				return null;
 			}
 		}
 	}
 	
-	public static void pauseMenuClicked(MouseEvent event){
-		
+	public static ActionResult pauseMenuClicked(MouseEvent event){
+		return null;
 	}
 	
 	public static void viewSettingsClicked(MouseEvent event){
@@ -148,7 +151,7 @@ public class MouseHandlers {
 		}
 	}
 
-	public static void mouseRelesed(MouseEvent event){
+	public static void mouseReleased(MouseEvent event){
 		Interface.draggingTCW = false;
 	}
 }

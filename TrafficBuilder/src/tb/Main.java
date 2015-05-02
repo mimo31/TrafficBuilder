@@ -148,6 +148,8 @@ public class Main {
 		@Override
 		public void mouseDragged(final MouseEvent event) {
 			processResult(interfaces[activeInterfaceId].mouseDragged(event));
+			mousePosition = event.getPoint();
+			gui.repaint();
 		}
 
 		@Override

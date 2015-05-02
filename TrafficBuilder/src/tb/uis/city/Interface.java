@@ -2,6 +2,7 @@ package tb.uis.city;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
@@ -43,16 +44,52 @@ public class Interface extends UI{
 		makingHistory = temp;
 	}
 
+	public void close() {
+		Tick.ticker.stop();
+	}
+
 	public static Point convertMapCoorsToScreenCoors(Point mapCoors){
 		return new Point(mapCoors.x * 64 - Main.city.mapPosition.x, mapCoors.y * 64 - Main.city.mapPosition.y + Components.controlPanel.height + 39);
 	}
-
+	
 	public static Point convertScreenCoorsToMapCoors(Point screenCoors){
 		screenCoors.y = screenCoors.y - 39 - Components.controlPanel.height;
 		final Point mapCoors = new Point((int) Math.floor((screenCoors.x + Main.city.mapPosition.x) / (double) 64), (int) Math.floor((screenCoors.y + Main.city.mapPosition.y) / (double) 64));
 		return mapCoors;
 	}
 	
+	public static Area getStationRing(Point stationCoors){
+		stationCoors = convertMapCoorsToScreenCoors(stationCoors);
+		Area circle = new Area(new Ellipse2D.Double((int) (stationCoors.x - (sqrt2 * 64 - 64) / 2), (int) (stationCoors.y - (sqrt2 * 64 - 64) / 2), (int) (sqrt2 * 64), (int) (sqrt2 * 64)));
+		final Area smallEll = new Area(new Ellipse2D.Double(stationCoors.x, stationCoors.y, 64, 64));
+		circle.subtract(smallEll);
+		return circle;
+	}
+	
+	public ActionResult load(){
+		Tick.ticker.start();
+		return null;
+	}
+	
+	public ActionResult mouseClicked(MouseEvent event){
+		return MouseHandlers.mouseClicked(event);
+	}
+	
+	public ActionResult mouseDragged(MouseEvent event){
+		MouseHandlers.mouseDragged(event);
+		return null;
+	}
+	
+	public ActionResult mousePressed(MouseEvent event){
+		MouseHandlers.mousePressed(event);
+		return null;
+	}
+	
+	public ActionResult mouseReleased(MouseEvent event){
+		MouseHandlers.mouseReleased(event);
+		return null;
+	}
+
 	public ActionResult paint(Graphics2D graph2, ExtendedGraphics2D exGraph){
 		Paint.paint(graph2, exGraph);
 		return null;
@@ -88,14 +125,6 @@ public class Interface extends UI{
 			}
 			makingHistory = temp;
 		}
-	}
-
-	public static Area getStationRing(Point stationCoors){
-		stationCoors = convertMapCoorsToScreenCoors(stationCoors);
-		Area circle = new Area(new Ellipse2D.Double((int) (stationCoors.x - (sqrt2 * 64 - 64) / 2), (int) (stationCoors.y - (sqrt2 * 64 - 64) / 2), (int) (sqrt2 * 64), (int) (sqrt2 * 64)));
-		final Area smallEll = new Area(new Ellipse2D.Double(stationCoors.x, stationCoors.y, 64, 64));
-		circle.subtract(smallEll);
-		return circle;
 	}
 	
 }

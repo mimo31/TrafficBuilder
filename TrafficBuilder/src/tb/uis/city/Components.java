@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 import tb.Main;
 import tb.Mathematics;
@@ -46,6 +47,95 @@ public class Components {
 	
 	static LineComponentGraphics[] lineComponents;
 	static Area[] makingLineComponents;
+	
+	public static void addLineComponent(LineComponentGraphics component){
+		LineComponentGraphics[] temp = new LineComponentGraphics[lineComponents.length + 1];
+		for(int i = 0; i < lineComponents.length; i++){
+			temp[i] = lineComponents[i];
+		}
+		temp[temp.length - 1] = component;
+		lineComponents = temp;
+	}
+	
+	public static void addMakingLineComponent(Area component){
+		Area[] temp = new Area[makingLineComponents.length + 1];
+		for(int i = 0; i < makingLineComponents.length; i++){
+			temp[i] = makingLineComponents[i];
+		}
+		temp[temp.length - 1] = component;
+		makingLineComponents = temp;
+	}
+	
+	public static void addMLstation(int stationIndex, int minXpos, int minYpos, int maxXpos, int maxYpos) {
+		if (haveToDrawStation(Interface.line.trace[stationIndex], minXpos, minYpos, maxXpos, maxYpos)) {
+			Area area = Interface.getStationRing(Interface.line.trace[stationIndex]);
+			addMakingLineComponent(area);
+		}
+	}
+	
+	public static void addMLtunnel(int stationIndex, Rectangle mapRect) {
+		Point line1 = convertStationToMiddlePoint(Interface.line.trace[stationIndex]);
+		Point line2 = convertStationToMiddlePoint(Interface.line.trace[stationIndex + 1]);
+		if (mapRect.intersectsLine(line1.x, line1.y, line2.x, line2.y)) {
+			Area area = getTunnelArea(line1, line2);
+			addMakingLineComponent(area);
+		}
+	}
+	
+	public static void addNonMLstation(int lineIndex, int stationIndex, int minXpos, int minYpos, int maxXpos, int maxYpos) {
+		if (haveToDrawStation(Main.city.lines[lineIndex].trace[stationIndex], minXpos, minYpos, maxXpos, maxYpos)) {
+			Area area = Interface.getStationRing(Main.city.lines[lineIndex].trace[stationIndex]);
+			LineComponentGraphics component = new LineComponentGraphics(area, lineIndex, 2 * stationIndex);
+			addLineComponent(component);
+		}
+	}
+	
+	public static void addNonMLtunnel(int lineIndex, int stationIndex, Rectangle mapRect) {
+		Point line1 = convertStationToMiddlePoint(Main.city.lines[lineIndex].trace[stationIndex]);
+		Point line2 = convertStationToMiddlePoint(Main.city.lines[lineIndex].trace[stationIndex + 1]);
+		if (mapRect.intersectsLine(line1.x, line1.y, line2.x, line2.y)) {
+			Area area = getTunnelArea(line1, line2);
+			LineComponentGraphics component = new LineComponentGraphics(area, lineIndex, 2 * stationIndex + 1);
+			addLineComponent(component);
+		}
+	}
+	
+	public static Point convertStationToMiddlePoint(Point station){
+		Point result = Interface.convertMapCoorsToScreenCoors(station);
+		result.x = result.x + 32;
+		result.y = result.y + 32;
+		return result;
+	}
+	
+	public static Area getTunnelArea(Point start, Point end){
+		Area tunnel;
+		if(start.y != end.y){
+			final double tempA = -(end.x - start.x) / (double) (end.y - start.y);
+			final double tempB = Math.sqrt(1024 + 1024 * tempA * tempA) / (double) (2 * tempA * tempA + 2);
+			final Point p1 = new Point((int) (start.x + tempB), (int) (start.y + tempB * tempA));
+			final Point p2 = new Point((int) (start.x - tempB), (int) (start.y - tempB * tempA));
+			final Point p3 = new Point((int) (end.x - tempB), (int) (end.y - tempB * tempA));
+			final Point p4 = new Point((int) (end.x + tempB), (int) (end.y + tempB * tempA));
+			tunnel =  new Area(new Polygon(new int[]{p1.x, p2.x, p3.x, p4.x}, new int[]{p1.y, p2.y, p3.y, p4.y}, 4));
+		} else {
+			if (start.x < end.x) {
+				tunnel = new Area(new Rectangle(start.x, start.y - 16, end.x - start.x, 32));
+			} else {
+				tunnel =  new Area(new Rectangle(end.x, start.y - 16, start.x - end.x, 32));
+			}
+		}
+		Area station1 = new Area(new Ellipse2D.Double(start.x - 32, start.y - 32, 64, 64));
+		Area station2 = new Area(new Ellipse2D.Double(end.x - 32, end.y - 32, 64, 64));
+		tunnel.subtract(station1);
+		tunnel.subtract(station2);
+		return tunnel;
+	}
+	
+	public static boolean haveToDrawStation(Point station, int minXpos, int minYpos, int maxXpos, int maxYpos) {
+		boolean insideXbounds = (station.x >= minXpos) && (station.x <= maxXpos);
+		boolean insideYbounds = (station.y >= minYpos) && (station.y <= maxYpos);
+		return insideXbounds && insideYbounds;
+	}
 	
 	public static void updateComponents(){
 		if(Interface.inViewSettings){
@@ -92,6 +182,7 @@ public class Components {
 			timeTextBounds = new Rectangle(controlPanelBorder + controlPanelInside.width * 2 / 3, controlPanelBorder, controlPanelInside.width / 3, controlPanelInside.height / 3);
 			timeTextBounds = Mathematics.addBorders(timeTextBounds, 3);
 			
+			makingLineComponents = new Area[0];
 			lineComponents = new LineComponentGraphics[0];
 			int minXpos = (int) Math.floor((Main.city.mapPosition.x / 64)) - 1;
 			int minYpos = (int) Math.floor((Main.city.mapPosition.y / 64)) - 1;
@@ -99,50 +190,18 @@ public class Components {
 			int maxYpos = (int) Math.floor(((Main.city.mapPosition.y + Main.guiHeight - controlPanel.height) / 64)) + 1;
 			Rectangle mapRect = new Rectangle(- 64, controlPanel.height - 64, Main.guiWidth + 128, Main.guiHeight - controlPanel.height + 128);
 			for(int i = 0; i < Main.city.lines.length; i++){
-				for(int j = 0; j < Main.city.lines[i].trace.length; j++){
-					boolean insideXbounds = (Main.city.lines[i].trace[j].x >= minXpos) && (Main.city.lines[i].trace[j].x <= maxXpos);
-					boolean insideYbounds = (Main.city.lines[i].trace[j].y >= minYpos) && (Main.city.lines[i].trace[j].y <= maxYpos);
-					if (insideXbounds && insideYbounds) {
-						Area area = Interface.getStationRing(Main.city.lines[i].trace[j]);
-						LineComponentGraphics component = new LineComponentGraphics(area, i, 2 * j);
-						addLineComponent(component);
-					}
-				}
 				for(int j = 0; j < Main.city.lines[i].trace.length - 1; j++){
-					Point line1 = Interface.convertMapCoorsToScreenCoors(Main.city.lines[i].trace[j]);
-					line1.x = line1.x + 32;
-					line1.y = line1.y + 32;
-					Point line2 = Interface.convertMapCoorsToScreenCoors(Main.city.lines[i].trace[j + 1]);
-					line2.x = line2.x + 32;
-					line2.y = line2.y + 32;
-					if (mapRect.intersectsLine(line1.x, line1.y, line2.x, line2.y)) {
-						Area area = getTunnelArea(line1, line2);
-						LineComponentGraphics component = new LineComponentGraphics(area, i, 2 * j + 1);
-						addLineComponent(component);
-					}
+					addNonMLstation(i, j, minXpos, minYpos, maxXpos, maxYpos);
+					addNonMLtunnel(i, j, mapRect);
 				}
+				addNonMLstation(i, Main.city.lines[i].trace.length - 1, minXpos, minYpos, maxXpos, maxYpos);
 			}
-			
 			if (Interface.makingLine) {
-				makingLineComponents = new Area[0];
-				for(int i = 0; i < Interface.line.trace.length; i++) {
-					boolean insideXbounds = (Interface.line.trace[i].x >= minXpos) && (Interface.line.trace[i].x <= maxXpos);
-					boolean insideYbounds = (Interface.line.trace[i].y >= minYpos) && (Interface.line.trace[i].y <= maxYpos);
-					if (insideXbounds && insideYbounds) {
-						addMakingLineComponent(Interface.getStationRing(Interface.line.trace[i]));
-					}
-				}
 				for(int i = 0; i < Interface.line.trace.length - 1; i++){
-					Point line1 = Interface.convertMapCoorsToScreenCoors(Interface.line.trace[i]);
-					line1.x = line1.x + 32;
-					line1.y = line1.y + 32;
-					Point line2 = Interface.convertMapCoorsToScreenCoors(Interface.line.trace[i + 1]);
-					line2.x = line2.x + 32;
-					line2.y = line2.y + 32;
-					if (mapRect.intersectsLine(line1.x, line1.y, line2.x, line2.y)) {
-						addMakingLineComponent(getTunnelArea(line1, line2));
-					}
+					addMLstation(i, minXpos, minYpos, maxXpos, maxYpos);
+					addMLtunnel(i, mapRect);
 				}
+				addMLstation(Interface.line.trace.length - 1, minXpos, minYpos, maxXpos, maxYpos);
 			}
 			if(Interface.showTCW){
 				int TCWBorderSize = Interface.TCWwidth / 16;
@@ -159,37 +218,6 @@ public class Components {
 				backToCity = new Rectangle(Main.guiWidth / 4, Main.guiHeight / 4, Main.guiWidth / 2, Main.guiHeight / 16);
 				enterSettings = new Rectangle(Main.guiWidth / 4, Main.guiHeight / 32 * 11, Main.guiWidth / 2, Main.guiHeight / 16);
 				goToTitle = new Rectangle(Main.guiWidth / 4, Main.guiHeight / 16 * 7, Main.guiWidth / 2, Main.guiHeight / 16);
-			}
-		}
-	}
-	
-	public static void addLineComponent(LineComponentGraphics component){
-		LineComponentGraphics[] temp = new LineComponentGraphics[lineComponents.length + 1];
-		for(int i = 0; i < lineComponents.length; i++){
-			temp[i] = lineComponents[i];
-		}
-		temp[temp.length - 1] = component;
-		lineComponents = temp;
-	}
-	
-	public static void addMakingLineComponent(Area component){
-		
-	}
-	
-	public static Area getTunnelArea(Point start, Point end){
-		if(start.y != end.y){
-			final double tempA = -(end.x - start.x) / (double) (end.y - start.y);
-			final double tempB = Math.sqrt(1024 + 1024 * tempA * tempA) / (double) (2 * tempA * tempA + 2);
-			final Point p1 = new Point((int) (start.x + tempB), (int) (start.y + tempB * tempA));
-			final Point p2 = new Point((int) (start.x - tempB), (int) (start.y - tempB * tempA));
-			final Point p3 = new Point((int) (end.x - tempB), (int) (end.y - tempB * tempA));
-			final Point p4 = new Point((int) (end.x + tempB), (int) (end.y + tempB * tempA));
-			return new Area(new Polygon(new int[]{p1.x, p2.x, p3.x, p4.x}, new int[]{p1.y, p2.y, p3.y, p4.y}, 4));
-		} else {
-			if (start.x < end.x) {
-				return new Area(new Rectangle(start.x, start.y - 16, end.x - start.x, 32));
-			} else {
-				return new Area(new Rectangle(end.x, start.y - 16, start.x - end.x, 32));
 			}
 		}
 	}
