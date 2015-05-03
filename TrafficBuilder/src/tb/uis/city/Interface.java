@@ -2,6 +2,7 @@ package tb.uis.city;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -46,8 +47,9 @@ public class Interface extends UI{
 
 	public void close() {
 		Tick.ticker.stop();
+		tb.data.Cities.saveCity();
 	}
-
+	
 	public static Point convertMapCoorsToScreenCoors(Point mapCoors){
 		return new Point(mapCoors.x * 64 - Main.city.mapPosition.x, mapCoors.y * 64 - Main.city.mapPosition.y + Components.controlPanel.height + 39);
 	}
@@ -65,41 +67,65 @@ public class Interface extends UI{
 		circle.subtract(smallEll);
 		return circle;
 	}
+
+	public ActionResult keyReleased(KeyEvent event){
+		if(event.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+			if(makingLine && (inPauseMenu == false)){
+				undoMakingStep();
+			}
+		}
+		else if(event.getKeyCode() == KeyEvent.VK_ESCAPE){
+			if(inPauseMenu){
+				inPauseMenu = false;
+				if(makingLine == false){
+					paused = false;
+				}
+			}
+			else{
+				inPauseMenu = true;
+				paused = true;
+			}
+		}
+		return new ActionResult(false, 0, true);
+	}
 	
-	public ActionResult load(){
+	public ActionResult load() {
 		Tick.ticker.start();
+		paused = false;
+		inPauseMenu = false;
+		makingLine = false;
 		return null;
 	}
-	
-	public ActionResult mouseClicked(MouseEvent event){
+
+	public ActionResult mouseClicked(MouseEvent event) {
 		return MouseHandlers.mouseClicked(event);
 	}
-	
-	public ActionResult mouseDragged(MouseEvent event){
+
+	public ActionResult mouseDragged(MouseEvent event) {
 		MouseHandlers.mouseDragged(event);
 		return null;
 	}
-	
-	public ActionResult mousePressed(MouseEvent event){
+
+	public ActionResult mousePressed(MouseEvent event) {
 		MouseHandlers.mousePressed(event);
 		return null;
 	}
-	
-	public ActionResult mouseReleased(MouseEvent event){
+
+	public ActionResult mouseReleased(MouseEvent event) {
 		MouseHandlers.mouseReleased(event);
 		return null;
 	}
 
-	public ActionResult paint(Graphics2D graph2, ExtendedGraphics2D exGraph){
+	public ActionResult paint(Graphics2D graph2, ExtendedGraphics2D exGraph) {
 		Paint.paint(graph2, exGraph);
 		return null;
 	}
 
-	public static boolean stationPlaceAllowed(Point station){
+	public static boolean stationPlaceAllowed(Point station) {
 		int counter = 0;
 		boolean stationExists = false;
-		while(counter < line.trace.length){
-			if(line.trace[counter].equals(station)){
+		while (counter < line.trace.length) {
+			if (line.trace[counter].equals(station)) {
 				stationExists = true;
 				break;
 			}

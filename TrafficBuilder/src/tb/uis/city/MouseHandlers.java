@@ -28,6 +28,17 @@ public class MouseHandlers {
 	}
 	
 	public static ActionResult pauseMenuClicked(MouseEvent event){
+		if (Components.backToCity.contains(Main.mousePosition)) {
+			Interface.inPauseMenu = false;
+			if (Interface.makingLine == false) {
+				Interface.paused = false;
+			}
+			return new ActionResult(false, 0, true);
+		} else if (Components.enterSettings.contains(Main.mousePosition)) {
+			
+		} else if (Components.goToTitle.contains(Main.mousePosition)) {
+			return new ActionResult(true, 0, true);
+		}
 		return null;
 	}
 	

@@ -90,6 +90,8 @@ public class Line {
 			this.trace[counter] = new Point(IO.bytesToInt(xBytes), IO.bytesToInt(yBytes));
 			counter++;
 		}
+		this.codeChar = codeChar;
+		this.codeNumber = codeNumber;
 	}
 	
 	public byte[] toBytes(){

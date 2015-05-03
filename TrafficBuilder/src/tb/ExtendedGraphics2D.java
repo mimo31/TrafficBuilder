@@ -45,10 +45,7 @@ public class ExtendedGraphics2D {
 	}
 
 	public void drawMaxString(final int borderSize, final String str, final int align, Rectangle bounds, final int fontType){
-		bounds.x = bounds.x + borderSize;
-		bounds.y = bounds.y + borderSize;
-		bounds.width = bounds.width - borderSize * 2;
-		bounds.height = bounds.height - borderSize * 2;
+		bounds = Mathematics.addBorders(bounds, borderSize);
 		if(bounds.width > 0 && bounds.height > 0){
 			graph2.setFont(Main.usingFont.deriveFont(fontType, 101f));
 			Rectangle s1Size = getStringBounds(str, 0, 0);

@@ -170,6 +170,7 @@ public class Components {
 				makingLineCovering = new Rectangle(0, controlPanel.height + 39, Main.guiWidth, Main.guiHeight - controlPanel.height + 39);
 			}
 			
+			
 			int controlButtonsSize = controlPanelInside.height * 3 / 4;
 			CCFTButton = new Rectangle(Main.guiWidth / 2 - controlButtonsSize, controlPanelBorder, controlButtonsSize, controlButtonsSize);
 			CCFTButtonText = Mathematics.addBorders(CCFTButton, controlButtonsSize / 8);

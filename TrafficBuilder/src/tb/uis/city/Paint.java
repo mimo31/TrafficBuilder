@@ -86,7 +86,7 @@ public class Paint {
 		int indexToHighlight = -2;
 		boolean isHighlitedStation = false;
 		int highlitedLineIndex = -1;
-		if (Interface.makingLine == false) {
+		if (Interface.makingLine == false && Interface.inPauseMenu == false) {
 			for (int i = 0; i < Components.lineComponents.length; i++) {
 				boolean isIn = Components.lineComponents[i].area.contains(Main.mousePosition);
 				if (isIn) {
@@ -403,7 +403,16 @@ public class Paint {
 	}
 
 	public static void paintPauseMenu(Graphics2D graph2, ExtendedGraphics2D exGraph){
-		
+		graph2.setColor(new Color(255, 255, 255, 127));
+		graph2.fillRect(0, 0, Main.guiWidth, Main.guiHeight);
+		exGraph.drawChangingRect(Components.backToCity, Color.black, new Color(40, 40, 40));
+		exGraph.drawChangingRect(Components.enterSettings, Color.black, new Color(40, 40, 40));
+		exGraph.drawChangingRect(Components.goToTitle, Color.black, new Color(40, 40, 40));
+		exGraph.setColor(Color.white);
+		int borderSize = Main.guiHeight / 128;
+		exGraph.drawMaxString(borderSize, "Back to the city", Components.backToCity);
+		exGraph.drawMaxString(borderSize, "Settings", Components.enterSettings);
+		exGraph.drawMaxString(borderSize, "Go to title", Components.goToTitle);
 	}
 	
 	public static void paintViewSettings(Graphics2D graph2, ExtendedGraphics2D exGraph){

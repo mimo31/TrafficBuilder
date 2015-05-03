@@ -11,6 +11,7 @@ import java.util.Calendar;
 import javax.imageio.ImageIO;
 
 import tb.CityInfo;
+import tb.Main;
 import tb.cityType.Chunk;
 import tb.cityType.City;
 import tb.cityType.IntMap;
@@ -131,7 +132,7 @@ public class Cities {
 		return new Chunk(chunkLands, position);
 	}
 	
-	public static City loadCity(String folderName) throws Exception{
+	public static void loadCity(String folderName) throws Exception {
 		byte[] mapPosBytes = IO.readBytes(IO.getInGameDir("\\Saves\\" + folderName + "\\mapPosition.byt"));
 		int mapX = IO.bytesToInt(IO.getFirst4ofByte(mapPosBytes));
 		int mapY = IO.bytesToInt(IO.getLast4ofByte(mapPosBytes));
@@ -141,10 +142,10 @@ public class Cities {
 		IntMap popMap = new IntMap();
 		for(int i = 0; i < listed.length; i++){
 			int counter = listed[i].toString().length() - 1;
-			while(listed[counter].toString().charAt(counter) != '\\'){
+			while(listed[i].toString().charAt(counter) != '\\'){
 				counter--;
 			}
-			String fileName = listed[counter].toString().substring(counter + 1);
+			String fileName = listed[i].toString().substring(counter + 1);
 			int chunkX;
 			int chunkY;
 			counter = 0;
@@ -161,16 +162,15 @@ public class Cities {
 		for(int i = 0; i < lines.length; i++){
 			String filePath = listedLines[i].toString();
 			int counter = filePath.length() - 1;
-			while(filePath.charAt(counter) == '\\'){
+			while(filePath.charAt(counter) != '\\'){
 				counter--;
 			}
 			String lineCodeName = filePath.substring(counter + 1);
 			char lineCodeChar = lineCodeName.charAt(0);
-			int lineCodeNumber = Integer.parseInt(lineCodeName.substring(1));
-			lines[counter] = new Line(IO.readBytes(listedLines[counter]), lineCodeChar, lineCodeNumber);
-			counter++;
+			int lineCodeNumber = Integer.parseInt(lineCodeName.substring(1, lineCodeName.length() - 4));
+			lines[i] = new Line(IO.readBytes(listedLines[i]), lineCodeChar, lineCodeNumber);
 		}
-		return new City(
+		Main.city =  new City(
 				IO.bytesToLong(IO.readBytes(IO.getInGameFile("\\Saves\\" + folderName + "\\time.byt"))),
 				IO.readTextFile(IO.getInGameDir("\\Saves\\" + folderName + "\\name.txt")),
 				folderName,
@@ -218,25 +218,25 @@ public class Cities {
 		IO.writeBytesToFile(bytesToWrite, IO.getInGameDir("\\Saves\\" + folderName + "\\map\\chunks\\" +
 				chunk.position.x + "," + chunk.position.y), false);
 	}
-	public static void saveCity(City city){
-		IO.writeBytesToFile(IO.longToBytes(city.time), IO.getInGameDir("\\Saves\\" + city.folderName + "\\time.byt"), false);
+	public static void saveCity(){
+		IO.writeBytesToFile(IO.longToBytes(Main.city.time), IO.getInGameDir("\\Saves\\" + Main.city.folderName + "\\time.byt"), false);
 		Calendar now = Calendar.getInstance();
 		byte[] dateData = {(byte) (now.get(Calendar.YEAR) - 2000), (byte) now.get(Calendar.MONTH), (byte) now.get(Calendar.DAY_OF_MONTH), (byte) now.get(Calendar.HOUR_OF_DAY), (byte) now.get(Calendar.MINUTE), (byte) now.get(Calendar.SECOND)};
-		IO.writeBytesToFile(dateData, IO.getInGameDir("\\Saves\\" + city.folderName + "\\lastPlay.byt"), false);
-		IO.writeBytesToFile(IO.concatenateTwo4bytesArrays(IO.intToBytes(city.mapPosition.x), IO.intToBytes(city.mapPosition.y)),
-				IO.getInGameDir("\\Saves\\" + city.folderName + "\\mapPosition.byt"), false);
-		IO.writeBytesToFile(IO.floatToBytes(city.money), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + city.folderName + "\\money.byt", false);
-		for(int i = 0; i < city.popMap.chunks.length; i++){
-			saveChunk(city.popMap.chunks[i], city.folderName);
+		IO.writeBytesToFile(dateData, IO.getInGameDir("\\Saves\\" + Main.city.folderName + "\\lastPlay.byt"), false);
+		IO.writeBytesToFile(IO.concatenateTwo4bytesArrays(IO.intToBytes(Main.city.mapPosition.x), IO.intToBytes(Main.city.mapPosition.y)),
+				IO.getInGameDir("\\Saves\\" + Main.city.folderName + "\\mapPosition.byt"), false);
+		IO.writeBytesToFile(IO.floatToBytes(Main.city.money), System.getenv("APPDATA")  + "\\TrafficBuilder\\Saves\\" + Main.city.folderName + "\\money.byt", false);
+		for(int i = 0; i < Main.city.popMap.chunks.length; i++){
+			saveChunk(Main.city.popMap.chunks[i], Main.city.folderName);
 		}
-		File linesDirectory = IO.getInGameFile("\\Saves\\" + city.folderName + "\\map\\lines");
+		File linesDirectory = IO.getInGameFile("\\Saves\\" + Main.city.folderName + "\\map\\lines");
 		File[] listedLineFiles = linesDirectory.listFiles();
 		for(int i = 0; i < listedLineFiles.length; i++){
 			listedLineFiles[i].delete();
 		}
-		for(int i = 0; i < city.lines.length; i++){
-			String path = IO.getInGameDir("\\Saves\\" + city.folderName + "\\map\\lines\\" + String.valueOf(city.lines[i].codeChar) + String.valueOf(city.lines[i].codeNumber) + ".byt");
-			IO.writeBytesToFile(city.lines[i].toBytes(), path, false);
+		for(int i = 0; i < Main.city.lines.length; i++){
+			String path = IO.getInGameDir("\\Saves\\" + Main.city.folderName + "\\map\\lines\\" + String.valueOf(Main.city.lines[i].codeChar) + String.valueOf(Main.city.lines[i].codeNumber) + ".byt");
+			IO.writeBytesToFile(Main.city.lines[i].toBytes(), path, false);
 		}
 	}
 }

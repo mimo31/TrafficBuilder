@@ -112,7 +112,7 @@ public class Interface extends UI {
 	}
 
 	@Override
-	public void close(){
+	public void close() {
 		scrollUp.stop();
 		scrollDown.stop();
 	}
@@ -125,11 +125,16 @@ public class Interface extends UI {
 	}
 
 	@Override
-	public ActionResult mouseClicked(MouseEvent event){
-		if (Components.cityBlocks.length != 0){
-			if (event.getY() > Components.titleRect.height){
-				for (int i = 0; i < Components.cityBlocks.length; i++){
-					if (Components.cityBlocks[i].contains(event.getPoint())){
+	public ActionResult mouseClicked(MouseEvent event) {
+		if (Components.cityBlocks.length != 0) {
+			if (event.getY() > Components.titleRect.height) {
+				for (int i = 0; i < Components.cityBlocks.length; i++) {
+					if (Components.cityBlocks[i].contains(event.getPoint())) {
+						try {
+							tb.data.Cities.loadCity(cityInfos[Components.firstCityBlockIndex + i].folder);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						return new ActionResult(true, 3, true);
 					}
 				}
@@ -139,7 +144,7 @@ public class Interface extends UI {
 				return new ActionResult(true, 1, true);
 			}
 		}
-		if (Components.backButton.contains(event.getPoint())){
+		if (Components.backButton.contains(event.getPoint())) {
 			return new ActionResult(true, 0, true);
 		}
 		return null;
